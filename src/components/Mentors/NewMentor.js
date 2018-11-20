@@ -4,7 +4,6 @@ import { withStyles } from "@material-ui/core/styles";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
@@ -208,7 +207,6 @@ class NewMentor extends Component {
   checkForNull = event => {
     const name = event.target.name;
     const formControl = name + "Error";
-    //const value = this.state[name];
     const value = event.target.value;
     this.setState({
       [formControl]: validateString(name, value)
@@ -230,8 +228,7 @@ class NewMentor extends Component {
   };
 
   /**
-   * handleChange – the handleChange sets the value selected in a select list
-   * or a multiline text
+   * handleChangeCheck – the handleChangeCheck sets the value of mentor's availability
    * @param {Object} the object name and event
    * @return {void}
    */
@@ -468,14 +465,11 @@ class NewMentor extends Component {
                   multiline
                   rowsMax="7"
                   value={mail}
-                  onBlur={this.checkForNull}
                   onChange={this.handleChange}
                   className={classes.textField}
                   margin="normal"
-                  required
                 />
               </FormControl>
-              <FormHelperText error={true}>{mailError}</FormHelperText>
             </div>
             <div>
               <FormControl required className={classes.formControl}>

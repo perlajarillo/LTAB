@@ -16,7 +16,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 import Grid from "@material-ui/core/Grid";
 import icon_facebook from "../../images/icon_facebook.png";
-import icon_site from "../../images/icon_site.png";
+import b_business from "../../images/b_business.jpg";
 
 const styles = theme => ({
   wrapper: {
@@ -72,6 +72,24 @@ const styles = theme => ({
   icons: {
     width: "50px",
     marginLeft: 75,
+    paddingBottom: "1%",
+    [theme.breakpoints.up("xs")]: {
+      width: "40px"
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: "35px"
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "95px"
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      width: "45px"
+    }
+  },
+  iconBusiness: {
+    width: "50px",
+    marginLeft: 75,
+    border: "2px solid green",
     paddingBottom: "1%",
     [theme.breakpoints.up("xs")]: {
       width: "40px"
@@ -221,7 +239,7 @@ class LogIn extends React.Component {
 
             <Grid item xs={12} sm={6} md={6} lg={6}>
               <Typography className={classes.text} variant="body1">
-                Are you looking for a Mentor? Not registered yet?
+                Are you looking for a Mentor and your are not registered yet?
               </Typography>
               <CardActions>
                 <Button
@@ -249,7 +267,7 @@ class LogIn extends React.Component {
                 href="https://www.flad.pt/en/lets-talk-about-business/"
                 target="blank"
               >
-                <img src={icon_site} className={classes.icons} />
+                <img src={b_business} className={classes.iconBusiness} />
               </a>
             </Grid>
           </Grid>

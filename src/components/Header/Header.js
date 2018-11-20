@@ -35,12 +35,12 @@ const styles = theme => ({
     width: "25px",
     height: "25px",
     [theme.breakpoints.up("sm")]: {
-      width: "100px",
-      height: "100px"
+      width: "110px",
+      height: "110px"
     },
     [theme.breakpoints.up("md")]: {
-      width: "70px",
-      height: "70px"
+      width: "115px",
+      height: "115px"
     }
   }
 });

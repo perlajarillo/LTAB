@@ -25,7 +25,7 @@ function Footer(props) {
     <footer className={classes.root}>
       <Paper className={classes.paper} elevation={0}>
         <Typography variant="h6" align="center" className={classes.textColor}>
-          Flad Mentorship
+          FLAD Mentorship
         </Typography>
         <Typography
           variant="caption"
