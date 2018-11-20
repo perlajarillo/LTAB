@@ -1,0 +1,155 @@
+import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import List from "@material-ui/core/List";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import { Link } from "react-router-dom";
+import LogOut from "../LogOut/LogOut";
+import logo from "../../images/logo.png";
+import AuthUserContext from "../AuthUserContext";
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    display: "flex"
+  },
+  menuButton: {
+    marginLeft: -12
+  },
+  list: {
+    width: 250
+  },
+  fullList: {
+    width: "auto"
+  },
+  logoStyles: {
+    margin: "16px 0",
+    flex: 1
+  },
+  logo: {
+    width: "25px",
+    height: "25px",
+    [theme.breakpoints.up("sm")]: {
+      width: "100px",
+      height: "100px"
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "70px",
+      height: "70px"
+    }
+  }
+});
+
+const NavAuthUser = props => {
+  const { classes, mobileOpen, toggle } = props;
+  return (
+    <Fragment>
+      <AppBar className={classes.root} positionsticky="true">
+        <Toolbar>
+          <IconButton
+            className={classes.navIconHide}
+            color="inherit"
+            aria-label="Menu"
+            onClick={toggle}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Link to="/" className={classes.logoStyles}>
+            <img src={logo} alt="Flad Mentorship" className={classes.logo} />
+          </Link>
+          <LogOut />
+          <SwipeableDrawer
+            anchor="left"
+            open={mobileOpen}
+            onClose={toggle}
+            onOpen={toggle}
+          >
+            <div className={classes.list}>
+              <List>
+                <Button
+                  tabIndex="-1"
+                  color="inherit"
+                  component={Link}
+                  to="/mentors"
+                >
+                  Mentors
+                </Button>
+              </List>
+              <List>
+                <Button tabIndex="-1" color="inherit" component={Link} to="/">
+                  Reports
+                </Button>
+              </List>
+              <List>
+                <Button tabIndex="-1" color="inherit" component={Link} to="/">
+                  Settings
+                </Button>
+              </List>
+            </div>
+          </SwipeableDrawer>
+        </Toolbar>
+      </AppBar>
+    </Fragment>
+  );
+};
+
+const NavNoAuth = props => {
+  const { classes } = props;
+  return (
+    <div>
+      <AppBar className={classes.root}>
+        <Toolbar>
+          <Link to="/" className={classes.logoStyles}>
+            <img src={logo} alt="True relief" className={classes.logo} />
+          </Link>
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+};
+
+class Header extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      mobileOpen: false
+    };
+    this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
+  }
+
+  handleDrawerToggle = event => {
+    this.setState(state => ({ mobileOpen: !state.mobileOpen }));
+  };
+
+  render() {
+    const { classes } = this.props;
+    const { mobileOpen } = this.state;
+    return (
+      <AuthUserContext.Consumer>
+        {authUser =>
+          authUser ? (
+            <NavAuthUser
+              classes={classes}
+              mobileOpen={mobileOpen}
+              toggle={this.handleDrawerToggle}
+            />
+          ) : (
+            <NavNoAuth classes={classes} />
+          )
+        }
+      </AuthUserContext.Consumer>
+    );
+  }
+}
+
+Header.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(Header);
