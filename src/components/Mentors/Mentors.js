@@ -76,7 +76,7 @@ function desc(a, b, orderBy) {
 function stableSort(array, cmp) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
+    const order = cmp(a[0][1], b[0][1]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
