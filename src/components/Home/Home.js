@@ -29,7 +29,7 @@ const styles = theme => ({
   backImg: {
     background: "url(" + backgroundImg + ")",
     backgroundPosition: "center 70%",
-    padding: "11% 0",
+    padding: "13% 0",
     backgroundSize: "cover",
     [theme.breakpoints.up("sm")]: {
       marginTop: "70px"
@@ -42,17 +42,18 @@ const styles = theme => ({
     }
   },
   principalLogo: {
-    marginLeft: theme.spacing.unit * 3,
+    marginLeft: theme.spacing.unit * 1,
     [theme.breakpoints.up("xs")]: {
       width: "140px",
       marginLeft: theme.spacing.unit * 9
     },
     [theme.breakpoints.up("sm")]: {
-      width: "135px",
+      width: "275px",
       marginLeft: theme.spacing.unit * 11
     },
     [theme.breakpoints.up("md")]: {
-      width: "225px"
+      width: "355px",
+      marginLeft: theme.spacing.unit * 2
     },
     [theme.breakpoints.between("sm", "md")]: {
       width: "145px",
@@ -94,10 +95,7 @@ const Home = props => {
             <Typography variant="h6" gutterBottom>
               Do you want to be a #LetsTalkAboutBusiness mentor?
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              Our Program Coordinator, Carmen Monereo is currently recruiting
-              mentors!
-            </Typography>
+
             <Typography variant="body1" gutterBottom>
               Please reach out to us through email to{" "}
               <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
