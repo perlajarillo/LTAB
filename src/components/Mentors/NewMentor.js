@@ -125,7 +125,8 @@ class NewMentor extends Component {
       picturePath: "",
       pictureBlob: "",
       returnMentor: false,
-      available: false
+      available: false,
+      pictureName: "NA"
     };
   }
 
@@ -222,8 +223,12 @@ class NewMentor extends Component {
   handleChange = event => {
     const { target } = event;
     const { value, name } = target;
+    const valueUpperCase = value.toUpperCase();
+
+    const mustBeUCase =
+      name === "specialty" || name === "name" || name === "location";
     this.setState({
-      [name]: value
+      [name]: mustBeUCase ? valueUpperCase : value
     });
   };
 
@@ -345,7 +350,6 @@ class NewMentor extends Component {
       returnMentor,
       nameError,
       specialtyError,
-      mailError,
       locationError,
       descriptionError,
       available

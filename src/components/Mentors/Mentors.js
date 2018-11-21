@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
+import SearchIcon from "@material-ui/icons/Search";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Table from "@material-ui/core/Table";
@@ -32,11 +33,15 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import TextField from "@material-ui/core/TextField";
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    margin: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 3,
+    marginLeft: "1%",
+    width: "98%",
+    overflowX: "auto"
   },
   wrapper: {
     margin: "100px 0",
@@ -55,11 +60,55 @@ const styles = theme => ({
       marginLeft: "10%"
     }
   },
+  bullet: {
+    display: "inline-block",
+    margin: "0 2px",
+    transform: "scale(0.8)"
+  },
+  button: {
+    marginLeft: 20
+  },
 
+  textField: {
+    width: 400
+  },
   container: {
     display: "flex",
     flexWrap: "wrap",
     marginTop: theme.spacing.unit * 3
+  },
+  row: {
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.background.default
+    }
+  },
+  table: {
+    minWidth: 700
+  },
+  tableWrapper: {
+    overflowX: "auto"
+  },
+  titleRow: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    margin: theme.spacing.unit * 2,
+    [theme.breakpoints.up("sm")]: {
+      justifyContent: "space-between"
+    }
+  },
+  searchBar: {
+    marginRight: 0,
+    display: "flex",
+    flexWrap: "wrap",
+    [theme.breakpoints.up("sm")]: {
+      justifyContent: "space-between"
+    }
+  },
+  personalizedCell: {
+    width: "7px",
+    align: "center",
+    whiteSpace: "nowrap"
   }
 });
 
@@ -294,17 +343,20 @@ const MentorsList = ({
   state,
   classes,
   handleClickDeleteMentor,
+  filterBySpecialty,
   handleClose,
   handleDeleteMentor,
   isSelected,
   handleClick,
   handleRequestSort,
   handleChangePage,
-  handleChangeRowsPerPage
+  handleChange,
+  handleChangeRowsPerPage,
+  getMentors
 }) => {
   const {
     mentors,
-    open,
+
     uid,
     order,
     orderBy,
@@ -316,7 +368,7 @@ const MentorsList = ({
   const emptyRows = mentors
     ? rowsPerPage - Math.min(rowsPerPage, mentors.length - page * rowsPerPage)
     : 0;
-  const mentorsData = [];
+
   return (
     <div className={classes.root}>
       <div className={classes.titleRow}>
@@ -336,6 +388,38 @@ const MentorsList = ({
         >
           <AddIcon /> Add new mentor
         </Button>
+        <div className={classes.searchBar}>
+          {" "}
+          <TextField
+            id="specialty"
+            name="specialty"
+            label="Filter by specialty"
+            placeholder="e.g. Accountant"
+            className={classes.textField}
+            onChange={handleChange}
+            margin="normal"
+          />
+          <Button
+            size="small"
+            variant="extendedFab"
+            color="secondary"
+            aria-label="Add"
+            className={classes.button}
+            onClick={filterBySpecialty}
+          >
+            <SearchIcon /> Search
+          </Button>
+          <Button
+            size="small"
+            variant="extendedFab"
+            color="primary"
+            aria-label="Add"
+            className={classes.button}
+            onClick={getMentors}
+          >
+            Show all mentors
+          </Button>
+        </div>
       </div>
       {mentors ? (
         <Paper className={classes.root}>
@@ -450,7 +534,9 @@ class Mentors extends React.Component {
       page: 0,
       rowsPerPage: 5,
       mentorData: {},
-      openSnackbarDeleted: false
+      openSnackbarDeleted: false,
+      filterApplied: false,
+      specialty: ""
     };
   }
   handleRequestSort = (event, property) => {
@@ -474,6 +560,19 @@ class Mentors extends React.Component {
     this.setState({ page });
   };
 
+  /**
+   * handleChange – the handleChange sets the specialty wrote in the state
+   * @param {Object} the object name and event
+   * @return {void}
+   */
+  handleChange = event => {
+    const { target } = event;
+    const { value, name } = target;
+    this.setState({
+      [name]: value
+    });
+  };
+
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
   };
@@ -490,6 +589,26 @@ class Mentors extends React.Component {
   handleClickDeleteMentor = () => {
     this.setState({ open: true });
   };
+  arrayToObject = array =>
+    array.reduce((obj, item) => {
+      obj[item[0]] = item[1];
+      return obj;
+    }, {});
+
+  filterBySpecialty = () => {
+    const specialty = this.state.specialty;
+    if (specialty.trim().length > 0) {
+      const mentorsBySpecialty = this.arrayToObject(
+        Object.entries(this.state.mentorsMirror).filter(mentor =>
+          mentor[1].specialty.includes(specialty.toUpperCase())
+        )
+      );
+      this.setState({
+        mentors: mentorsBySpecialty,
+        filterApplied: true
+      });
+    }
+  };
 
   handleClose = () => {
     this.setState({ open: false, mentorKey: "" });
@@ -497,7 +616,9 @@ class Mentors extends React.Component {
   getMentors = () => {
     getMentors().then(snapshot => {
       this.setState({
-        mentors: snapshot.val()
+        mentors: snapshot.val(),
+        mentorsMirror: snapshot.val(),
+        filterApplied: false
       });
     });
   };
@@ -543,6 +664,7 @@ class Mentors extends React.Component {
           <MentorsList
             classes={classes}
             state={this.state}
+            filterBySpecialty={this.filterBySpecialty}
             handleClickDeleteMentor={this.handleClickDeleteMentor}
             handleClose={this.handleClose}
             handleDeleteMentor={this.handleDeleteMentor}
@@ -550,8 +672,10 @@ class Mentors extends React.Component {
             handleClick={this.handleClick}
             handleSelectAllClick={this.handleSelectAllClick}
             handleRequestSort={this.handleRequestSort}
+            handleChange={this.handleChange}
             handleChangePage={this.handleChangePage}
             handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+            getMentors={this.getMentors}
           />
         </div>
         <Snackbar

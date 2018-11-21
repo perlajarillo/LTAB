@@ -34,6 +34,10 @@ const styles = theme => ({
   logo: {
     width: "25px",
     height: "25px",
+    [theme.breakpoints.up("xs")]: {
+      width: "60px",
+      height: "60px"
+    },
     [theme.breakpoints.up("sm")]: {
       width: "110px",
       height: "110px"
