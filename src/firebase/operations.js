@@ -48,6 +48,11 @@ export function getMentors() {
   return mentors.once("value");
 }
 
+export function getAdmin(uid) {
+  const admin = db.ref("admin");
+  return admin.child(uid).once("value");
+}
+
 export function getImage(key, pictureName) {
   const childName = "images/" + key;
   const storageRef = storage.ref();
