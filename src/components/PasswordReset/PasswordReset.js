@@ -12,6 +12,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
+import { Redirect } from "react-router-dom";
 
 import { auth } from "../../firebase";
 
@@ -51,7 +52,8 @@ class EditPassword extends Component {
       error: null,
       successMsg: null,
       openSnackbarSaved: false,
-      openSnackbarError: false
+      openSnackbarError: false,
+      returnToHome: false
     };
   }
 
@@ -66,6 +68,7 @@ class EditPassword extends Component {
 
   handleSubmit = event => {
     const { email } = this.state;
+    console.log("clicked handleSubmit");
     event.preventDefault();
 
     auth
@@ -86,7 +89,8 @@ class EditPassword extends Component {
   };
 
   /**
-   * handleSnackbarClose - sets the actions when the snackbar is closed
+   * handleSnackbarClose - sets the actions when the snackbar is closed and redirects
+   * to the home page
    * @param {Object} event the event object
    * @param {Object} reason for closing the snackbar
    * @return {void}
@@ -97,7 +101,8 @@ class EditPassword extends Component {
     }
     this.state.openSnackbarSaved
       ? this.setState({
-          openSnackbarSaved: false
+          openSnackbarSaved: false,
+          returnToHome: true
         })
       : this.setState({ openSnackbarError: false });
   };
@@ -108,12 +113,21 @@ class EditPassword extends Component {
       error,
       successMsg,
       openSnackbarSaved,
-      openSnackbarError
+      openSnackbarError,
+      returnToHome
     } = this.state;
     const { classes } = this.props;
 
     return (
       <div className={classes.container}>
+        {returnToHome && (
+          <Redirect
+            to={{
+              pathname: "/",
+              state: { from: this.props.location }
+            }}
+          />
+        )}
         <Card className={classes.card}>
           <Typography variant="h6" gutterBottom className={classes.text}>
             Reset your password
@@ -150,6 +164,7 @@ class EditPassword extends Component {
               type="submit"
               color="primary"
               fullWidth
+              onClick={this.handleSubmit}
               className={classes.button}
             >
               Send password reset email

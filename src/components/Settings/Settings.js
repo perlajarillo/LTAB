@@ -54,17 +54,6 @@ class Settings extends React.Component {
           </ExpansionPanel>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <NotificationsIcon className={classes.iconStyle} />
-              <Typography className={classes.heading}>Notifications</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Typography>
-                Specify how often do you want to receive reminders.
-              </Typography>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <DeleteIcon className={classes.iconStyle} />
               <Typography className={classes.heading}>
                 Cancel account
