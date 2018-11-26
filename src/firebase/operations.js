@@ -55,6 +55,15 @@ export function getMentors() {
   return mentors.once("value");
 }
 
+export function getAvailableMentors() {
+  const mentors = db.ref("mentors");
+
+  return mentors
+    .orderByChild("available")
+    .equalTo(true)
+    .once("value");
+}
+
 export function getImage(key, pictureName) {
   const childName = "images/" + key;
   const storageRef = storage.ref();

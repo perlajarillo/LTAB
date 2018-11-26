@@ -12,7 +12,7 @@ import NewMentor from "./Mentors/NewMentor";
 import Logout from "./LogOut/LogOut";
 import NewMentee from "./Mentees/NewMentee";
 import TermsAndConditions from "./Mentees/TermsAndConditions";
-import AvailableMentors from "./Mentors/AvailableMentors";
+import AvailableMentors from "./AvailableMentors";
 
 const App = () => (
   <div className="App">
