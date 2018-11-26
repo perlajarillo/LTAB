@@ -11,6 +11,13 @@ export function writeNewMentor(data, picture) {
   return db.ref().update(updates);
 }
 
+export function writeNewMentee(userId, data) {
+  db.ref()
+    .child("mentee")
+    .child(userId)
+    .set(data);
+}
+
 export function editMentor(data, mentorsKey, picture) {
   const updates = {};
   updates["/mentors/" + mentorsKey] = data;
