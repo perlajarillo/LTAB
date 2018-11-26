@@ -50,7 +50,7 @@ const styles = theme => ({
 });
 
 const NavAuthUser = props => {
-  const { classes, mobileOpen, toggle } = props;
+  const { classes, mobileOpen, toggle, admin } = props;
   return (
     <Fragment>
       <AppBar className={classes.root} positionsticky="true">
@@ -74,21 +74,41 @@ const NavAuthUser = props => {
             onOpen={toggle}
           >
             <div className={classes.list}>
-              <List>
-                <Button
-                  tabIndex="-1"
-                  color="inherit"
-                  component={Link}
-                  to="/mentors"
-                >
-                  Mentors
-                </Button>
-              </List>
-              <List>
-                <Button tabIndex="-1" color="inherit" component={Link} to="/">
-                  Reports
-                </Button>
-              </List>
+              {admin ? (
+                <div>
+                  <List>
+                    <Button
+                      tabIndex="-1"
+                      color="inherit"
+                      component={Link}
+                      to="/mentors"
+                    >
+                      Mentors
+                    </Button>
+                  </List>
+                  <List>
+                    <Button
+                      tabIndex="-1"
+                      color="inherit"
+                      component={Link}
+                      to="/"
+                    >
+                      Reports
+                    </Button>
+                  </List>
+                </div>
+              ) : (
+                <List>
+                  <Button
+                    tabIndex="-1"
+                    color="inherit"
+                    component={Link}
+                    to="/availablementors"
+                  >
+                    Mentors
+                  </Button>
+                </List>
+              )}
               <List>
                 <Button
                   tabIndex="-1"
@@ -114,7 +134,7 @@ const NavNoAuth = props => {
       <AppBar className={classes.root}>
         <Toolbar>
           <Link to="/" className={classes.logoStyles}>
-            <img src={logo} alt="True relief" className={classes.logo} />
+            <img src={logo} alt="FLAD Mentorship" className={classes.logo} />
           </Link>
         </Toolbar>
       </AppBar>
@@ -127,7 +147,8 @@ class Header extends Component {
     super(props);
 
     this.state = {
-      mobileOpen: false
+      mobileOpen: false,
+      admin: false
     };
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
   }
@@ -147,6 +168,7 @@ class Header extends Component {
               classes={classes}
               mobileOpen={mobileOpen}
               toggle={this.handleDrawerToggle}
+              admin={authUser.admin}
             />
           ) : (
             <NavNoAuth classes={classes} />
