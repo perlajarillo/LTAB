@@ -38,6 +38,10 @@ function Footer(props) {
             target="blank"
           >
             Perla Jarillo{" "}
+          </a>{" "}
+          and{" "}
+          <a href="https://www.fabiolavieyra.com/" target="blank">
+            Fabiola Vieyra{" "}
           </a>
         </Typography>
       </Paper>
