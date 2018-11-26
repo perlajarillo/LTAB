@@ -10,6 +10,8 @@ import Home from "./Home/Home";
 import Mentors from "./Mentors";
 import NewMentor from "./Mentors/NewMentor";
 import Logout from "./LogOut/LogOut";
+import NewMentee from "./Mentees/NewMentee";
+import TermsAndConditions from "./Mentees/TermsAndConditions";
 
 const App = () => (
   <div className="App">
@@ -21,6 +23,8 @@ const App = () => (
         <Route path="/mentors" component={Mentors} />
         <Route path="/logout" component={Logout} />
         <Route path="/newmentor" component={NewMentor} />
+        <Route path="/newmentee" component={NewMentee} />
+        <Route path="/termsandconditions" component={TermsAndConditions} />
       </Switch>
       <Footer />
     </MuiThemeProvider>
