@@ -1,20 +1,26 @@
 import React from "react";
 import { firebase } from "../firebase";
 import AuthUserContext from "./AuthUserContext";
+import { getAdmin } from "../firebase/operations";
 
 const withAuthentication = Component => {
   class WithAuthentication extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        authUser: null
+        authUser: null,
+        admin: false
       };
     }
 
     componentDidMount() {
       firebase.auth.onAuthStateChanged(authUser => {
         authUser
-          ? this.setState({ authUser })
+          ? getAdmin(authUser.uid).then(snapshot => {
+              snapshot.val()
+                ? this.setState({ authUser: { authUser, admin: true } })
+                : this.setState({ authUser: { authUser, admin: false } });
+            })
           : this.setState({ authUser: null });
       });
     }
