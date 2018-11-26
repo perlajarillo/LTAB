@@ -17,6 +17,7 @@ import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentC
 import Grid from "@material-ui/core/Grid";
 import icon_facebook from "../../images/icon_facebook.png";
 import b_business from "../../images/b_business.jpg";
+import { getAdmin } from "../../firebase/operations";
 
 const styles = theme => ({
   wrapper: {
@@ -144,8 +145,15 @@ class LogIn extends React.Component {
         });
       })
       .then(() => {
-        history.push("/mentors");
-        // });
+        getAdmin(auth.currentUserUid())
+          .then(snapshot => {
+            snapshot.val()
+              ? history.push("/mentors")
+              : history.push("/availablementors");
+          })
+          .catch(e => {
+            history.push("/availablementors");
+          });
       })
       .catch(error => {
         this.setState({
