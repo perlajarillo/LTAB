@@ -10,13 +10,15 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PermIcon from "@material-ui/icons/PermIdentity";
-import NotificationsIcon from "@material-ui/icons/SpeakerNotes";
 
 const styles = theme => ({
   wrapper: {
     margin: "80px 0",
-    marginTop: "25%",
-    minHeight: "70vh"
+    marginTop: "20%",
+    minHeight: "70vh",
+    [theme.breakpoints.up("md")]: {
+      marginTop: "15%"
+    }
   },
   sectionStyles: {
     padding: theme.spacing.unit * 3
