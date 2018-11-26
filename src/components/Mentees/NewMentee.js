@@ -10,11 +10,15 @@ import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentC
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import TextField from "@material-ui/core/TextField";
-
 import b_business from "../../images/b_business.jpg";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
+import * as R from "ramda";
+import { writeNewMentee } from "../../firebase/operations";
+import { auth } from "../../firebase";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { validateString } from "../validity";
 
 const styles = theme => ({
   wrapper: {
@@ -25,32 +29,18 @@ const styles = theme => ({
   formControl: {
     margin: "24px 0",
     width: 550,
-
-    [theme.breakpoints.up("sm")]: {
-      width: 500
-    }
-  },
-  button: {
-    marginTop: theme.spacing.unit * 2,
-    marginLeft: theme.spacing.unit * 3,
-    maxWidth: 410,
     [theme.breakpoints.up("xs")]: {
-      maxWidth: 270,
-      marginLeft: theme.spacing.unit * 2
+      width: 300
     },
     [theme.breakpoints.up("sm")]: {
-      maxWidth: 400,
-      marginLeft: theme.spacing.unit * 3
+      width: 900
     },
-    [theme.breakpoints.up("md")]: {
-      maxWidth: 410,
-      marginLeft: theme.spacing.unit * 3
-    },
+
     [theme.breakpoints.between("sm", "md")]: {
-      maxWidth: 145,
-      marginLeft: theme.spacing.unit * 3
+      width: 550
     }
   },
+
   text: {
     padding: theme.spacing.unit * 3,
     marginLeft: theme.spacing.unit * 2,
@@ -70,7 +60,7 @@ const styles = theme => ({
       width: "950px"
     },
     [theme.breakpoints.between("sm", "md")]: {
-      width: "420px"
+      width: "620px"
     }
   },
 
@@ -78,16 +68,16 @@ const styles = theme => ({
     width: "50px",
     marginLeft: 75,
     [theme.breakpoints.up("xs")]: {
-      width: "40px"
+      width: "60px"
     },
     [theme.breakpoints.up("sm")]: {
-      width: "35px"
+      width: "65px"
     },
     [theme.breakpoints.up("md")]: {
-      width: "95px"
+      width: "115px"
     },
     [theme.breakpoints.between("sm", "md")]: {
-      width: "45px"
+      width: "105px"
     }
   },
   pos: {
@@ -107,10 +97,23 @@ class NewMentee extends React.Component {
       descendent: "",
       openSnackbarError: false,
       chkDisclaimer: false,
-      repeatPassword: ""
+      repeatPassword: "",
+      nameError: "",
+      emailError: "",
+      passwordError: "",
+      repeatPasswordError: "",
+      descendentError: "",
+      locationError: "",
+      location: ""
     };
   }
 
+  /**
+   * handleChange – the handleChange sets the value selected in a select list
+   * or a text field
+   * @param {Object} the object name and event
+   * @return {void}
+   */
   handleChange = event => {
     const { target } = event;
     const { value, name } = target;
@@ -119,10 +122,126 @@ class NewMentee extends React.Component {
     });
   };
 
+  /**
+   * checkForNull - sets an error if the field is null
+   * @returns {void}
+   */
+  checkForNull = event => {
+    const name = event.target.name;
+    const formControl = name + "Error";
+    const value = event.target.value;
+    this.setState({
+      [formControl]: validateString(name, value)
+    });
+  };
+
+  /**
+   * handleChangeCheck – sets true or false on chkDisclaimer state
+   * @param {Object} the object name and event
+   * @return {void}
+   */
   handleChangeCheck = () => {
     this.setState({
       chkDisclaimer: !this.state.chkDisclaimer
     });
+  };
+
+  /**
+   * getFirebasePayload - returns the data to send to Firebase
+   * @returns {Object} the Firebase payload
+   */
+  getFirebasePayload() {
+    return R.pick(["name", "email", "descendent", "location"], this.state);
+  }
+
+  /**
+   * allRequiredDataProvided - returns true when all required data have been provided
+   * or false when some data is missing.
+   * @returns {Object} the Firebase payload
+   */
+  allRequiredDataProvided = () => {
+    const {
+      email,
+      password,
+      repeatPassword,
+      descendent,
+      location
+    } = this.state;
+    const fieldsAreRequired =
+      email === "" ||
+      password === "" ||
+      repeatPassword === "" ||
+      descendent === "" ||
+      location === "";
+    if (fieldsAreRequired) {
+      this.setState({
+        error: "All fields are required",
+        openSnackbarError: true
+      });
+      return false;
+    }
+
+    if (password !== repeatPassword) {
+      this.setState({
+        error: "The passwords must be equal",
+        openSnackbarError: true
+      });
+      return false;
+    }
+    return true;
+  };
+
+  /**
+   * handleSubmit - review if all required data has been provided and then create
+   * an account with the email and password.
+   * @param {Object} e the event object
+   * @param {Object} reason for closing the snackbar
+   * @return {void}
+   */
+  handleSubmit = e => {
+    e.preventDefault();
+    const { chkDisclaimer, email, password } = this.state;
+    const { history } = this.props;
+
+    if (this.allRequiredDataProvided()) {
+      if (chkDisclaimer) {
+        auth
+          .onCreateAccount(email, password)
+          .then(authUser => {
+            this.setState({
+              email: email,
+              password: password
+            });
+            writeNewMentee(auth.currentUserUid(), this.getFirebasePayload());
+            history.push("/availablementors");
+          })
+          .catch(error => {
+            this.setState({
+              error: error.message,
+              openSnackbarError: true
+            });
+          });
+      } else {
+        this.setState({
+          error: "You must agree with the terms and conditions!",
+          openSnackbarError: true
+        });
+      }
+    }
+  };
+
+  /**
+   * handleSnackbarClose - sets the actions when the snackbar is closed
+   * @param {Object} event the event object
+   * @param {Object} reason for closing the snackbar
+   * @return {void}
+   */
+  handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({ openSnackbarError: false });
   };
 
   render() {
@@ -130,12 +249,19 @@ class NewMentee extends React.Component {
     const {
       name,
       email,
+      location,
       password,
       repeatPassword,
       error,
       descendent,
       openSnackbarError,
-      chkDisclaimer
+      chkDisclaimer,
+      nameError,
+      emailError,
+      passwordError,
+      repeatPasswordError,
+      descendentError,
+      locationError
     } = this.state;
 
     return (
@@ -158,8 +284,10 @@ class NewMentee extends React.Component {
                     className={classes.textField}
                     margin="normal"
                     onChange={this.handleChange}
+                    onBlur={this.checkForNull}
                     required
                   />
+                  <FormHelperText error={true}>{nameError}</FormHelperText>
                 </FormControl>
               </div>
               <div>
@@ -173,8 +301,27 @@ class NewMentee extends React.Component {
                     className={classes.textField}
                     margin="normal"
                     onChange={this.handleChange}
+                    onBlur={this.checkForNull}
                     required
                   />
+                  <FormHelperText error={true}>{emailError}</FormHelperText>
+                </FormControl>
+              </div>
+              <div>
+                <FormControl required className={classes.formControl}>
+                  <TextField
+                    id="location"
+                    name="location"
+                    label="Location:"
+                    placeholder="Where are you living?"
+                    value={location}
+                    className={classes.textField}
+                    margin="normal"
+                    onChange={this.handleChange}
+                    onBlur={this.checkForNull}
+                    required
+                  />
+                  <FormHelperText error={true}>{locationError}</FormHelperText>
                 </FormControl>
               </div>
               <div>
@@ -188,8 +335,10 @@ class NewMentee extends React.Component {
                     onChange={this.handleChange}
                     type="password"
                     margin="normal"
+                    onBlur={this.checkForNull}
                     required
                   />
+                  <FormHelperText error={true}>{passwordError}</FormHelperText>
                 </FormControl>
               </div>
               <div>
@@ -202,9 +351,13 @@ class NewMentee extends React.Component {
                     className={classes.textField}
                     type="password"
                     onChange={this.handleChange}
+                    onBlur={this.checkForNull}
                     margin="normal"
                     required
                   />
+                  <FormHelperText error={true}>
+                    {repeatPasswordError}
+                  </FormHelperText>
                 </FormControl>
               </div>
               <div>
@@ -215,6 +368,7 @@ class NewMentee extends React.Component {
                     name="descendent"
                     displayEmpty
                     className={classes.selectEmpty}
+                    onBlur={this.checkForNull}
                     required
                   >
                     <MenuItem value="" disabled>
@@ -226,6 +380,9 @@ class NewMentee extends React.Component {
                     </MenuItem>
                     <MenuItem value={"American"}>American</MenuItem>
                   </Select>
+                  <FormHelperText error={true}>
+                    {descendentError}
+                  </FormHelperText>
                 </FormControl>
               </div>
               <div>
