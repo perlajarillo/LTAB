@@ -1,28 +1,34 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
+
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { Link } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
+
+import b_business from "../../images/b_business.jpg";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const styles = theme => ({
   wrapper: {
-    margin: "80px 0"
+    margin: "80px 0",
+    marginTop: 200
   },
 
   formControl: {
-    margin: theme.spacing.unit
+    margin: "24px 0",
+    width: 550,
+
+    [theme.breakpoints.up("sm")]: {
+      width: 500
+    }
   },
   button: {
     marginTop: theme.spacing.unit * 2,
@@ -55,7 +61,7 @@ const styles = theme => ({
     margin: "30px auto",
     paddingBottom: "1%",
     [theme.breakpoints.up("xs")]: {
-      width: "300px"
+      width: "330px"
     },
     [theme.breakpoints.up("sm")]: {
       width: "250px"
@@ -67,28 +73,10 @@ const styles = theme => ({
       width: "420px"
     }
   },
-  icons: {
-    width: "50px",
-    marginLeft: 75,
-    paddingBottom: "1%",
-    [theme.breakpoints.up("xs")]: {
-      width: "40px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "35px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "95px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "45px"
-    }
-  },
+
   iconBusiness: {
     width: "50px",
     marginLeft: 75,
-    border: "2px solid green",
-    paddingBottom: "1%",
     [theme.breakpoints.up("xs")]: {
       width: "40px"
     },
@@ -113,12 +101,13 @@ class NewMentee extends React.Component {
 
     this.state = {
       name: "",
-      mail: "",
+      email: "",
       password: "",
-      location: "",
       error: "",
-      ascendence: "",
-      openSnackbarError: false
+      descendent: "",
+      openSnackbarError: false,
+      chkDisclaimer: false,
+      repeatPassword: ""
     };
   }
 
@@ -130,81 +119,146 @@ class NewMentee extends React.Component {
     });
   };
 
+  handleChangeCheck = () => {
+    this.setState({
+      chkDisclaimer: !this.state.chkDisclaimer
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const {
+      name,
       email,
       password,
-      location,
+      repeatPassword,
       error,
-      ascendence,
-      openSnackbarError
+      descendent,
+      openSnackbarError,
+      chkDisclaimer
     } = this.state;
 
     return (
-      <div>
+      <div className={classes.wrapper}>
         <Card className={classes.card}>
-          <Grid container spacing={32}>
-            <Grid item xs={12} sm={6} md={6} lg={6}>
-              <form onSubmit={this.handleSubmit}>
-                <Typography className={classes.text} variant="body1">
-                  Register to look for a mentor.
-                </Typography>
-                <CardContent>
+          <form onSubmit={this.handleSubmit}>
+            <CardContent>
+              <Typography variant="h6">
+                Register to look for a mentor.{" "}
+                <img src={b_business} className={classes.iconBusiness} />
+              </Typography>
+              <div>
+                <FormControl required className={classes.formControl}>
                   <TextField
                     id="name"
+                    name="name"
                     label="Name:"
                     placeholder="Your name"
+                    value={name}
                     className={classes.textField}
                     margin="normal"
                     onChange={this.handleChange}
                     required
                   />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl required className={classes.formControl}>
                   <TextField
                     id="email"
                     name="email"
                     label="E-mail:"
+                    value={email}
                     placeholder="Your email"
                     className={classes.textField}
                     margin="normal"
                     onChange={this.handleChange}
                     required
                   />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl required className={classes.formControl}>
                   <TextField
                     id="password"
-                    label="password"
+                    name="password"
+                    label="Password:"
+                    value={password}
                     className={classes.textField}
+                    onChange={this.handleChange}
                     type="password"
                     margin="normal"
+                    required
                   />
-                  <FormControl
-                    className={classes.formControl}
-                    fullWidth
-                    aria-describedby="required"
-                    aria-required="true"
+                </FormControl>
+              </div>
+              <div>
+                <FormControl required className={classes.formControl}>
+                  <TextField
+                    id="repeatPassword"
+                    name="repeatPassword"
+                    label="Repeat password:"
+                    value={repeatPassword}
+                    className={classes.textField}
+                    type="password"
+                    onChange={this.handleChange}
+                    margin="normal"
+                    required
+                  />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl required className={classes.formControl}>
+                  <Select
+                    value={descendent}
+                    onChange={this.handleChange}
+                    name="descendent"
+                    displayEmpty
+                    className={classes.selectEmpty}
+                    required
                   >
-                    <InputLabel htmlFor="password">Password</InputLabel>
-                    <Input
-                      id="password"
-                      name="password"
-                      type="Password"
-                      value={password}
-                      onChange={this.handleChange}
-                    />
-                    <FormHelperText id="required">Required*</FormHelperText>
-                  </FormControl>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    color="primary"
-                    fullWidth
-                  >
-                    Sign out
-                  </Button>
-                </CardContent>
-              </form>
-            </Grid>
-          </Grid>
+                    <MenuItem value="" disabled>
+                      Descendent
+                    </MenuItem>
+                    <MenuItem value={"Portuguese"}>Portuguese</MenuItem>
+                    <MenuItem value={"Portuguese descendent"}>
+                      Portuguese descendent
+                    </MenuItem>
+                    <MenuItem value={"American"}>American</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div>
+                <Typography className={classes.text} variant="subtitle1">
+                  Please read and agree with the{" "}
+                  <a href="/termsandconditions" target="_blank">
+                    terms and conditions{" "}
+                  </a>{" "}
+                  in order to continue.
+                </Typography>
+
+                <Typography className={classes.text} variant="body1">
+                  <Checkbox
+                    name="chkDisclaimer"
+                    checked={chkDisclaimer}
+                    onChange={this.handleChangeCheck}
+                    required
+                  />
+                  I have read terms and conditions and I agree with them.
+                </Typography>
+              </div>
+              <div>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  color="primary"
+                  fullWidth
+                >
+                  Sign out
+                </Button>
+              </div>
+            </CardContent>
+          </form>
         </Card>
         <Snackbar
           anchorOrigin={{
