@@ -247,7 +247,7 @@ class LogIn extends React.Component {
                   color="primary"
                   fullWidth
                   component={Link}
-                  to="/disclaimer"
+                  to="/newmentee"
                 >
                   Create an account
                 </Button>

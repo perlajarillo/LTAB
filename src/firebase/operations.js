@@ -11,6 +11,13 @@ export function writeNewMentor(data, picture) {
   return db.ref().update(updates);
 }
 
+export function writeNewMentee(userId, data) {
+  db.ref()
+    .child("mentee")
+    .child(userId)
+    .set(data);
+}
+
 export function editMentor(data, mentorsKey, picture) {
   const updates = {};
   updates["/mentors/" + mentorsKey] = data;
@@ -46,6 +53,15 @@ function deleteImage(pictureName) {
 export function getMentors() {
   const mentors = db.ref("mentors");
   return mentors.once("value");
+}
+
+export function getAvailableMentors() {
+  const mentors = db.ref("mentors");
+
+  return mentors
+    .orderByChild("available")
+    .equalTo(true)
+    .once("value");
 }
 
 export function getImage(key, pictureName) {
