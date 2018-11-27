@@ -12,6 +12,7 @@ import NewMentor from "./Mentors/NewMentor";
 import Logout from "./LogOut/LogOut";
 import PasswordReset from "./PasswordReset/PasswordReset";
 import Settings from "./Settings/Settings";
+import NoFound from "./NoFound/NoFound";
 
 const App = () => (
   <div className="App">
@@ -25,6 +26,7 @@ const App = () => (
         <Route path="/newmentor" component={NewMentor} />
         <Route path="/password-reset" component={PasswordReset} />
         <Route path="/settings" component={Settings} />
+        <Route path="/nofound" component={NoFound} />
       </Switch>
       <Footer />
     </MuiThemeProvider>
