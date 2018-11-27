@@ -16,11 +16,14 @@ const withAuthentication = Component => {
     componentDidMount() {
       this.unregisterObserver = firebase.auth.onAuthStateChanged(authUser => {
         authUser
-          ? getAdmin(authUser.uid).then(snapshot => {
-              snapshot.val()
-                ? this.setState({ authUser: { authUser, admin: true } })
-                : this.setState({ authUser: { authUser, admin: false } });
-            })
+          ? getAdmin(authUser.uid)
+              .then(snapshot => {
+                snapshot.val() &&
+                  this.setState({ authUser: { authUser, admin: true } });
+              })
+              .catch(e =>
+                this.setState({ authUser: { authUser, admin: false } })
+              )
           : this.setState({ authUser: null });
       });
     }
