@@ -10,6 +10,9 @@ import Home from "./Home/Home";
 import Mentors from "./Mentors";
 import NewMentor from "./Mentors/NewMentor";
 import Logout from "./LogOut/LogOut";
+import NewMentee from "./Mentees/NewMentee";
+import TermsAndConditions from "./Mentees/TermsAndConditions";
+import AvailableMentors from "./AvailableMentors";
 import PasswordReset from "./PasswordReset/PasswordReset";
 import Settings from "./Settings/Settings";
 import NoFound from "./NoFound/NoFound";
@@ -24,9 +27,13 @@ const App = () => (
         <Route path="/mentors" component={Mentors} />
         <Route path="/logout" component={Logout} />
         <Route path="/newmentor" component={NewMentor} />
+        <Route path="/newmentee" component={NewMentee} />
+        <Route path="/termsandconditions" component={TermsAndConditions} />
+        <Route path="/availablementors" component={AvailableMentors} />
         <Route path="/password-reset" component={PasswordReset} />
         <Route path="/settings" component={Settings} />
         <Route path="/nofound" component={NoFound} />
+
       </Switch>
       <Footer />
     </MuiThemeProvider>
