@@ -13,6 +13,8 @@ import Logout from "./LogOut/LogOut";
 import NewMentee from "./Mentees/NewMentee";
 import TermsAndConditions from "./Mentees/TermsAndConditions";
 import AvailableMentors from "./AvailableMentors";
+import PasswordReset from "./PasswordReset/PasswordReset";
+import Settings from "./Settings/Settings";
 
 const App = () => (
   <div className="App">
@@ -27,6 +29,9 @@ const App = () => (
         <Route path="/newmentee" component={NewMentee} />
         <Route path="/termsandconditions" component={TermsAndConditions} />
         <Route path="/availablementors" component={AvailableMentors} />
+        <Route path="/password-reset" component={PasswordReset} />
+        <Route path="/settings" component={Settings} />
+
       </Switch>
       <Footer />
     </MuiThemeProvider>
