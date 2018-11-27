@@ -14,7 +14,7 @@ const withAuthentication = Component => {
     }
 
     componentDidMount() {
-      firebase.auth.onAuthStateChanged(authUser => {
+      this.unregisterObserver = firebase.auth.onAuthStateChanged(authUser => {
         authUser
           ? getAdmin(authUser.uid).then(snapshot => {
               snapshot.val()
@@ -24,7 +24,9 @@ const withAuthentication = Component => {
           : this.setState({ authUser: null });
       });
     }
-
+    componentWillUnmount() {
+      this.unregisterObserver = null;
+    }
     render() {
       const { authUser } = this.state;
       return (
