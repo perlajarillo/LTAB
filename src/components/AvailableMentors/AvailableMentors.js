@@ -1,6 +1,5 @@
 import React from "react";
 import withAuthorization from "../WithAuthorization";
-import classNames from "classnames";
 
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -12,22 +11,15 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
 import { lighten } from "@material-ui/core/styles/colorManipulator";
 import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Radio from "@material-ui/core/Radio";
 import { getAvailableMentors } from "../../firebase/operations";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
 const styles = theme => ({
@@ -261,7 +253,6 @@ const MentorsList = ({
   state,
   classes,
   filterBySpecialty,
-  handleClose,
   isSelected,
   handleClick,
   handleRequestSort,
@@ -270,17 +261,7 @@ const MentorsList = ({
   handleChangeRowsPerPage,
   getMentors
 }) => {
-  const {
-    mentors,
-
-    uid,
-    order,
-    orderBy,
-    rowsPerPage,
-    page,
-    mentorKey,
-    mentorData
-  } = state;
+  const { mentors, order, orderBy, rowsPerPage, page, mentorKey } = state;
   const emptyRows = mentors
     ? rowsPerPage - Math.min(rowsPerPage, mentors.length - page * rowsPerPage)
     : 0;
