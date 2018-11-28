@@ -15,6 +15,7 @@ import TermsAndConditions from "./Mentees/TermsAndConditions";
 import AvailableMentors from "./AvailableMentors";
 import PasswordReset from "./PasswordReset/PasswordReset";
 import Settings from "./Settings/Settings";
+import NoFound from "./NoFound/NoFound";
 
 const App = () => (
   <div className="App">
@@ -31,6 +32,7 @@ const App = () => (
         <Route path="/availablementors" component={AvailableMentors} />
         <Route path="/password-reset" component={PasswordReset} />
         <Route path="/settings" component={Settings} />
+        <Route path="/nofound" component={NoFound} />
 
       </Switch>
       <Footer />

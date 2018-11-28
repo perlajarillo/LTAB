@@ -34,6 +34,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -653,10 +654,14 @@ class Mentors extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, authUser } = this.props;
     const { openSnackbarDeleted, open } = this.state;
+    const { from } = this.props.location.state || {
+      from: { pathname: "/nofound" }
+    };
     return (
       <div className={classes.wrapper}>
+        {!authUser.admin && <Redirect to={from} />}
         <div className={classes.root}>
           <Typography variant="h5" gutterBottom>
             Mentors
