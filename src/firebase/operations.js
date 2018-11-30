@@ -1,14 +1,12 @@
 import { db, storage } from "./firebase.js";
 
-export function writeNewMentor(data, picture) {
-  const newMentorsKey = db
+export function writeNewMentor(uid, data, picture) {
+  putImage(picture, uid);
+  return db
     .ref()
     .child("mentors")
-    .push().key;
-  const updates = {};
-  updates["/mentors/" + newMentorsKey] = data;
-  putImage(picture, newMentorsKey);
-  return db.ref().update(updates);
+    .child(uid)
+    .set(data);
 }
 
 export function writeNewMentee(userId, data) {
