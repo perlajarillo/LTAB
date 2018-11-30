@@ -7,16 +7,13 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { auth } from "../../firebase";
 import { Link } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
-import Grid from "@material-ui/core/Grid";
-import icon_facebook from "../../images/icon_facebook.png";
-import b_business from "../../images/b_business.jpg";
+
 import { getAdmin } from "../../firebase/operations";
 
 const styles = theme => ({
@@ -55,7 +52,8 @@ const styles = theme => ({
   },
   card: {
     width: "500px",
-    margin: "30px auto",
+    height: "573px",
+    marginTop: "30px",
     paddingBottom: "1%",
     [theme.breakpoints.up("xs")]: {
       width: "300px"
@@ -64,47 +62,13 @@ const styles = theme => ({
       width: "250px"
     },
     [theme.breakpoints.up("md")]: {
-      width: "950px"
+      width: "500px"
     },
     [theme.breakpoints.between("sm", "md")]: {
       width: "420px"
     }
   },
-  icons: {
-    width: "50px",
-    marginLeft: 75,
-    paddingBottom: "1%",
-    [theme.breakpoints.up("xs")]: {
-      width: "40px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "35px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "95px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "45px"
-    }
-  },
-  iconBusiness: {
-    width: "50px",
-    marginLeft: 75,
-    border: "2px solid green",
-    paddingBottom: "1%",
-    [theme.breakpoints.up("xs")]: {
-      width: "40px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "35px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "95px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "45px"
-    }
-  },
+
   pos: {
     marginBottom: 24
   }
@@ -183,58 +147,54 @@ class LogIn extends React.Component {
     return (
       <div>
         <Card className={classes.card}>
-          <Grid container spacing={32}>
-            <Grid item xs={12} sm={6} md={6} lg={6}>
-              <form onSubmit={this.handleSubmit}>
-                <Typography className={classes.text} variant="body1">
-                  Login to look for a mentor.
-                </Typography>
-                <CardContent>
-                  <FormControl
-                    className={classes.formControl}
-                    fullWidth
-                    aria-describedby="required"
-                    aria-required="true"
-                  >
-                    <InputLabel htmlFor="email">E-mail</InputLabel>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={email}
-                      onChange={this.handleChange}
-                    />
-                    <FormHelperText id="required">Required*</FormHelperText>
-                  </FormControl>
-                  <FormControl
-                    className={classes.formControl}
-                    fullWidth
-                    aria-describedby="required"
-                    aria-required="true"
-                  >
-                    <InputLabel htmlFor="password">Password</InputLabel>
-                    <Input
-                      id="password"
-                      name="password"
-                      type="Password"
-                      value={password}
-                      onChange={this.handleChange}
-                    />
-                    <FormHelperText id="required">Required*</FormHelperText>
-                  </FormControl>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    color="primary"
-                    fullWidth
-                  >
-                    Log In
-                  </Button>
-                </CardContent>
-              </form>
+          <form onSubmit={this.handleSubmit}>
+            <Typography className={classes.text} variant="body1">
+              Login if you already have an account.
+            </Typography>
+            <CardContent>
+              <FormControl
+                className={classes.formControl}
+                fullWidth
+                aria-describedby="required"
+                aria-required="true"
+              >
+                <InputLabel htmlFor="email">E-mail</InputLabel>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={this.handleChange}
+                />
+                <FormHelperText id="required">Required*</FormHelperText>
+              </FormControl>
+              <FormControl
+                className={classes.formControl}
+                fullWidth
+                aria-describedby="required"
+                aria-required="true"
+              >
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <Input
+                  id="password"
+                  name="password"
+                  type="Password"
+                  value={password}
+                  onChange={this.handleChange}
+                />
+                <FormHelperText id="required">Required*</FormHelperText>
+              </FormControl>
+              <Button
+                variant="contained"
+                type="submit"
+                color="primary"
+                fullWidth
+                className={classes.button}
+              >
+                Log In
+              </Button>
               <Button
                 variant="outlined"
-                type="submit"
                 color="primary"
                 fullWidth
                 component={Link}
@@ -243,42 +203,8 @@ class LogIn extends React.Component {
               >
                 Forgot your password?
               </Button>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={6} lg={6}>
-              <Typography className={classes.text} variant="body1">
-                Are you looking for a Mentor and your are not registered yet?
-              </Typography>
-              <CardActions>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  fullWidth
-                  component={Link}
-                  to="/newmentee"
-                >
-                  Create an account
-                </Button>
-              </CardActions>
-
-              <Typography className={classes.text} variant="body1">
-                Or visit our Facebook page and Web Site to know more about the
-                program:
-              </Typography>
-              <a
-                href="https://www.facebook.com/TalkBusinessFlad/"
-                target="blank"
-              >
-                <img src={icon_facebook} className={classes.icons} />
-              </a>
-              <a
-                href="https://www.flad.pt/en/lets-talk-about-business/"
-                target="blank"
-              >
-                <img src={b_business} className={classes.iconBusiness} />
-              </a>
-            </Grid>
-          </Grid>
+            </CardContent>
+          </form>
         </Card>
         <Snackbar
           anchorOrigin={{
