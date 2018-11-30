@@ -7,6 +7,12 @@ import backgroundImg from "../../images/letstalk_logo_3.jpg";
 import logo_original from "../../images/logo_original.png";
 import LogIn from "../Login/LogIn";
 import Divider from "@material-ui/core/Divider";
+import Button from "@material-ui/core/Button";
+import { Link } from "react-router-dom";
+import icon_facebook from "../../images/icon_facebook.png";
+import b_business from "../../images/b_business.jpg";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 
 const styles = theme => ({
   wrapper: {
@@ -61,11 +67,92 @@ const styles = theme => ({
     }
   },
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 2
   },
   leftPanel: {
     marginTop: 30,
     marginLeft: 20
+  },
+  icons: {
+    width: "50px",
+    marginLeft: 75,
+    paddingBottom: "1%",
+    [theme.breakpoints.up("xs")]: {
+      width: "40px"
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: "35px"
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "95px"
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      width: "45px"
+    }
+  },
+  iconBusiness: {
+    width: "50px",
+    marginTop: "50px",
+    marginLeft: 75,
+    border: "2px solid green",
+    paddingBottom: "1%",
+    [theme.breakpoints.up("xs")]: {
+      width: "40px"
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: "35px"
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "95px"
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      width: "45px"
+    }
+  },
+  card: {
+    width: "300px",
+    marginTop: "30px",
+    marginLeft: "20px",
+    paddingBottom: "1%",
+    [theme.breakpoints.up("xs")]: {
+      width: "300px"
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: "250px"
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "450px"
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      width: "420px"
+    }
+  },
+  menteeCard: {
+    width: "300px",
+    height: "573px",
+
+    marginTop: "30px",
+    marginLeft: "30px",
+    paddingBottom: "1%",
+    [theme.breakpoints.up("xs")]: {
+      width: "300px"
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: "250px"
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "450px"
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      width: "420px"
+    }
+  },
+  button: {
+    width: "400px"
+  },
+  text: {
+    marginTop: theme.spacing.unit * 2
   }
 });
 
@@ -89,26 +176,75 @@ const Home = props => {
       </div>
       <br />
       <Divider />
-      <Grid container spacing={8}>
-        <Grid item xs={12} sm={5} md={4} lg={3}>
-          <div className={classes.leftPanel}>
-            <Typography variant="h6" gutterBottom>
-              Do you want to be a #LetsTalkAboutBusiness mentor?
-            </Typography>
+      <Grid container spacing={0}>
+        <Grid item xs={12} sm={3} md={3} lg={4}>
+          <Card className={classes.card}>
+            <div className={classes.leftPanel}>
+              <Typography variant="h6" gutterBottom>
+                Do you want to be a #LetsTalkAboutBusiness mentor?
+              </Typography>
+              <Button
+                variant="outlined"
+                color="primary"
+                fullWidth
+                component={Link}
+                to="/newmentor"
+                className={classes.button}
+              >
+                Create a mentor account
+              </Button>
 
-            <Typography variant="body1" gutterBottom>
-              Please reach out to us through email to{" "}
-              <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
-            </Typography>
-            <div>
-              <img src={logo_original} className={classes.principalLogo} />
+              <Typography variant="body1" gutterBottom className={classes.text}>
+                Or please reach out to us through email to{" "}
+                <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
+              </Typography>
+              <div>
+                <img src={logo_original} className={classes.principalLogo} />
+              </div>
             </div>
-          </div>
+          </Card>
         </Grid>
-        <Grid item xs={12} sm={7} md={8} lg={9}>
+        <Grid item xs={12} sm={4} md={4} lg={4}>
           <div>
             <LogIn history={history} />
           </div>
+        </Grid>
+        <Grid item xs={12} sm={5} md={5} lg={4}>
+          <Card className={classes.menteeCard}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Are you looking for a mentor and your are not registered yet?
+              </Typography>
+              <br />
+              <Button
+                variant="outlined"
+                color="primary"
+                fullWidth
+                component={Link}
+                to="/newmentee"
+                className={classes.button}
+              >
+                Create an account
+              </Button>
+
+              <Typography variant="body1" className={classes.text}>
+                Or visit our Facebook page and Web Site to know more about the
+                program:
+              </Typography>
+              <a
+                href="https://www.facebook.com/TalkBusinessFlad/"
+                target="blank"
+              >
+                <img src={icon_facebook} className={classes.icons} />
+              </a>
+              <a
+                href="https://www.flad.pt/en/lets-talk-about-business/"
+                target="blank"
+              >
+                <img src={b_business} className={classes.iconBusiness} />
+              </a>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </main>
