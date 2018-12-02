@@ -411,7 +411,7 @@ class NewMentee extends React.Component {
                   color="primary"
                   fullWidth
                 >
-                  Sign out
+                  Sign up
                 </Button>
               </div>
             </CardContent>
