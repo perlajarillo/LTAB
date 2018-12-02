@@ -8,7 +8,6 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
@@ -17,16 +16,54 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import { uniq, map, filter, compose } from "ramda";
+
+const SPACE = " ";
+
+const splitOnSpace = x => x.split(SPACE);
+const joinWithSpace = x => x.join(SPACE);
+
+const capitalizeWord = str => {
+  if (typeof str !== "string") {
+    return "";
+  }
+  let newStr = str.toLowerCase();
+  return newStr.charAt(0).toUpperCase() + newStr.slice(1);
+};
+
+const toTitleCase = compose(
+  joinWithSpace,
+  map(capitalizeWord),
+  splitOnSpace
+);
+
+/**
+ * Uses Ramda methods. The functions in the compose method are executed from right to left or from bottom to top.
+ * @param {[String]} strings an array of strings
+ * @return {Array} removes duplicates, title cases sentences and sorts in alphabetically
+ */
+const sanitizeStrings = compose(
+  uniq,
+  filter(Boolean),
+  map(toTitleCase)
+);
 
 const styles = theme => ({
   wrapper: {
     display: "flex",
     flexWrap: "wrap",
-    margin: "80px 0",
-    marginTop: "20%",
+    marginTop: "160px",
     minHeight: "70vh",
-    [theme.breakpoints.up("md")]: {
-      marginTop: "15%"
+    [theme.breakpoints.up("sm")]: {
+      marginTop: "225px"
     }
   },
   card: {
@@ -34,16 +71,6 @@ const styles = theme => ({
     minWidth: 300,
     flexGrow: 1,
     margin: theme.spacing.unit
-  },
-  media: {
-    height: 140
-  },
-  avatar: {
-    margin: 10
-  },
-  avatar: {
-    margin: 10,
-    flexWrap: "noWrap"
   },
   bigAvatar: {
     margin: 10,
@@ -53,8 +80,125 @@ const styles = theme => ({
   dialogTitle: {
     display: "flex",
     flexFlow: "row noWrap"
+  },
+  root: {
+    width: "100%",
+    zIndex: 1000,
+    position: "fixed",
+    top: "90px",
+    //height: "180px",
+    [theme.breakpoints.up("sm")]: {
+      top: "145px"
+    },
+    [theme.breakpoints.up("md")]: {
+      top: "150px"
+    }
+  },
+  details: {
+    width: "100%"
+  },
+  formControl: {
+    width: "100%",
+    margin: "8px 24px 16px 24px",
+    fontSize: "0.8em"
+  },
+  group: {
+    display: "unset"
+  },
+  link: {
+    color: theme.palette.primary.main,
+    textDecoration: "none",
+    "&:hover": {
+      textDecoration: "underline"
+    }
   }
 });
+
+function SelectionPanel(props) {
+  const {
+    classes,
+    specialties,
+    locations,
+    selectedSpecialty,
+    handleSelectedSpecialty,
+    setSelectedFilter,
+    selectedContent,
+    selectedLocation,
+    handleSelectedLocation
+  } = props;
+
+  return (
+    <div className={classes.root}>
+      <ExpansionPanel>
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          <div className={classes.column}>
+            <Button
+              data-id="specialty"
+              size="small"
+              color="primary"
+              onClick={setSelectedFilter}
+            >
+              Specialty
+            </Button>
+          </div>
+          <div className={classes.column}>
+            <Button
+              data-id="location"
+              size="small"
+              color="primary"
+              onClick={setSelectedFilter}
+            >
+              Location
+            </Button>
+          </div>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails className={classes.details}>
+          {selectedContent === "specialty" ? (
+            <FormControl component="fieldset" className={classes.formControl}>
+              <RadioGroup
+                aria-label="Specialty"
+                name="mentor-specialty"
+                className={classes.group}
+                value={selectedSpecialty}
+                onChange={handleSelectedSpecialty}
+              >
+                {specialties &&
+                  specialties.map((specialty, index) => (
+                    <FormControlLabel
+                      value={specialty}
+                      control={<Radio />}
+                      label={specialty}
+                      key={`${specialty}_${index}`}
+                    />
+                  ))}
+              </RadioGroup>
+            </FormControl>
+          ) : (
+            <FormControl component="fieldset" className={classes.formControl}>
+              <RadioGroup
+                aria-label="Specialty"
+                name="mentor-specialty"
+                className={classes.group}
+                value={selectedLocation}
+                onChange={handleSelectedLocation}
+              >
+                {locations &&
+                  locations.map((location, index) => (
+                    <FormControlLabel
+                      value={location}
+                      control={<Radio />}
+                      label={location}
+                      key={`${location}_${index}`}
+                    />
+                  ))}
+              </RadioGroup>
+            </FormControl>
+          )}
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+    </div>
+  );
+}
 
 class AvailableMentors extends Component {
   constructor(props) {
@@ -62,19 +206,20 @@ class AvailableMentors extends Component {
 
     this.state = {
       mentors: [],
+      mentorDetail: "",
       mentorId: "",
-      specialty: "",
-      mentorData: "",
       uid: "",
-      filterApplied: false,
-      order: "desc",
-      orderBy: "name",
       selected: [],
       page: 0,
-      rowsPerPage: 5,
-      openSnackbarDeleted: false,
       open: false,
-      scroll: "paper"
+      scroll: "paper",
+      value: "",
+      specialties: [],
+      locations: [],
+      selectedSpecialty: "",
+      selectedLocation: "",
+      filteredMentors: null,
+      selectedContent: "specialty"
     };
   }
 
@@ -97,17 +242,23 @@ class AvailableMentors extends Component {
   getMentors = () => {
     db.getMentors().then(snapshot => {
       const data = snapshot.val();
+      let specialties = [];
+      let locations = [];
       const mentorsData = Object.keys(data).map(mentorKey => {
-        let name = data[mentorKey].name;
-        name = name.toLowerCase();
+        specialties.push(data[mentorKey].specialty);
+        locations.push(data[mentorKey].location);
+        let mentorState =
+          data[mentorKey].mentorState && data[mentorKey].mentorState;
+
         const mentor = {
           key: mentorKey,
-          name: name,
-          location: data[mentorKey].location,
-          specialty: data[mentorKey].specialty,
+          name: data[mentorKey].name,
+          location: toTitleCase(data[mentorKey].location),
+          specialty: toTitleCase(data[mentorKey].specialty),
           available: data[mentorKey].available,
           description: data[mentorKey].description,
           pictureName: data[mentorKey].pictureName,
+          mentorState: mentorState,
           mail: data[mentorKey].mail,
           phone: data[mentorKey].phone,
           lk: data[mentorKey].linkedin,
@@ -117,11 +268,13 @@ class AvailableMentors extends Component {
 
         return mentor;
       });
+
       data &&
         this.setState({
           mentors: mentorsData,
-          //mentorsMirror: snapshot.val(),
-          filterApplied: false
+          filterApplied: false,
+          specialties: sanitizeStrings(specialties).sort(),
+          locations: sanitizeStrings(locations).sort()
         });
     });
   };
@@ -137,7 +290,7 @@ class AvailableMentors extends Component {
       open: true,
       scroll,
       mentorId: mentorKey,
-      mentorData: selectedMentor
+      mentorDetail: selectedMentor
     });
   };
 
@@ -145,13 +298,93 @@ class AvailableMentors extends Component {
     this.setState({ open: false });
   };
 
+  setSelectedFilter = event => {
+    event.stopPropagation();
+
+    this.setState({
+      selectedContent: event.currentTarget.dataset.id
+    });
+  };
+
+  handleSelectedSpecialty = event => {
+    this.setState(
+      {
+        selectedSpecialty: event.target.value
+      },
+      () => {
+        const { selectedSpecialty, mentors } = this.state;
+        const filteredMentors = this.filterOnSpecialty(
+          selectedSpecialty,
+          mentors
+        );
+        this.setState({
+          filteredMentors,
+          selectedLocation: ""
+        });
+      }
+    );
+  };
+
+  filterOnSpecialty = (specialty, mentors) => {
+    const isMentor = mentor => mentor.specialty === specialty;
+    return filter(isMentor, mentors);
+  };
+
+  handleSelectedLocation = event => {
+    this.setState(
+      {
+        selectedLocation: event.target.value
+      },
+      () => {
+        const { selectedLocation, mentors } = this.state;
+        const filteredMentors = this.filterOnLocation(
+          selectedLocation,
+          mentors
+        );
+        this.setState({
+          filteredMentors,
+          selectedSpecialty: ""
+        });
+      }
+    );
+  };
+
+  filterOnLocation = (location, mentors) => {
+    const isMentor = mentor => mentor.location === location;
+    return filter(isMentor, mentors);
+  };
+
   render() {
     const { classes } = this.props;
-    const { mentors, mentorData } = this.state;
+    const {
+      mentors,
+      mentorDetail,
+      specialties,
+      selectedSpecialty,
+      selectedLocation,
+      filteredMentors,
+      locations,
+      selectedContent
+    } = this.state;
+    const mentorsToShow = filteredMentors ? filteredMentors : mentors;
+
     return (
       <div>
         <div className={classes.wrapper}>
-          {mentors.map(mentor => (
+          <SelectionPanel
+            classes={classes}
+            data={mentorDetail}
+            state={this.state.value}
+            specialties={specialties}
+            selectedContent={selectedContent}
+            locations={locations}
+            selectedSpecialty={selectedSpecialty}
+            selectedLocation={selectedLocation}
+            handleSelectedSpecialty={this.handleSelectedSpecialty}
+            setSelectedFilter={this.setSelectedFilter}
+            handleSelectedLocation={this.handleSelectedLocation}
+          />
+          {mentorsToShow.map(mentor => (
             <Card className={classes.card} key={mentor.key}>
               <CardActionArea>
                 <CardHeader
@@ -165,6 +398,9 @@ class AvailableMentors extends Component {
                   title={mentor.name}
                 />
                 <CardContent>
+                  <Typography variant="body2" color="textSecondary">
+                    <em>{mentor.mentorState}</em>
+                  </Typography>
                   <Typography variant="body2">{mentor.specialty}</Typography>
                   <Typography gutterBottom variant="body2">
                     {mentor.location}
@@ -181,7 +417,7 @@ class AvailableMentors extends Component {
                     </Typography>
                   ) : (
                     <Typography component="p" style={{ color: "red" }}>
-                      available
+                      not available
                     </Typography>
                   )}
                 </CardContent>
@@ -199,7 +435,7 @@ class AvailableMentors extends Component {
           ))}
         </div>
 
-        {mentorData && (
+        {mentorDetail && (
           <div>
             <Dialog
               open={this.state.open}
@@ -217,18 +453,20 @@ class AvailableMentors extends Component {
                   className={classes.bigAvatar}
                 />
                 <span>
-                  {mentorData.name}
+                  {mentorDetail.name}
                   <Typography variant="body2">
-                    {mentorData.specialty}
+                    {mentorDetail.specialty}
                   </Typography>
                   <Typography gutterBottom variant="body2">
-                    {mentorData.location}
+                    {mentorDetail.location}
                   </Typography>
                 </span>
               </DialogTitle>
 
               <DialogContent>
-                <DialogContentText>{mentorData.description}</DialogContentText>
+                <DialogContentText>
+                  {mentorDetail.description}
+                </DialogContentText>
               </DialogContent>
               <DialogActions>
                 <Button onClick={this.handleClose} color="primary">
