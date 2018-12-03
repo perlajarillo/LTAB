@@ -28,6 +28,7 @@ import { uniq, map, filter, compose } from "ramda";
 import fbLogo from "../../images/facebook.png";
 import twLogo from "../../images/twitter.png";
 import inLogo from "../../images/linkedin.png";
+import email from "../../images/email.png";
 
 const SPACE = " ";
 
@@ -89,7 +90,6 @@ const styles = theme => ({
     zIndex: 1000,
     position: "fixed",
     top: "90px",
-    //height: "180px",
     [theme.breakpoints.up("sm")]: {
       top: "145px"
     },
@@ -118,7 +118,9 @@ const styles = theme => ({
   quote: {
     borderLeft: "2px solid #c7c7c7",
     fontStyle: "italic",
-    padding: "4px"
+    padding: "4px",
+    fontSize: "1.3em",
+    margin: "16px"
   }
 });
 
@@ -269,7 +271,17 @@ class AvailableMentors extends Component {
           specialty: toTitleCase(data[mentorKey].specialty),
           available: data[mentorKey].available,
           description: data[mentorKey].description,
-          pictureName: data[mentorKey].pictureName,
+          pictureName: db
+            .getImage(mentorKey, data[mentorKey].pictureName)
+            .then(url => {
+              if (!url) {
+                url = "https://via.placeholder.com/100.png/09f/fff?text=mentor";
+              }
+              return url;
+            })
+            .catch(error => {
+              return "https://via.placeholder.com/100.png/09f/fff?text=mentor";
+            }),
           mentorState: mentorState,
           mail: data[mentorKey].mail,
           phone: data[mentorKey].phone,
@@ -405,24 +417,23 @@ class AvailableMentors extends Component {
                   avatar={
                     <Avatar
                       alt="Remy Sharp"
-                      src="https://via.placeholder.com/100.png/09f/fff?text=mentor"
+                      src={mentor.pictureName.i}
                       className={classes.bigAvatar}
                     />
                   }
                   title={mentor.name}
+                  subheader={mentor.location}
                 />
                 <CardContent>
                   {mentor.mentorState && (
-                    <Typography variant="body2" color="textSecondary">
-                      <blockquote className={classes.quote}>
-                        {mentor.mentorState}
-                      </blockquote>
-                    </Typography>
+                    <blockquote className={classes.quote}>
+                      {mentor.mentorState}
+                    </blockquote>
                   )}
                   <Typography variant="body2">{mentor.specialty}</Typography>
-                  <Typography gutterBottom variant="body2">
-                    {mentor.location}
-                  </Typography>
+                  {mentor.mail && <Typography gutterBottom variant="body2">
+                    {mentor.mail}
+                  </Typography>}
                   <br />
                   {mentor.available ? (
                     <hr style={{ border: "1px solid green" }} />
@@ -467,7 +478,7 @@ class AvailableMentors extends Component {
               >
                 <Avatar
                   alt="Remy Sharp"
-                  src="https://via.placeholder.com/100.png/09f/fff?text=mentor"
+                  src={mentorDetail.pictureName.i}
                   className={classes.bigAvatar}
                 />
                 <span>
@@ -497,14 +508,14 @@ class AvailableMentors extends Component {
                 {mentorDetail.tw && (
                   <Button onClick={this.handleClose} color="primary">
                     <a href={mentorDetail.tw} target="blank">
-                      <img src={twLogo} width="32px" alt="facebook" />
+                      <img src={twLogo} width="32px" alt="twitter" />
                     </a>
                   </Button>
                 )}
                 {mentorDetail.lk && (
                   <Button onClick={this.handleClose} color="primary">
                     <a href={mentorDetail.lk} target="blank">
-                      <img src={inLogo} width="32px" alt="facebook" />
+                      <img src={inLogo} width="32px" alt="linkedin" />
                     </a>
                   </Button>
                 )}
