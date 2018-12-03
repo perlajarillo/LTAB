@@ -25,6 +25,9 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import { uniq, map, filter, compose } from "ramda";
+import fbLogo from "../../images/facebook.png";
+import twLogo from "../../images/twitter.png";
+import inLogo from "../../images/linkedin.png";
 
 const SPACE = " ";
 
@@ -111,6 +114,11 @@ const styles = theme => ({
     "&:hover": {
       textDecoration: "underline"
     }
+  },
+  quote: {
+    borderLeft: "2px solid #c7c7c7",
+    fontStyle: "italic",
+    padding: "4px"
   }
 });
 
@@ -219,7 +227,8 @@ class AvailableMentors extends Component {
       selectedSpecialty: "",
       selectedLocation: "",
       filteredMentors: null,
-      selectedContent: "specialty"
+      selectedContent: "specialty",
+      allMentorsKeys: null
     };
   }
 
@@ -237,6 +246,7 @@ class AvailableMentors extends Component {
 
   componentWillUnmount() {
     this.unregisterObserver = null;
+    this.imgObserver = null;
   }
 
   getMentors = () => {
@@ -244,9 +254,11 @@ class AvailableMentors extends Component {
       const data = snapshot.val();
       let specialties = [];
       let locations = [];
+      let keys = [];
       const mentorsData = Object.keys(data).map(mentorKey => {
         specialties.push(data[mentorKey].specialty);
         locations.push(data[mentorKey].location);
+        keys.push(mentorKey);
         let mentorState =
           data[mentorKey].mentorState && data[mentorKey].mentorState;
 
@@ -386,7 +398,9 @@ class AvailableMentors extends Component {
           />
           {mentorsToShow.map(mentor => (
             <Card className={classes.card} key={mentor.key}>
-              <CardActionArea>
+              <CardActionArea
+                onClick={this.handleClickOpen("paper", mentor.key)}
+              >
                 <CardHeader
                   avatar={
                     <Avatar
@@ -398,9 +412,13 @@ class AvailableMentors extends Component {
                   title={mentor.name}
                 />
                 <CardContent>
-                  <Typography variant="body2" color="textSecondary">
-                    <em>{mentor.mentorState}</em>
-                  </Typography>
+                  {mentor.mentorState && (
+                    <Typography variant="body2" color="textSecondary">
+                      <blockquote className={classes.quote}>
+                        {mentor.mentorState}
+                      </blockquote>
+                    </Typography>
+                  )}
                   <Typography variant="body2">{mentor.specialty}</Typography>
                   <Typography gutterBottom variant="body2">
                     {mentor.location}
@@ -469,12 +487,27 @@ class AvailableMentors extends Component {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={this.handleClose} color="primary">
-                  Twitter
-                </Button>
-                <Button onClick={this.handleClose} color="primary">
-                  Linkedin
-                </Button>
+                {mentorDetail.fb && (
+                  <Button onClick={this.handleClose} color="primary">
+                    <a href={mentorDetail.fb} target="blank">
+                      <img src={fbLogo} width="32px" alt="facebook" />
+                    </a>
+                  </Button>
+                )}
+                {mentorDetail.tw && (
+                  <Button onClick={this.handleClose} color="primary">
+                    <a href={mentorDetail.tw} target="blank">
+                      <img src={twLogo} width="32px" alt="facebook" />
+                    </a>
+                  </Button>
+                )}
+                {mentorDetail.lk && (
+                  <Button onClick={this.handleClose} color="primary">
+                    <a href={mentorDetail.lk} target="blank">
+                      <img src={inLogo} width="32px" alt="facebook" />
+                    </a>
+                  </Button>
+                )}
               </DialogActions>
             </Dialog>
           </div>
