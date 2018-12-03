@@ -65,7 +65,7 @@ const styles = theme => ({
 const HAVENT_SET_STATE =
   "Please share something with our community. What would you like for our mentees to know about you?";
 const HAVE_SET_STATE =
-  "You have shared this with our community. You can change it any time.";
+  "The next message has been shared with our community. You can change it any time.";
 
 class MentorsHome extends Component {
   constructor(props, context) {
