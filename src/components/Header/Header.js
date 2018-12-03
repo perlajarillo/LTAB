@@ -50,7 +50,7 @@ const styles = theme => ({
 });
 
 const NavAuthUser = props => {
-  const { classes, mobileOpen, toggle, admin } = props;
+  const { classes, mobileOpen, toggle, rol } = props;
   return (
     <Fragment>
       <AppBar className={classes.root} positionsticky="true">
@@ -74,7 +74,7 @@ const NavAuthUser = props => {
             onOpen={toggle}
           >
             <div className={classes.list}>
-              {admin ? (
+              {rol === "admin" ? (
                 <div>
                   <List>
                     <Button
@@ -84,6 +84,29 @@ const NavAuthUser = props => {
                       to="/mentors"
                     >
                       Mentors
+                    </Button>
+                  </List>
+                  <List>
+                    <Button
+                      tabIndex="-1"
+                      color="inherit"
+                      component={Link}
+                      to="/"
+                    >
+                      Reports
+                    </Button>
+                  </List>
+                </div>
+              ) : rol === "mentor" ? (
+                <div>
+                  <List>
+                    <Button
+                      tabIndex="-1"
+                      color="inherit"
+                      component={Link}
+                      to="/mentorshome"
+                    >
+                      Set state
                     </Button>
                   </List>
                   <List>
@@ -136,6 +159,11 @@ const NavNoAuth = props => {
           <Link to="/" className={classes.logoStyles}>
             <img src={logo} alt="FLAD Mentorship" className={classes.logo} />
           </Link>
+          <div>
+            <Button tabIndex="-1" color="inherit" component={Link} to="/login">
+              Log in
+            </Button>
+          </div>
         </Toolbar>
       </AppBar>
     </div>
@@ -148,7 +176,7 @@ class Header extends Component {
 
     this.state = {
       mobileOpen: false,
-      admin: false
+      rol: "mentee"
     };
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
   }
@@ -168,7 +196,7 @@ class Header extends Component {
               classes={classes}
               mobileOpen={mobileOpen}
               toggle={this.handleDrawerToggle}
-              admin={authUser.admin}
+              rol={authUser.rol}
             />
           ) : (
             <NavNoAuth classes={classes} />
