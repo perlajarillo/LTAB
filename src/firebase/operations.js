@@ -28,9 +28,16 @@ function putImage(picture, pictureName) {
     const storageRef = storage.ref();
     const fullPicturePath = "images/" + pictureName;
     const mentorImageRef = storageRef.child(fullPicturePath);
-    mentorImageRef.put(picture).catch(error => {
-      console.log(error);
-    });
+    mentorImageRef
+      .put(picture)
+      .then(() => {
+        getImage(pictureName).then(url => {
+          setImage(pictureName, url);
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 }
 
@@ -80,7 +87,7 @@ export function getAvailableMentors() {
     .once("value");
 }
 
-export function getImage(key, pictureName) {
+export function getImage(key) {
   const childName = "images/" + key;
   const storageRef = storage.ref();
   const starsRef = storageRef.child(childName);
@@ -114,4 +121,13 @@ export function setState(mentorsKey, state) {
     .child(mentorsKey)
     .child("mentorState")
     .set(state);
+}
+
+export function setImage(mentorsKey, url) {
+  return db
+    .ref()
+    .child("mentors")
+    .child(mentorsKey)
+    .child("pictureName")
+    .set(url);
 }
