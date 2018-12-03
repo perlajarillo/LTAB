@@ -6,18 +6,13 @@ import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 import { Redirect } from "react-router-dom";
 import PhotoIcon from "../../images/baseline_photo.png";
 import Grid from "@material-ui/core/Grid";
 import * as R from "ramda";
-import {
-  writeNewMentor,
-  getImage,
-  editMentor
-} from "../../firebase/operations";
+import { writeNewMentor } from "../../firebase/operations";
 import { validateString } from "../validity";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -171,7 +166,7 @@ class NewMentor extends Component {
       nameError: "",
       specialty: "",
       specialtyError: "",
-      email: "",
+      mail: "",
       mailError: "",
       phone: "",
       location: "",
@@ -195,67 +190,18 @@ class NewMentor extends Component {
       password: "",
       repeatPassword: "",
       passwordError: "",
-      repeatPasswordError: ""
+      repeatPasswordError: "",
+      imageError: ""
     };
   }
 
   /**
-   * componentDidMount – sets in the state data to edit
-   * @returns {void}
-   */
-  componentDidMount = () => {
-    if (this.props.location.state) {
-      this.authUser = this.props.location.state.authUser;
-      if (this.props.location.state.mentor) {
-        const { mentor } = this.props.location.state;
-        this.dataToEdit(mentor);
-      }
-    }
-  };
-
-  /**
-   * areThereParameters – sets the state with the parameters sent via url
-   * @returns {void}
-   *
-   */
-  dataToEdit = mentor => {
-    const { key } = this.props.location.state;
-    getImage(key, mentor.pictureName)
-      .then(url => {
-        this.setState({
-          picture: url
-        });
-      })
-      .catch(error => {
-        this.setState({
-          openSnackbarError: true,
-          sectionError: "There is not picture for this mentor."
-        });
-      });
-    this.setState({
-      name: mentor.name,
-      specialty: mentor.specialty,
-      email: mentor.email,
-      phone: mentor.phone,
-      location: mentor.location,
-      linkedin: mentor.linkedin,
-      twitter: mentor.twitter,
-      facebook: mentor.facebook,
-      description: mentor.description,
-      btnText: "Save changes",
-      key: key,
-      pictureName: mentor.pictureName,
-      available: mentor.available
-    });
-  };
-
-  /**
-   * checkForErrors - sets an error if the section if there are required fields
+   * allRequiredDataProvided - sets an error if the section if there are required fields
    * without a value
    * @returns {void}
    */
-  checkForErrors = () => {
-    let response = false;
+  allRequiredDataProvided = () => {
+    const { password, repeatPassword } = this.state;
     const errorMessages =
       this.state.nameError ||
       this.state.mailError ||
@@ -267,9 +213,16 @@ class NewMentor extends Component {
         openSnackbarError: true,
         sectionError: "The fields with * are required"
       });
-      response = true;
+      return false;
     }
-    return response;
+    if (password !== repeatPassword) {
+      this.setState({
+        sectionError: "The passwords must be equal",
+        openSnackbarError: true
+      });
+      return false;
+    }
+    return true;
   };
 
   /**
@@ -294,12 +247,8 @@ class NewMentor extends Component {
   handleChange = event => {
     const { target } = event;
     const { value, name } = target;
-    const valueUpperCase = value.toUpperCase();
-
-    const mustBeUCase =
-      name === "specialty" || name === "name" || name === "location";
     this.setState({
-      [name]: mustBeUCase ? valueUpperCase : value
+      [name]: value
     });
   };
 
@@ -331,11 +280,20 @@ class NewMentor extends Component {
    */
   handlePicture = event => {
     const currentFile = new Blob(event.target.files, { type: "image/png" });
-    this.setState({
-      picture: window.URL.createObjectURL(currentFile),
-      pictureName: event.target.files[0].name,
-      pictureBlob: currentFile
-    });
+    const size = event.target.files[0].size / 1024 / 1024;
+    size <= 5
+      ? this.setState({
+          picture: window.URL.createObjectURL(currentFile),
+          pictureName: event.target.files[0].name,
+          pictureBlob: currentFile,
+          imageError: ""
+        })
+      : this.setState({
+          sectionError: "The size of the image must be inferior to 5 MB.",
+          imageError:
+            "The size of the image must be inferior to 5 MB. This image will not be save, choose another.",
+          openSnackbarError: true
+        });
   };
 
   /**
@@ -347,7 +305,7 @@ class NewMentor extends Component {
       [
         "name",
         "specialty",
-        "email",
+        "mail",
         "phone",
         "location",
         "linkedin",
@@ -365,18 +323,19 @@ class NewMentor extends Component {
    * handleSubmit - sends Firebase payload
    * @returns {void}
    */
-  handleSubmit = () => {
-    const { chkDisclaimer, email, password } = this.state;
+  handleSubmit = e => {
+    e.preventDefault();
+    const { chkDisclaimer, mail, password } = this.state;
     const { history } = this.props;
     const key = this.state.key;
-    if (!this.checkForErrors()) {
-      !key
-        ? chkDisclaimer &&
+    if (this.allRequiredDataProvided()) {
+      if (!key) {
+        if (chkDisclaimer) {
           auth
-            .onCreateAccount(email, password)
+            .onCreateAccount(mail, password)
             .then(authUser => {
               this.setState({
-                email: email,
+                mail: mail,
                 password: password
               });
               writeNewMentor(
@@ -389,33 +348,24 @@ class NewMentor extends Component {
                 })
                 .catch(error => {
                   this.setState({
-                    error: error.message,
+                    sectionError: error.message,
                     openSnackbarError: true
                   });
                 });
             })
             .catch(error => {
               this.setState({
-                error: error.message,
+                sectionError: error.message,
                 openSnackbarError: true
               });
-            })
-        : editMentor(
-            this.getFirebasePayload(),
-            key,
-            this.state.pictureBlob
-          ).then(
-            this.setState({
-              openSnackbarSaved: true,
-              successMsg: "Mentor's information has been modified",
-              sectionError: ""
-            })
-          );
-    } else {
-      this.setState({
-        error: "You must agree with the terms and conditions!",
-        openSnackbarError: true
-      });
+            });
+        } else {
+          this.setState({
+            sectionError: "You must agree with the terms and conditions!",
+            openSnackbarError: true
+          });
+        }
+      }
     }
   };
 
@@ -442,7 +392,7 @@ class NewMentor extends Component {
     const {
       name,
       specialty,
-      email,
+      mail,
       phone,
       location,
       linkedin,
@@ -464,7 +414,8 @@ class NewMentor extends Component {
       password,
       repeatPassword,
       passwordError,
-      repeatPasswordError
+      repeatPasswordError,
+      imageError
     } = this.state;
 
     return (
@@ -478,259 +429,252 @@ class NewMentor extends Component {
           />
         )}
         <Card className={classes.card}>
-          <CardContent>
-            <Grid container spacing={8}>
-              <Grid item xs={12} sm={7} md={7} lg={7}>
-                <div className={classes.sectionMargin}>
-                  <Typography variant="h6">
-                    Fill this form to become a Mentor
-                  </Typography>
-                </div>
-                <div>
-                  <img
-                    src={picture}
-                    alt="mentor photography"
-                    className={classes.picture}
-                  />
+          <form onSubmit={this.handleSubmit}>
+            <CardContent>
+              <Grid container spacing={8}>
+                <Grid item xs={12} sm={7} md={7} lg={7}>
+                  <div className={classes.sectionMargin}>
+                    <Typography variant="h6">
+                      Fill this form to become a Mentor
+                    </Typography>
+                  </div>
+                  <div>
+                    <img
+                      src={picture}
+                      alt="mentor photography"
+                      className={classes.picture}
+                    />
 
-                  <input
-                    type="file"
-                    id="picture"
-                    name="picture"
-                    accept=".jpg, .jpeg, .png"
-                    onChange={this.handlePicture}
-                  />
-                </div>
-                <div>
-                  <FormControl required className={classes.formControl}>
-                    <TextField
-                      id="name"
-                      name="name"
-                      label="Name"
-                      value={name}
-                      onChange={this.handleChange}
-                      className={classes.textField}
-                      onBlur={this.checkForNull}
-                      required
+                    <input
+                      type="file"
+                      id="picture"
+                      name="picture"
+                      accept=".jpg, .jpeg, .png"
+                      onChange={this.handlePicture}
                     />
-                    <FormHelperText error={true}>{nameError}</FormHelperText>
-                  </FormControl>
-                </div>
-                <div>
-                  <FormControl required className={classes.formControl}>
-                    <TextField
-                      id="specialty"
-                      name="specialty"
-                      label="Specialty"
-                      placeholder="e.g. Accountant, Visual Arts, Design, etc."
-                      value={specialty}
-                      onChange={this.handleChange}
-                      onBlur={this.checkForNull}
-                      className={classes.textField}
-                      required
-                    />
-                    <FormHelperText error={true}>
-                      {specialtyError}
-                    </FormHelperText>
-                  </FormControl>
-                </div>
-                <div>
-                  <FormControl required className={classes.formControl}>
-                    <TextField
-                      id="password"
-                      name="password"
-                      label="Password:"
-                      value={password}
-                      className={classes.textField}
-                      onChange={this.handleChange}
-                      type="password"
-                      onBlur={this.checkForNull}
-                      required
-                    />
-                    <FormHelperText error={true}>
-                      {passwordError}
-                    </FormHelperText>
-                  </FormControl>
-                </div>
-                <div>
-                  <FormControl required className={classes.formControl}>
-                    <TextField
-                      id="repeatPassword"
-                      name="repeatPassword"
-                      label="Repeat password:"
-                      value={repeatPassword}
-                      className={classes.textField}
-                      type="password"
-                      onChange={this.handleChange}
-                      onBlur={this.checkForNull}
-                      required
-                    />
-                    <FormHelperText error={true}>
-                      {repeatPasswordError}
-                    </FormHelperText>
-                  </FormControl>
-                </div>
+                    <FormHelperText error={true}>{imageError}</FormHelperText>
+                  </div>
+                  <div>
+                    <FormControl required className={classes.formControl}>
+                      <TextField
+                        id="name"
+                        name="name"
+                        label="Name"
+                        value={name}
+                        onChange={this.handleChange}
+                        className={classes.textField}
+                        onBlur={this.checkForNull}
+                        required
+                      />
+                      <FormHelperText error={true}>{nameError}</FormHelperText>
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormControl required className={classes.formControl}>
+                      <TextField
+                        id="specialty"
+                        name="specialty"
+                        label="Specialty"
+                        placeholder="e.g. Accountant, Visual Arts, Design, etc."
+                        value={specialty}
+                        onChange={this.handleChange}
+                        onBlur={this.checkForNull}
+                        className={classes.textField}
+                        required
+                      />
+                      <FormHelperText error={true}>
+                        {specialtyError}
+                      </FormHelperText>
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormControl required className={classes.formControl}>
+                      <TextField
+                        id="password"
+                        name="password"
+                        label="Password:"
+                        value={password}
+                        className={classes.textField}
+                        onChange={this.handleChange}
+                        type="password"
+                        onBlur={this.checkForNull}
+                        required
+                      />
+                      <FormHelperText error={true}>
+                        {passwordError}
+                      </FormHelperText>
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormControl required className={classes.formControl}>
+                      <TextField
+                        id="repeatPassword"
+                        name="repeatPassword"
+                        label="Repeat password:"
+                        value={repeatPassword}
+                        className={classes.textField}
+                        type="password"
+                        onChange={this.handleChange}
+                        onBlur={this.checkForNull}
+                        required
+                      />
+                      <FormHelperText error={true}>
+                        {repeatPasswordError}
+                      </FormHelperText>
+                    </FormControl>
+                  </div>
 
-                <div>
-                  <FormControl required className={classes.formControl}>
-                    <TextField
-                      id="description"
-                      name="description"
-                      label="Description"
-                      placeholder="Professional abstract"
-                      multiline
-                      rowsMax="15"
-                      rows="7"
-                      value={description}
-                      onBlur={this.checkForNull}
-                      onChange={this.handleChange}
-                      className={classes.textField}
-                      required
-                    />
-                  </FormControl>
-                  <FormHelperText error={true}>
-                    {descriptionError}
-                  </FormHelperText>
-                </div>
-              </Grid>
-              <Grid item xs={12} sm={5} md={5} lg={5}>
-                <div>
-                  <FormControl required className={classes.formControl}>
-                    <TextField
-                      id="location"
-                      name="location"
-                      label=" Location"
-                      placeholder="Physical location (e.g. New England)"
-                      value={location}
-                      onBlur={this.checkForNull}
-                      onChange={this.handleChange}
-                      className={classes.textField}
-                      required
-                    />
-                  </FormControl>
-                  <FormHelperText error={true}>{locationError}</FormHelperText>
-                </div>
-                <div>
-                  <FormControl required className={classes.formControl}>
-                    <TextField
-                      id="email"
-                      name="email"
-                      label="E-mail"
-                      type="email"
-                      value={email}
-                      onChange={this.handleChange}
-                      className={classes.textField}
-                    />
-                  </FormControl>
-                </div>
-                <div>
-                  <FormControl required className={classes.formControl}>
-                    <TextField
-                      id="phone"
-                      name="phone"
-                      label="Phone"
-                      value={phone}
-                      onChange={this.handleChange}
-                      className={classes.textField}
-                    />
-                  </FormControl>
-                </div>
-                <div>
-                  <FormControl required className={classes.formControl}>
-                    <TextField
-                      id="linkedin"
-                      name="linkedin"
-                      label="LinkedIn"
-                      value={linkedin}
-                      onChange={this.handleChange}
-                      className={classes.textField}
-                    />
-                  </FormControl>
-                </div>
-                <div>
-                  <FormControl required className={classes.formControl}>
-                    <TextField
-                      id="twitter"
-                      name="twitter"
-                      label="Twitter"
-                      value={twitter}
-                      onChange={this.handleChange}
-                      className={classes.textField}
-                    />
-                  </FormControl>
-                </div>
-                <div>
-                  <FormControl required className={classes.formControl}>
-                    <TextField
-                      id="facebook"
-                      name="facebook"
-                      label="Facebook"
-                      value={facebook}
-                      onChange={this.handleChange}
-                      className={classes.textField}
-                    />
-                  </FormControl>
-                </div>
-                <div>
-                  <FormControl className={classes.formControl}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={available}
-                          onChange={this.handleChangeCheck}
-                          color="primary"
-                          value="available"
-                        />
-                      }
-                      label="Are you available to start mentoring?"
-                    />
-                  </FormControl>
-                </div>
-                <div>
-                  <Typography className={classes.text} variant="subtitle1">
-                    Please read and agree with the{" "}
-                    <a href="/termsandconditions" target="_blank">
-                      terms and conditions{" "}
-                    </a>{" "}
-                    in order to continue.
-                  </Typography>
+                  <div>
+                    <FormControl required className={classes.formControl}>
+                      <TextField
+                        id="description"
+                        name="description"
+                        label="Description"
+                        placeholder="Professional abstract"
+                        multiline
+                        rowsMax="15"
+                        rows="7"
+                        value={description}
+                        onBlur={this.checkForNull}
+                        onChange={this.handleChange}
+                        className={classes.textField}
+                        required
+                      />
+                    </FormControl>
+                    <FormHelperText error={true}>
+                      {descriptionError}
+                    </FormHelperText>
+                  </div>
+                </Grid>
+                <Grid item xs={12} sm={5} md={5} lg={5}>
+                  <div>
+                    <FormControl required className={classes.formControl}>
+                      <TextField
+                        id="location"
+                        name="location"
+                        label=" Location"
+                        placeholder="Physical location (e.g. New England)"
+                        value={location}
+                        onBlur={this.checkForNull}
+                        onChange={this.handleChange}
+                        className={classes.textField}
+                        required
+                      />
+                    </FormControl>
+                    <FormHelperText error={true}>
+                      {locationError}
+                    </FormHelperText>
+                  </div>
+                  <div>
+                    <FormControl required className={classes.formControl}>
+                      <TextField
+                        id="mail"
+                        name="mail"
+                        label="E-mail"
+                        type="email"
+                        value={mail}
+                        required
+                        onChange={this.handleChange}
+                        className={classes.textField}
+                      />
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormControl required className={classes.formControl}>
+                      <TextField
+                        id="phone"
+                        name="phone"
+                        label="Phone"
+                        value={phone}
+                        onChange={this.handleChange}
+                        className={classes.textField}
+                      />
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormControl required className={classes.formControl}>
+                      <TextField
+                        id="linkedin"
+                        name="linkedin"
+                        label="LinkedIn"
+                        value={linkedin}
+                        onChange={this.handleChange}
+                        className={classes.textField}
+                      />
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormControl required className={classes.formControl}>
+                      <TextField
+                        id="twitter"
+                        name="twitter"
+                        label="Twitter"
+                        value={twitter}
+                        onChange={this.handleChange}
+                        className={classes.textField}
+                      />
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormControl required className={classes.formControl}>
+                      <TextField
+                        id="facebook"
+                        name="facebook"
+                        label="Facebook"
+                        value={facebook}
+                        onChange={this.handleChange}
+                        className={classes.textField}
+                      />
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormControl className={classes.formControl}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={available}
+                            onChange={this.handleChangeCheck}
+                            color="primary"
+                            value="available"
+                          />
+                        }
+                        label="Are you available to start mentoring?"
+                      />
+                    </FormControl>
+                  </div>
+                  <div>
+                    <Typography className={classes.text} variant="subtitle1">
+                      Please read and agree with the{" "}
+                      <a href="/termsandconditions" target="_blank">
+                        terms and conditions{" "}
+                      </a>{" "}
+                      in order to continue.
+                    </Typography>
 
-                  <Typography className={classes.text} variant="body1">
-                    <Checkbox
-                      name="chkDisclaimer"
-                      checked={chkDisclaimer}
-                      onChange={this.handleDisclamerChange}
-                      required
-                    />
-                    I have read terms and conditions and I agree with them.
-                  </Typography>
-                </div>
-                <div className={classes.buttons}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.handleSubmit}
-                    className={classes.button}
-                  >
-                    {btnText}
-                  </Button>
-                  {this.authUser && this.authUser.admin && (
+                    <Typography className={classes.text} variant="body1">
+                      <Checkbox
+                        name="chkDisclaimer"
+                        checked={chkDisclaimer}
+                        onChange={this.handleDisclamerChange}
+                        required
+                      />
+                      I have read terms and conditions and I agree with them.
+                    </Typography>
+                  </div>
+                  <div className={classes.buttons}>
                     <Button
                       variant="contained"
-                      color="secondary"
-                      component={Link}
-                      to={{
-                        pathname: "/mentors"
-                      }}
+                      color="primary"
+                      type="submit"
                       className={classes.button}
                     >
-                      Return to Mentors
+                      {btnText}
                     </Button>
-                  )}
-                </div>
+                  </div>
+                </Grid>
               </Grid>
-            </Grid>
-          </CardContent>
+            </CardContent>
+          </form>
         </Card>
         <Snackbar
           anchorOrigin={{
