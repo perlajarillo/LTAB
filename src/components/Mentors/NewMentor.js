@@ -191,7 +191,8 @@ class NewMentor extends Component {
       repeatPassword: "",
       passwordError: "",
       repeatPasswordError: "",
-      imageError: ""
+      imageError: "",
+      mentorState: "Let's talk about business"
     };
   }
 
@@ -313,7 +314,8 @@ class NewMentor extends Component {
         "facebook",
         "description",
         "pictureName",
-        "available"
+        "available",
+        "mentorState"
       ],
       this.state
     );

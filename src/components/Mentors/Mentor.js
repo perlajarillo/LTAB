@@ -15,7 +15,6 @@ import Grid from "@material-ui/core/Grid";
 import * as R from "ramda";
 import {
   writeMentorWithoutEmail,
-  getImage,
   editMentor,
   deleteMentor
 } from "../../firebase/operations";
@@ -180,7 +179,7 @@ class NewMentor extends Component {
       open: false,
       imageError: "",
       openSnackbarDeleted: false,
-      mentorState: ""
+      mentorState: "Let's talk about business"
     };
   }
 
@@ -203,18 +202,6 @@ class NewMentor extends Component {
    */
   dataToEdit = mentor => {
     const { key } = this.props.location.state;
-    getImage(key, mentor.pictureName)
-      .then(url => {
-        this.setState({
-          picture: url
-        });
-      })
-      .catch(error => {
-        this.setState({
-          openSnackbarError: true,
-          sectionError: "There is not picture for this mentor."
-        });
-      });
     this.setState({
       name: mentor.name,
       specialty: mentor.specialty,
@@ -227,7 +214,7 @@ class NewMentor extends Component {
       description: mentor.description,
       btnText: "Save changes",
       key: key,
-      pictureName: mentor.pictureName,
+      picture: mentor.pictureName === "NA" ? PhotoIcon : mentor.pictureName,
       available: mentor.available,
       mentorState: mentor.mentorState
     });
