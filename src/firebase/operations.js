@@ -58,6 +58,19 @@ export function getAdmin(uid) {
   return admin.child(uid).once("value");
 }
 
+export function getMentor(uid) {
+  const mentor = db.ref("mentors");
+  return mentor.child(uid).once("value");
+}
+
+export function getMentorState(uid) {
+  const mentor = db.ref("mentors");
+  return mentor
+    .child(uid)
+    .child("mentorState")
+    .once("value");
+}
+
 export function getAvailableMentors() {
   const mentors = db.ref("mentors");
 
@@ -81,4 +94,24 @@ export function deleteMentor(mentorKey) {
     .child(mentorKey);
   deleteImage(mentorKey);
   return mentorToDelete.remove();
+}
+
+export function writeMentorWithoutEmail(data, picture) {
+  const newMentorsKey = db
+    .ref()
+    .child("mentors")
+    .push().key;
+  const updates = {};
+  updates["/mentors/" + newMentorsKey] = data;
+  putImage(picture, newMentorsKey);
+  return db.ref().update(updates);
+}
+
+export function setState(mentorsKey, state) {
+  return db
+    .ref()
+    .child("mentors")
+    .child(mentorsKey)
+    .child("mentorState")
+    .set(state);
 }
