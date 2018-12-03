@@ -180,11 +180,12 @@ class MentorsHome extends Component {
                 id="mentorState"
                 name="mentorState"
                 multiline
-                rows="8"
-                label="Your message"
+                rows="5"
+                label="Your message (200 characters max)"
                 value={mentorState}
                 onChange={this.handleChange}
                 className={classes.textField}
+                inputProps={{ maxLength: 200 }}
               />
             </div>{" "}
             <div>
