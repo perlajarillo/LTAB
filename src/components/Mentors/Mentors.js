@@ -1,6 +1,5 @@
 import React from "react";
 import withAuthorization from "../WithAuthorization";
-import classNames from "classnames";
 
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -476,7 +475,7 @@ class Mentors extends React.Component {
     if (specialty.trim().length > 0) {
       const mentorsBySpecialty = this.arrayToObject(
         Object.entries(this.state.mentorsMirror).filter(mentor =>
-          mentor[1].specialty.includes(specialty.toUpperCase())
+          mentor[1].specialty.toLowerCase().includes(specialty.toLowerCase())
         )
       );
       this.setState({
@@ -526,12 +525,8 @@ class Mentors extends React.Component {
             classes={classes}
             state={this.state}
             filterBySpecialty={this.filterBySpecialty}
-            handleClickDeleteMentor={this.handleClickDeleteMentor}
-            handleClose={this.handleClose}
-            handleDeleteMentor={this.handleDeleteMentor}
             isSelected={this.isSelected}
             handleClick={this.handleClick}
-            handleSelectAllClick={this.handleSelectAllClick}
             handleRequestSort={this.handleRequestSort}
             handleChange={this.handleChange}
             handleChangePage={this.handleChangePage}
