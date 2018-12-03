@@ -36,7 +36,10 @@ const styles = theme => ({
     background: "url(" + backgroundImg + ")",
     backgroundPosition: "center 70%",
     padding: "13% 0",
-    backgroundSize: "cover",
+    backgroundSize: "contain",
+    [theme.breakpoints.up("xs")]: {
+      marginTop: "83px"
+    },
     [theme.breakpoints.up("sm")]: {
       marginTop: "70px"
     },
@@ -66,14 +69,7 @@ const styles = theme => ({
       marginLeft: theme.spacing.unit * 7
     }
   },
-  button: {
-    margin: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2
-  },
-  leftPanel: {
-    marginTop: 30,
-    marginLeft: 20
-  },
+
   icons: {
     width: "50px",
     marginLeft: 75,
@@ -111,46 +107,44 @@ const styles = theme => ({
     }
   },
   card: {
-    width: "300px",
     marginTop: "30px",
-    marginLeft: "20px",
     paddingBottom: "1%",
     [theme.breakpoints.up("xs")]: {
-      width: "300px"
+      width: "auto"
     },
     [theme.breakpoints.up("sm")]: {
       width: "250px"
     },
     [theme.breakpoints.up("md")]: {
-      width: "450px"
+      width: "650px",
+      marginLeft: "50px"
     },
     [theme.breakpoints.between("sm", "md")]: {
-      width: "420px"
+      width: "320px",
+      marginLeft: "50px"
     }
   },
   menteeCard: {
-    width: "300px",
-    height: "573px",
-
     marginTop: "30px",
-    marginLeft: "30px",
     paddingBottom: "1%",
+
     [theme.breakpoints.up("xs")]: {
-      width: "300px"
+      width: "auto",
+      height: "auto"
     },
     [theme.breakpoints.up("sm")]: {
       width: "250px"
     },
     [theme.breakpoints.up("md")]: {
-      width: "450px"
+      width: "650px",
+      height: "540px"
     },
     [theme.breakpoints.between("sm", "md")]: {
-      width: "420px"
+      width: "320px",
+      height: "478px"
     }
   },
-  button: {
-    width: "400px"
-  },
+
   text: {
     marginTop: theme.spacing.unit * 2
   }
@@ -176,10 +170,10 @@ const Home = props => {
       </div>
       <br />
       <Divider />
-      <Grid container spacing={0}>
-        <Grid item xs={12} sm={3} md={3} lg={4}>
+      <Grid container spacing={8}>
+        <Grid item xs={12} sm={6} md={6} lg={6}>
           <Card className={classes.card}>
-            <div className={classes.leftPanel}>
+            <CardContent>
               <Typography variant="h6" gutterBottom>
                 Do you want to be a #LetsTalkAboutBusiness mentor?
               </Typography>
@@ -201,15 +195,11 @@ const Home = props => {
               <div>
                 <img src={logo_original} className={classes.principalLogo} />
               </div>
-            </div>
+            </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={4} md={4} lg={4}>
-          <div>
-            <LogIn history={history} />
-          </div>
-        </Grid>
-        <Grid item xs={12} sm={5} md={5} lg={4}>
+
+        <Grid item xs={12} sm={6} md={6} lg={6}>
           <Card className={classes.menteeCard}>
             <CardContent>
               <Typography variant="h6" gutterBottom>

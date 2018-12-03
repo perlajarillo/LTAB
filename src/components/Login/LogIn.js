@@ -14,13 +14,22 @@ import { Link } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 
-import { getAdmin } from "../../firebase/operations";
+import { getAdmin, getMentor } from "../../firebase/operations";
 
 const styles = theme => ({
   wrapper: {
-    margin: "80px 0"
+    margin: "80px 0",
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex"
   },
 
+  container: {
+    paddingTop: theme.spacing.unit * 3,
+    [theme.breakpoints.up("sm")]: {
+      padding: theme.spacing.unit * 3
+    }
+  },
   formControl: {
     margin: theme.spacing.unit
   },
@@ -41,7 +50,7 @@ const styles = theme => ({
       marginLeft: theme.spacing.unit * 3
     },
     [theme.breakpoints.between("sm", "md")]: {
-      maxWidth: 145,
+      maxWidth: 445,
       marginLeft: theme.spacing.unit * 3
     }
   },
@@ -52,20 +61,20 @@ const styles = theme => ({
   },
   card: {
     width: "500px",
-    height: "573px",
-    marginTop: "30px",
     paddingBottom: "1%",
     [theme.breakpoints.up("xs")]: {
-      width: "300px"
+      width: "auto"
     },
     [theme.breakpoints.up("sm")]: {
-      width: "250px"
+      width: "250px",
+      marginTop: "60px"
     },
     [theme.breakpoints.up("md")]: {
-      width: "500px"
+      width: "500px",
+      marginTop: "60px"
     },
     [theme.breakpoints.between("sm", "md")]: {
-      width: "420px"
+      width: "520px"
     }
   },
 
@@ -111,14 +120,21 @@ class LogIn extends React.Component {
       .then(() => {
         getAdmin(auth.currentUserUid())
           .then(snapshot => {
-            snapshot.val()
-              ? history.push("/mentors")
-              : history.push("/availablementors");
+            snapshot.val() && history.push("/mentors");
           })
           .catch(e => {
-            history.push("/availablementors");
+            getMentor(auth.currentUserUid())
+              .then(snapshot => {
+                snapshot.val()
+                  ? history.push("/mentorshome")
+                  : history.push("/availablementors");
+              })
+              .catch(() => {
+                history.push("/availablementors");
+              });
           });
       })
+
       .catch(error => {
         this.setState({
           error: error.message,
@@ -145,84 +161,86 @@ class LogIn extends React.Component {
     const { email, password, error, openSnackbarError } = this.state;
 
     return (
-      <div>
-        <Card className={classes.card}>
-          <form onSubmit={this.handleSubmit}>
-            <Typography className={classes.text} variant="body1">
-              Login if you already have an account.
-            </Typography>
-            <CardContent>
-              <FormControl
-                className={classes.formControl}
-                fullWidth
-                aria-describedby="required"
-                aria-required="true"
-              >
-                <InputLabel htmlFor="email">E-mail</InputLabel>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={this.handleChange}
-                />
-                <FormHelperText id="required">Required*</FormHelperText>
-              </FormControl>
-              <FormControl
-                className={classes.formControl}
-                fullWidth
-                aria-describedby="required"
-                aria-required="true"
-              >
-                <InputLabel htmlFor="password">Password</InputLabel>
-                <Input
-                  id="password"
-                  name="password"
-                  type="Password"
-                  value={password}
-                  onChange={this.handleChange}
-                />
-                <FormHelperText id="required">Required*</FormHelperText>
-              </FormControl>
-              <Button
-                variant="contained"
-                type="submit"
-                color="primary"
-                fullWidth
-                className={classes.button}
-              >
-                Log In
-              </Button>
-              <Button
-                variant="outlined"
-                color="primary"
-                fullWidth
-                component={Link}
-                to="/password-reset"
-                className={classes.button}
-              >
-                Forgot your password?
-              </Button>
-            </CardContent>
-          </form>
-        </Card>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={openSnackbarError}
-          autoHideDuration={3000}
-          onClose={this.handleSnackbarClose}
-          id="openSnackbarError"
-          name="openSnackbarError"
-        >
-          <SnackbarContentWrapper
+      <div className={classes.wrapper}>
+        <div className={classes.container}>
+          <Card className={classes.card}>
+            <form onSubmit={this.handleSubmit}>
+              <Typography className={classes.text} variant="body1">
+                Login to enter your account.
+              </Typography>
+              <CardContent>
+                <FormControl
+                  className={classes.formControl}
+                  fullWidth
+                  aria-describedby="required"
+                  aria-required="true"
+                >
+                  <InputLabel htmlFor="email">E-mail</InputLabel>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={email}
+                    onChange={this.handleChange}
+                  />
+                  <FormHelperText id="required">Required*</FormHelperText>
+                </FormControl>
+                <FormControl
+                  className={classes.formControl}
+                  fullWidth
+                  aria-describedby="required"
+                  aria-required="true"
+                >
+                  <InputLabel htmlFor="password">Password</InputLabel>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="Password"
+                    value={password}
+                    onChange={this.handleChange}
+                  />
+                  <FormHelperText id="required">Required*</FormHelperText>
+                </FormControl>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  color="primary"
+                  fullWidth
+                  className={classes.button}
+                >
+                  Log In
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  component={Link}
+                  to="/password-reset"
+                  className={classes.button}
+                >
+                  Forgot your password?
+                </Button>
+              </CardContent>
+            </form>
+          </Card>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left"
+            }}
+            open={openSnackbarError}
+            autoHideDuration={3000}
             onClose={this.handleSnackbarClose}
-            variant="error"
-            message={error}
-          />
-        </Snackbar>
+            id="openSnackbarError"
+            name="openSnackbarError"
+          >
+            <SnackbarContentWrapper
+              onClose={this.handleSnackbarClose}
+              variant="error"
+              message={error}
+            />
+          </Snackbar>
+        </div>
       </div>
     );
   }

@@ -11,7 +11,7 @@ const LogOut = () => {
         color="inherit"
         onClick={auth.onLogOut}
         component={Link}
-        to="/"
+        to="/login"
       >
         Log out
       </Button>
