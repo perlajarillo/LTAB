@@ -28,7 +28,8 @@ import { uniq, map, filter, compose } from "ramda";
 import fbLogo from "../../images/facebook.png";
 import twLogo from "../../images/twitter.png";
 import inLogo from "../../images/linkedin.png";
-import email from "../../images/email.png";
+import emailLogo from "../../images/email.png";
+import phoneLogo from "../../images/phone-receiver.png";
 
 const SPACE = " ";
 
@@ -161,9 +162,19 @@ function SelectionPanel(props) {
               Location
             </Button>
           </div>
+          <div className={classes.column}>
+            <Button
+              data-id="all"
+              size="small"
+              color="primary"
+              onClick={setSelectedFilter}
+            >
+              All mentors
+            </Button>
+          </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          {selectedContent === "specialty" ? (
+          {selectedContent && selectedContent === "specialty" && (
             <FormControl component="fieldset" className={classes.formControl}>
               <RadioGroup
                 aria-label="Specialty"
@@ -183,7 +194,8 @@ function SelectionPanel(props) {
                   ))}
               </RadioGroup>
             </FormControl>
-          ) : (
+          )}
+          {selectedContent && selectedContent === "location" && (
             <FormControl component="fieldset" className={classes.formControl}>
               <RadioGroup
                 aria-label="Specialty"
@@ -219,7 +231,6 @@ class AvailableMentors extends Component {
       mentorDetail: "",
       mentorId: "",
       uid: "",
-      selected: [],
       page: 0,
       open: false,
       scroll: "paper",
@@ -323,11 +334,19 @@ class AvailableMentors extends Component {
   };
 
   setSelectedFilter = event => {
-    event.stopPropagation();
+    event.preventDefault();
+    const selectedFilter = event.currentTarget.dataset.id;
 
-    this.setState({
-      selectedContent: event.currentTarget.dataset.id
-    });
+    selectedFilter === "all"
+      ? this.setState({
+          selectedLocation: "",
+          selectedSpecialty: "",
+          filteredMentors: null,
+          selectedContent: ""
+        })
+      : this.setState({
+          selectedContent: selectedFilter
+        });
   };
 
   handleSelectedSpecialty = event => {
@@ -431,9 +450,11 @@ class AvailableMentors extends Component {
                     </blockquote>
                   )}
                   <Typography variant="body2">{mentor.specialty}</Typography>
-                  {mentor.mail && <Typography gutterBottom variant="body2">
-                    {mentor.mail}
-                  </Typography>}
+                  {mentor.mail && (
+                    <Typography gutterBottom variant="body2">
+                      {mentor.mail}
+                    </Typography>
+                  )}
                   <br />
                   {mentor.available ? (
                     <hr style={{ border: "1px solid green" }} />
@@ -517,6 +538,19 @@ class AvailableMentors extends Component {
                     <a href={mentorDetail.lk} target="blank">
                       <img src={inLogo} width="32px" alt="linkedin" />
                     </a>
+                  </Button>
+                )}
+                {mentorDetail.mail && (
+                  <Button onClick={this.handleClose} color="primary">
+                    <a href={`mailto:${mentorDetail.mail}`}>
+                      <img src={emailLogo} width="32px" alt="linkedin" />
+                    </a>
+                  </Button>
+                )}
+                {mentorDetail.phone && (
+                  <Button disableRipple>
+                    <img src={phoneLogo} width="32px" alt="phone-number" />{" "}
+                    {mentorDetail.phone}
                   </Button>
                 )}
               </DialogActions>
