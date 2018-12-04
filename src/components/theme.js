@@ -18,5 +18,14 @@ export default createMuiTheme({
   typography: {
     fontSize: 16,
     useNextVariants: true
+  },
+  smallSection: {
+    padding: "3rem 1.5rem"
+  },
+  mediumSection: {
+    padding: "9rem 1.5rem"
+  },
+  bigSection: {
+    padding: "18rem 1.5rem"
   }
 });
