@@ -1,12 +1,10 @@
 import React from "react";
 import withAuthorization from "../WithAuthorization";
-import classNames from "classnames";
 
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
+import SearchIcon from "@material-ui/icons/Search";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -14,29 +12,23 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
 import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import FilterListIcon from "@material-ui/icons/FilterList";
-import { lighten } from "@material-ui/core/styles/colorManipulator";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Radio from "@material-ui/core/Radio";
-import { getMentors, deleteMentor } from "../../firebase/operations";
-import Snackbar from "@material-ui/core/Snackbar";
-import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import { getMentors } from "../../firebase/operations";
+import TextField from "@material-ui/core/TextField";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    margin: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 3,
+    marginLeft: "1%",
+    width: "98%",
+    overflowX: "auto"
   },
   wrapper: {
     margin: "100px 0",
@@ -55,11 +47,56 @@ const styles = theme => ({
       marginLeft: "10%"
     }
   },
+  bullet: {
+    display: "inline-block",
+    margin: "0 2px",
+    transform: "scale(0.8)"
+  },
+  button: {
+    marginLeft: 20
+  },
 
+  textField: {
+    width: 400
+  },
   container: {
     display: "flex",
     flexWrap: "wrap",
     marginTop: theme.spacing.unit * 3
+  },
+  row: {
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.background.default
+    },
+    textDecoration: "none"
+  },
+  table: {
+    minWidth: 700
+  },
+  tableWrapper: {
+    overflowX: "auto"
+  },
+  titleRow: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    margin: theme.spacing.unit * 2,
+    [theme.breakpoints.up("sm")]: {
+      justifyContent: "space-between"
+    }
+  },
+  searchBar: {
+    marginRight: 0,
+    display: "flex",
+    flexWrap: "wrap",
+    [theme.breakpoints.up("sm")]: {
+      justifyContent: "space-between"
+    }
+  },
+  personalizedCell: {
+    width: "7px",
+    align: "center",
+    whiteSpace: "nowrap"
   }
 });
 
@@ -76,7 +113,7 @@ function desc(a, b, orderBy) {
 function stableSort(array, cmp) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
+    const order = cmp(a[0][1], b[0][1]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
@@ -188,123 +225,20 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired
 };
 
-const toolbarStyles = theme => ({
-  root: {
-    paddingRight: theme.spacing.unit
-  },
-  highlight:
-    theme.palette.type === "light"
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85)
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark
-        },
-  spacer: {
-    flex: "1 1 50%"
-  },
-  actions: {
-    color: theme.palette.text.secondary
-  },
-  title: {
-    flex: "0 0 auto"
-  }
-});
-
-let EnhancedTableToolbar = props => {
-  const {
-    mentorKey,
-    classes,
-    handleClickDeleteMentor,
-    mentorData,
-    uid
-  } = props;
-
-  return (
-    <Toolbar
-      className={classNames(classes.root, {
-        [classes.highlight]: mentorKey !== ""
-      })}
-    >
-      <div className={classes.title}>
-        {mentorKey !== "" ? (
-          <Typography color="inherit" variant="subtitle1">
-            {1} selected
-          </Typography>
-        ) : (
-          <Typography variant="h6" id="tableTitle">
-            All mentors
-          </Typography>
-        )}
-      </div>
-      <div className={classes.spacer} />
-      <div className={classes.actions}>
-        {mentorKey !== "" ? (
-          <div>
-            <Tooltip title="Delete">
-              <IconButton
-                aria-label="Delete"
-                color="primary"
-                onClick={handleClickDeleteMentor}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Edit">
-              <IconButton
-                size="small"
-                color="primary"
-                component={Link}
-                to={{
-                  pathname: "/newMentor",
-                  state: {
-                    mentor: mentorData,
-                    key: mentorKey,
-                    authUser: uid
-                  }
-                }}
-              >
-                <EditIcon />
-              </IconButton>
-            </Tooltip>
-          </div>
-        ) : (
-          <Tooltip title="Filter list">
-            <IconButton aria-label="Filter list">
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
-        )}
-      </div>
-    </Toolbar>
-  );
-};
-EnhancedTableToolbar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  mentorKey: PropTypes.string.isRequired,
-  uid: PropTypes.string.isRequired,
-  mentorData: PropTypes.object.isRequired
-};
-
-EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
-
 const MentorsList = ({
   state,
   classes,
-  handleClickDeleteMentor,
-  handleClose,
-  handleDeleteMentor,
+  filterBySpecialty,
   isSelected,
-  handleClick,
   handleRequestSort,
   handleChangePage,
-  handleChangeRowsPerPage
+  handleChange,
+  handleChangeRowsPerPage,
+  getMentors
 }) => {
   const {
     mentors,
-    open,
+
     uid,
     order,
     orderBy,
@@ -316,7 +250,7 @@ const MentorsList = ({
   const emptyRows = mentors
     ? rowsPerPage - Math.min(rowsPerPage, mentors.length - page * rowsPerPage)
     : 0;
-  const mentorsData = [];
+
   return (
     <div className={classes.root}>
       <div className={classes.titleRow}>
@@ -328,7 +262,7 @@ const MentorsList = ({
           className={classes.button}
           component={Link}
           to={{
-            pathname: "/newMentor",
+            pathname: "/Mentor",
             state: {
               authUser: uid
             }
@@ -336,15 +270,41 @@ const MentorsList = ({
         >
           <AddIcon /> Add new mentor
         </Button>
+        <div className={classes.searchBar}>
+          {" "}
+          <TextField
+            id="specialty"
+            name="specialty"
+            label="Filter by specialty"
+            placeholder="e.g. Accountant"
+            className={classes.textField}
+            onChange={handleChange}
+            margin="normal"
+          />
+          <Button
+            size="small"
+            variant="extendedFab"
+            color="secondary"
+            aria-label="Add"
+            className={classes.button}
+            onClick={filterBySpecialty}
+          >
+            <SearchIcon /> Search
+          </Button>
+          <Button
+            size="small"
+            variant="extendedFab"
+            color="primary"
+            aria-label="Add"
+            className={classes.button}
+            onClick={getMentors}
+          >
+            Show all mentors
+          </Button>
+        </div>
       </div>
       {mentors ? (
         <Paper className={classes.root}>
-          <EnhancedTableToolbar
-            mentorKey={mentorKey}
-            handleClickDeleteMentor={handleClickDeleteMentor}
-            uid={uid}
-            mentorData={mentorData}
-          />
           <div className={classes.tableWrapper}>
             <Table className={classes.table} aria-labelledby="tableTitle">
               <EnhancedTableHead
@@ -362,7 +322,6 @@ const MentorsList = ({
                     return (
                       <TableRow
                         hover
-                        onClick={event => handleClick(event, n[0], n[1])}
                         role="checkbox"
                         aria-checked={itIsSelected}
                         tabIndex={-1}
@@ -374,8 +333,19 @@ const MentorsList = ({
                           padding="checkbox"
                           className={classes.personalizedCell}
                         >
-                          <Radio checked={mentorKey === n[0]} color="primary" />
+                          <Radio
+                            component={Link}
+                            to={{
+                              pathname: "/Mentor",
+                              state: {
+                                mentor: n[1],
+                                key: n[0],
+                                authUser: uid
+                              }
+                            }}
+                          />
                         </CustomTableCell>
+
                         <CustomTableCell padding="none">
                           {n[1].name}
                         </CustomTableCell>
@@ -448,9 +418,10 @@ class Mentors extends React.Component {
       orderBy: "name",
       selected: [],
       page: 0,
-      rowsPerPage: 5,
+      rowsPerPage: 25,
       mentorData: {},
-      openSnackbarDeleted: false
+      filterApplied: false,
+      specialty: ""
     };
   }
   handleRequestSort = (event, property) => {
@@ -474,46 +445,53 @@ class Mentors extends React.Component {
     this.setState({ page });
   };
 
+  /**
+   * handleChange – the handleChange sets the specialty wrote in the state
+   * @param {Object} the object name and event
+   * @return {void}
+   */
+  handleChange = event => {
+    const { target } = event;
+    const { value, name } = target;
+    this.setState({
+      [name]: value
+    });
+  };
+
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
   };
 
   isSelected = key => this.state.mentorKey === key;
 
-  handleDeleteMentor = () => {
-    const { mentorKey } = this.state;
-    deleteMentor(mentorKey).then(this.setState({ openSnackbarDeleted: true }));
-    this.getMentors();
-    this.handleClose();
+  arrayToObject = array =>
+    array.reduce((obj, item) => {
+      obj[item[0]] = item[1];
+      return obj;
+    }, {});
+
+  filterBySpecialty = () => {
+    const specialty = this.state.specialty;
+    if (specialty.trim().length > 0) {
+      const mentorsBySpecialty = this.arrayToObject(
+        Object.entries(this.state.mentorsMirror).filter(mentor =>
+          mentor[1].specialty.toLowerCase().includes(specialty.toLowerCase())
+        )
+      );
+      this.setState({
+        mentors: mentorsBySpecialty,
+        filterApplied: true
+      });
+    }
   };
 
-  handleClickDeleteMentor = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false, mentorKey: "" });
-  };
   getMentors = () => {
     getMentors().then(snapshot => {
       this.setState({
-        mentors: snapshot.val()
+        mentors: snapshot.val(),
+        mentorsMirror: snapshot.val(),
+        filterApplied: false
       });
-    });
-  };
-
-  /**
-   * handleSnackbarClose - sets the actions when the snackbar is closed
-   * @param {Object} event the event object
-   * @param {Object} reason for closing the snackbar
-   * @return {void}
-   */
-  handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    this.setState({
-      openSnackbarDeleted: false
     });
   };
 
@@ -532,10 +510,13 @@ class Mentors extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
-    const { openSnackbarDeleted, open } = this.state;
+    const { classes, authUser } = this.props;
+    const { from } = this.props.location.state || {
+      from: { pathname: "/nofound" }
+    };
     return (
       <div className={classes.wrapper}>
+        {!authUser.rol === "admin" && <Redirect to={from} />}
         <div className={classes.root}>
           <Typography variant="h5" gutterBottom>
             Mentors
@@ -543,55 +524,16 @@ class Mentors extends React.Component {
           <MentorsList
             classes={classes}
             state={this.state}
-            handleClickDeleteMentor={this.handleClickDeleteMentor}
-            handleClose={this.handleClose}
-            handleDeleteMentor={this.handleDeleteMentor}
+            filterBySpecialty={this.filterBySpecialty}
             isSelected={this.isSelected}
             handleClick={this.handleClick}
-            handleSelectAllClick={this.handleSelectAllClick}
             handleRequestSort={this.handleRequestSort}
+            handleChange={this.handleChange}
             handleChangePage={this.handleChangePage}
             handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+            getMentors={this.getMentors}
           />
         </div>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={openSnackbarDeleted}
-          autoHideDuration={3000}
-          onClose={this.handleSnackbarClose}
-          id="openSnackbarDeleted"
-          name="openSnackbarDeleted"
-        >
-          <SnackbarContentWrapper
-            onClose={this.handleSnackbarClose}
-            variant="warning"
-            message="Mentor deleted"
-          />
-        </Snackbar>
-        <Dialog
-          open={open}
-          onClose={this.handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{"Delete mentor?"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Are you sure you want to delete this mentor?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleDeleteMentor} color="primary">
-              Yes
-            </Button>
-            <Button onClick={this.handleClose} color="primary" autoFocus>
-              No
-            </Button>
-          </DialogActions>
-        </Dialog>
       </div>
     );
   }

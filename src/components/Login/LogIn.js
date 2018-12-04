@@ -7,22 +7,29 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { auth } from "../../firebase";
 import { Link } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
-import Grid from "@material-ui/core/Grid";
-import icon_facebook from "../../images/icon_facebook.png";
-import icon_site from "../../images/icon_site.png";
+
+import { getAdmin, getMentor } from "../../firebase/operations";
 
 const styles = theme => ({
   wrapper: {
-    margin: "80px 0"
+    margin: "80px 0",
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex"
   },
 
+  container: {
+    paddingTop: theme.spacing.unit * 3,
+    [theme.breakpoints.up("sm")]: {
+      padding: theme.spacing.unit * 3
+    }
+  },
   formControl: {
     margin: theme.spacing.unit
   },
@@ -43,7 +50,7 @@ const styles = theme => ({
       marginLeft: theme.spacing.unit * 3
     },
     [theme.breakpoints.between("sm", "md")]: {
-      maxWidth: 145,
+      maxWidth: 445,
       marginLeft: theme.spacing.unit * 3
     }
   },
@@ -54,38 +61,23 @@ const styles = theme => ({
   },
   card: {
     width: "500px",
-    margin: "30px auto",
     paddingBottom: "1%",
     [theme.breakpoints.up("xs")]: {
-      width: "300px"
+      width: "auto"
     },
     [theme.breakpoints.up("sm")]: {
-      width: "250px"
+      width: "250px",
+      marginTop: "60px"
     },
     [theme.breakpoints.up("md")]: {
-      width: "950px"
+      width: "500px",
+      marginTop: "60px"
     },
     [theme.breakpoints.between("sm", "md")]: {
-      width: "420px"
+      width: "520px"
     }
   },
-  icons: {
-    width: "50px",
-    marginLeft: 75,
-    paddingBottom: "1%",
-    [theme.breakpoints.up("xs")]: {
-      width: "40px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "35px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "95px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "45px"
-    }
-  },
+
   pos: {
     marginBottom: 24
   }
@@ -126,9 +118,23 @@ class LogIn extends React.Component {
         });
       })
       .then(() => {
-        history.push("/mentors");
-        // });
+        getAdmin(auth.currentUserUid())
+          .then(snapshot => {
+            snapshot.val() && history.push("/mentors");
+          })
+          .catch(e => {
+            getMentor(auth.currentUserUid())
+              .then(snapshot => {
+                snapshot.val()
+                  ? history.push("/mentorshome")
+                  : history.push("/availablementors");
+              })
+              .catch(() => {
+                history.push("/availablementors");
+              });
+          });
       })
+
       .catch(error => {
         this.setState({
           error: error.message,
@@ -155,122 +161,86 @@ class LogIn extends React.Component {
     const { email, password, error, openSnackbarError } = this.state;
 
     return (
-      <div>
-        <Card className={classes.card}>
-          <Grid container spacing={32}>
-            <Grid item xs={12} sm={6} md={6} lg={6}>
-              <form onSubmit={this.handleSubmit}>
-                <Typography className={classes.text} variant="body1">
-                  Login to look for a mentor.
-                </Typography>
-                <CardContent>
-                  <FormControl
-                    className={classes.formControl}
-                    fullWidth
-                    aria-describedby="required"
-                    aria-required="true"
-                  >
-                    <InputLabel htmlFor="email">E-mail</InputLabel>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={email}
-                      onChange={this.handleChange}
-                    />
-                    <FormHelperText id="required">Required*</FormHelperText>
-                  </FormControl>
-                  <FormControl
-                    className={classes.formControl}
-                    fullWidth
-                    aria-describedby="required"
-                    aria-required="true"
-                  >
-                    <InputLabel htmlFor="password">Password</InputLabel>
-                    <Input
-                      id="password"
-                      name="password"
-                      type="Password"
-                      value={password}
-                      onChange={this.handleChange}
-                    />
-                    <FormHelperText id="required">Required*</FormHelperText>
-                  </FormControl>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    color="primary"
-                    fullWidth
-                  >
-                    Log In
-                  </Button>
-                </CardContent>
-              </form>
-              <Button
-                variant="outlined"
-                type="submit"
-                color="primary"
-                fullWidth
-                component={Link}
-                to="/password-reset"
-                className={classes.button}
-              >
-                Forgot your password?
-              </Button>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={6} lg={6}>
+      <div className={classes.wrapper}>
+        <div className={classes.container}>
+          <Card className={classes.card}>
+            <form onSubmit={this.handleSubmit}>
               <Typography className={classes.text} variant="body1">
-                Are you looking for a Mentor? Not registered yet?
+                Login to enter your account.
               </Typography>
-              <CardActions>
+              <CardContent>
+                <FormControl
+                  className={classes.formControl}
+                  fullWidth
+                  aria-describedby="required"
+                  aria-required="true"
+                >
+                  <InputLabel htmlFor="email">E-mail</InputLabel>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={email}
+                    onChange={this.handleChange}
+                  />
+                  <FormHelperText id="required">Required*</FormHelperText>
+                </FormControl>
+                <FormControl
+                  className={classes.formControl}
+                  fullWidth
+                  aria-describedby="required"
+                  aria-required="true"
+                >
+                  <InputLabel htmlFor="password">Password</InputLabel>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="Password"
+                    value={password}
+                    onChange={this.handleChange}
+                  />
+                  <FormHelperText id="required">Required*</FormHelperText>
+                </FormControl>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  color="primary"
+                  fullWidth
+                  className={classes.button}
+                >
+                  Log In
+                </Button>
                 <Button
                   variant="outlined"
                   color="primary"
                   fullWidth
                   component={Link}
-                  to="/disclaimer"
+                  to="/password-reset"
+                  className={classes.button}
                 >
-                  Create an account
+                  Forgot your password?
                 </Button>
-              </CardActions>
-
-              <Typography className={classes.text} variant="body1">
-                Or visit our Facebook page and Web Site to know more about the
-                program:
-              </Typography>
-              <a
-                href="https://www.facebook.com/TalkBusinessFlad/"
-                target="blank"
-              >
-                <img src={icon_facebook} className={classes.icons} />
-              </a>
-              <a
-                href="https://www.flad.pt/en/lets-talk-about-business/"
-                target="blank"
-              >
-                <img src={icon_site} className={classes.icons} />
-              </a>
-            </Grid>
-          </Grid>
-        </Card>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={openSnackbarError}
-          autoHideDuration={3000}
-          onClose={this.handleSnackbarClose}
-          id="openSnackbarError"
-          name="openSnackbarError"
-        >
-          <SnackbarContentWrapper
+              </CardContent>
+            </form>
+          </Card>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left"
+            }}
+            open={openSnackbarError}
+            autoHideDuration={3000}
             onClose={this.handleSnackbarClose}
-            variant="error"
-            message={error}
-          />
-        </Snackbar>
+            id="openSnackbarError"
+            name="openSnackbarError"
+          >
+            <SnackbarContentWrapper
+              onClose={this.handleSnackbarClose}
+              variant="error"
+              message={error}
+            />
+          </Snackbar>
+        </div>
       </div>
     );
   }
