@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PermIcon from "@material-ui/icons/PermIdentity";
+import CancelAccount from "../CancelAccount/CancelAccount";
 
 const styles = theme => ({
   wrapper: {
@@ -36,7 +37,7 @@ const styles = theme => ({
 class Settings extends React.Component {
   render() {
     const { classes } = this.props;
-
+    const { rol } = this.props.authUser;
     return (
       <main className={classes.wrapper}>
         <section className={classes.sectionStyles}>
@@ -61,7 +62,9 @@ class Settings extends React.Component {
                 Cancel account
               </Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails />
+            <ExpansionPanelDetails>
+              <CancelAccount rol={rol} />
+            </ExpansionPanelDetails>
           </ExpansionPanel>
           <br />
           <br />

@@ -16,7 +16,7 @@ import NewMentee from "./Mentees/NewMentee";
 import TermsAndConditions from "./Mentees/TermsAndConditions";
 import AvailableMentors from "./AvailableMentors";
 import PasswordReset from "./PasswordReset/PasswordReset";
-import Settings from "./Settings/Settings";
+import Settings from "./Settings";
 import NoFound from "./NoFound/NoFound";
 import LogIn from "./Login/LogIn";
 
