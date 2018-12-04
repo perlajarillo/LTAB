@@ -5,7 +5,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import backgroundImg from "../../images/letstalk_logo_3.jpg";
 import logo_original from "../../images/logo_original.png";
-import LogIn from "../Login/LogIn";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
@@ -193,7 +192,11 @@ const Home = props => {
                 <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
               </Typography>
               <div>
-                <img src={logo_original} className={classes.principalLogo} />
+                <img
+                  src={logo_original}
+                  alt="Let's talk about business"
+                  className={classes.principalLogo}
+                />
               </div>
             </CardContent>
           </Card>
@@ -225,13 +228,21 @@ const Home = props => {
                 href="https://www.facebook.com/TalkBusinessFlad/"
                 target="blank"
               >
-                <img src={icon_facebook} className={classes.icons} />
+                <img
+                  src={icon_facebook}
+                  alt="Facebook"
+                  className={classes.icons}
+                />
               </a>
               <a
                 href="https://www.flad.pt/en/lets-talk-about-business/"
                 target="blank"
               >
-                <img src={b_business} className={classes.iconBusiness} />
+                <img
+                  src={b_business}
+                  alt="Let's talk about business"
+                  className={classes.iconBusiness}
+                />
               </a>
             </CardContent>
           </Card>

@@ -106,7 +106,7 @@ const NavAuthUser = props => {
                       component={Link}
                       to="/mentorshome"
                     >
-                      Set state
+                      Share message
                     </Button>
                   </List>
                   <List>
