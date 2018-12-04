@@ -80,7 +80,8 @@ const styles = theme => ({
   bigAvatar: {
     margin: 10,
     width: 100,
-    height: 100
+    height: 100,
+    backgroundColor: theme.palette.secondary
   },
   dialogTitle: {
     display: "flex",
@@ -276,25 +277,20 @@ class AvailableMentors extends Component {
         keys.push(mentorKey);
         let mentorState =
           data[mentorKey].mentorState && data[mentorKey].mentorState;
+        let imgUrl = data[mentorKey].pictureName;
+        let setImgUrl =
+          imgUrl === "" || imgUrl === "NA"
+            ? "https://via.placeholder.com/100.png/09f/fff?text=mentor"
+            : imgUrl;
 
         const mentor = {
           key: mentorKey,
-          name: data[mentorKey].name,
+          name: toTitleCase(data[mentorKey].name),
           location: toTitleCase(data[mentorKey].location),
           specialty: toTitleCase(data[mentorKey].specialty),
           available: data[mentorKey].available,
           description: data[mentorKey].description,
-          pictureName: db
-            .getImage(mentorKey, data[mentorKey].pictureName)
-            .then(url => {
-              if (!url) {
-                url = "https://via.placeholder.com/100.png/09f/fff?text=mentor";
-              }
-              return url;
-            })
-            .catch(error => {
-              return "https://via.placeholder.com/100.png/09f/fff?text=mentor";
-            }),
+          pictureName: setImgUrl,
           mentorState: mentorState,
           mail: data[mentorKey].mail,
           phone: data[mentorKey].phone,
@@ -450,8 +446,8 @@ class AvailableMentors extends Component {
                 <CardHeader
                   avatar={
                     <Avatar
-                      alt="Remy Sharp"
-                      src={mentor.pictureName.i}
+                      alt={mentor.name}
+                      src={mentor.pictureName}
                       className={classes.bigAvatar}
                     />
                   }
@@ -514,7 +510,7 @@ class AvailableMentors extends Component {
               >
                 <Avatar
                   alt="Remy Sharp"
-                  src={mentorDetail.pictureName.i}
+                  src={mentorDetail.pictureName}
                   className={classes.bigAvatar}
                 />
                 <span>
