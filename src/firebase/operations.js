@@ -45,14 +45,7 @@ function deleteImage(pictureName) {
   const storageRef = storage.ref();
   let desertRef = storageRef.child("images/" + pictureName);
   if (desertRef) {
-    desertRef
-      .delete()
-      .then(function() {
-        console.log("File deleted successfully");
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+    desertRef.delete().catch(function(error) {});
   }
 }
 export function getMentors() {
@@ -130,4 +123,14 @@ export function setImage(mentorsKey, url) {
     .child(mentorsKey)
     .child("pictureName")
     .set(url);
+}
+
+export function deleteUser(userId, rol) {
+  rol === "mentor" && (rol = "mentors");
+  deleteImage(userId);
+  return db
+    .ref()
+    .child(rol)
+    .child(userId)
+    .remove();
 }
