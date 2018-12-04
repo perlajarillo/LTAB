@@ -1,569 +1,582 @@
-import React from "react";
+import React, { Component } from "react";
 import withAuthorization from "../WithAuthorization";
-
-import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import SearchIcon from "@material-ui/icons/Search";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Paper from "@material-ui/core/Paper";
-import Tooltip from "@material-ui/core/Tooltip";
-import { lighten } from "@material-ui/core/styles/colorManipulator";
-import Button from "@material-ui/core/Button";
+import { db } from "../../firebase";
 import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Avatar from "@material-ui/core/Avatar";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Radio from "@material-ui/core/Radio";
-import { getAvailableMentors } from "../../firebase/operations";
-import Snackbar from "@material-ui/core/Snackbar";
-import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
-import TextField from "@material-ui/core/TextField";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import { uniq, map, filter, compose } from "ramda";
+import fbLogo from "../../images/facebook.png";
+import twLogo from "../../images/twitter.png";
+import inLogo from "../../images/linkedin.png";
+import emailLogo from "../../images/email.png";
+import phoneLogo from "../../images/phone-receiver.png";
 
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    marginTop: theme.spacing.unit * 3,
-    marginLeft: "1%",
-    width: "98%",
-    overflowX: "auto"
-  },
-  wrapper: {
-    margin: "100px 0",
-    minHeight: "80vh"
-  },
-  sectionStyles: {
-    marginTop: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginTop: "60%"
-    },
-    [theme.breakpoints.up("md")]: {
-      marginTop: "0%"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      marginTop: "0%",
-      marginLeft: "10%"
-    }
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
-  },
-  button: {
-    marginLeft: 20
-  },
+const SPACE = " ";
 
-  textField: {
-    width: 400
-  },
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-    marginTop: theme.spacing.unit * 3
-  },
-  row: {
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.background.default
-    }
-  },
-  table: {
-    minWidth: 700
-  },
-  tableWrapper: {
-    overflowX: "auto"
-  },
-  titleRow: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    margin: theme.spacing.unit * 2,
-    [theme.breakpoints.up("sm")]: {
-      justifyContent: "space-between"
-    }
-  },
-  searchBar: {
-    marginRight: 0,
-    display: "flex",
-    flexWrap: "wrap",
-    [theme.breakpoints.up("sm")]: {
-      justifyContent: "space-between"
-    }
-  },
-  personalizedCell: {
-    width: "7px",
-    align: "center",
-    whiteSpace: "nowrap"
+const splitOnSpace = x => x.split(SPACE);
+const joinWithSpace = x => x.join(SPACE);
+
+const capitalizeWord = str => {
+  if (typeof str !== "string") {
+    return "";
   }
-});
-
-function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0][1], b[0][1]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => desc(a, b, orderBy)
-    : (a, b) => -desc(a, b, orderBy);
-}
-const rows = [
-  {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
-    label: "Name"
-  },
-  {
-    id: "specialty",
-    numeric: false,
-    disablePadding: false,
-    label: "Specialty"
-  },
-  {
-    id: "mail",
-    numeric: false,
-    disablePadding: false,
-    label: "e-mail"
-  },
-  {
-    id: "phone",
-    numeric: false,
-    disablePadding: false,
-    label: "Phone"
-  },
-  {
-    id: "location",
-    numeric: true,
-    disablePadding: false,
-    label: "Location "
-  },
-  {
-    id: "linkedin",
-    numeric: false,
-    disablePadding: false,
-    label: " LinkedIn"
-  },
-  { id: "twitter", numeric: false, disablePadding: false, label: "Twitter" },
-  { id: "facebook", numeric: false, disablePadding: false, label: "Facebook" }
-];
-
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white
-  },
-  body: {
-    fontSize: 12,
-    width: "100px"
-  }
-}))(TableCell);
-
-class EnhancedTableHead extends React.Component {
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  render() {
-    const { order, orderBy } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          <CustomTableCell padding="checkbox" />
-          {rows.map(row => {
-            return (
-              <CustomTableCell
-                key={row.id}
-                padding={row.disablePadding ? "none" : "none"}
-                sortDirection={orderBy === row.id ? order : false}
-              >
-                <Tooltip
-                  title="Sort"
-                  placement={row.numeric ? "bottom-end" : "bottom-start"}
-                  enterDelay={300}
-                >
-                  <TableSortLabel
-                    active={orderBy === row.id}
-                    direction={order}
-                    onClick={this.createSortHandler(row.id)}
-                  >
-                    {row.label}
-                  </TableSortLabel>
-                </Tooltip>
-              </CustomTableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-EnhancedTableHead.propTypes = {
-  onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.string.isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired
+  let newStr = str.toLowerCase();
+  return newStr.charAt(0).toUpperCase() + newStr.slice(1);
 };
 
-const toolbarStyles = theme => ({
+const toTitleCase = compose(
+  joinWithSpace,
+  map(capitalizeWord),
+  splitOnSpace
+);
+
+/**
+ * Uses Ramda methods. The functions in the compose method are executed from right to left or from bottom to top.
+ * @param {[String]} strings an array of strings
+ * @return {Array} removes duplicates, title cases sentences and sorts in alphabetically
+ */
+const sanitizeStrings = compose(
+  uniq,
+  filter(Boolean),
+  map(toTitleCase)
+);
+
+const styles = theme => ({
+  wrapper: {
+    display: "flex",
+    flexWrap: "wrap",
+    marginTop: "160px",
+    minHeight: "70vh",
+    [theme.breakpoints.up("sm")]: {
+      marginTop: "225px"
+    }
+  },
+  card: {
+    maxWidth: 345,
+    minWidth: 300,
+    flexGrow: 1,
+    margin: theme.spacing.unit
+  },
+  bigAvatar: {
+    margin: 10,
+    width: 100,
+    height: 100,
+    backgroundColor: theme.palette.secondary
+  },
+  dialogTitle: {
+    display: "flex",
+    flexFlow: "row noWrap"
+  },
   root: {
-    paddingRight: theme.spacing.unit
+    width: "100%",
+    zIndex: 1000,
+    position: "fixed",
+    top: "90px",
+    [theme.breakpoints.up("sm")]: {
+      top: "145px"
+    },
+    [theme.breakpoints.up("md")]: {
+      top: "150px"
+    }
   },
-  highlight:
-    theme.palette.type === "light"
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85)
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark
-        },
-  spacer: {
-    flex: "1 1 50%"
+  details: {
+    width: "100%"
   },
-  actions: {
-    color: theme.palette.text.secondary
+  formControl: {
+    width: "100%",
+    margin: "8px 24px 16px 24px",
+    fontSize: "0.8em"
   },
-  title: {
-    flex: "0 0 auto"
+  group: {
+    display: "unset"
+  },
+  link: {
+    color: theme.palette.primary.main,
+    textDecoration: "none",
+    "&:hover": {
+      textDecoration: "underline"
+    }
+  },
+  quote: {
+    borderLeft: "2px solid #c7c7c7",
+    fontStyle: "italic",
+    padding: "4px",
+    fontSize: "1.3em",
+    margin: "16px"
   }
 });
 
-const MentorsList = ({
-  state,
-  classes,
-  filterBySpecialty,
-  isSelected,
-  handleClick,
-  handleRequestSort,
-  handleChangePage,
-  handleChange,
-  handleChangeRowsPerPage,
-  getMentors
-}) => {
-  const { mentors, order, orderBy, rowsPerPage, page, mentorKey } = state;
-  const emptyRows = mentors
-    ? rowsPerPage - Math.min(rowsPerPage, mentors.length - page * rowsPerPage)
-    : 0;
+function SelectionPanel(props) {
+  const {
+    classes,
+    specialties,
+    locations,
+    selectedSpecialty,
+    handleSelectedSpecialty,
+    setSelectedFilter,
+    selectedContent,
+    selectedLocation,
+    handleSelectedLocation,
+    expanded
+  } = props;
 
   return (
     <div className={classes.root}>
-      <div className={classes.titleRow}>
-        <div className={classes.searchBar}>
-          {" "}
-          <TextField
-            id="specialty"
-            name="specialty"
-            label="Filter by specialty"
-            placeholder="e.g. Accountant"
-            className={classes.textField}
-            onChange={handleChange}
-            margin="normal"
-          />
-          <Button
-            size="small"
-            variant="extendedFab"
-            color="secondary"
-            aria-label="Add"
-            className={classes.button}
-            onClick={filterBySpecialty}
-          >
-            <SearchIcon /> Search
-          </Button>
-          <Button
-            size="small"
-            variant="extendedFab"
-            color="primary"
-            aria-label="Add"
-            className={classes.button}
-            onClick={getMentors}
-          >
-            Show all mentors
-          </Button>
-        </div>
-      </div>
-      {mentors ? (
-        <Paper className={classes.root}>
-          <div className={classes.tableWrapper}>
-            <Table className={classes.table} aria-labelledby="tableTitle">
-              <EnhancedTableHead
-                mentorKey={mentorKey}
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-                rowCount={Object.keys(mentors).length}
-              />
-              <TableBody>
-                {stableSort(Object.entries(mentors), getSorting(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map(n => {
-                    const itIsSelected = isSelected(n[0]);
-                    return (
-                      <TableRow
-                        hover
-                        onClick={event => handleClick(event, n[0], n[1])}
-                        role="checkbox"
-                        aria-checked={itIsSelected}
-                        tabIndex={-1}
-                        key={n[0]}
-                        selected={itIsSelected}
-                        className={classes.row}
-                      >
-                        <CustomTableCell
-                          padding="checkbox"
-                          className={classes.personalizedCell}
-                        >
-                          <Radio checked={mentorKey === n[0]} color="primary" />
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].name}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].specialty}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].mail}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].phone}
-                        </CustomTableCell>
-                        <CustomTableCell className={classes.personalizedCell}>
-                          {n[1].location}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].linkedin}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].twitter}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].facebook}
-                        </CustomTableCell>
-                      </TableRow>
-                    );
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 49 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+      <ExpansionPanel expanded={expanded}>
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          <div className={classes.column}>
+            <Button
+              data-id="specialty"
+              size="small"
+              color="primary"
+              onClick={setSelectedFilter}
+            >
+              Specialty
+            </Button>
           </div>
-          <TablePagination
-            component="div"
-            count={Object.keys(mentors).length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            backIconButtonProps={{
-              "aria-label": "Previous Page"
-            }}
-            nextIconButtonProps={{
-              "aria-label": "Next Page"
-            }}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-          />
-        </Paper>
-      ) : (
-        <div className={classes.root}>
-          <Typography variant="h5"> You don't have any mentors yet.</Typography>
-        </div>
-      )}
+          <div className={classes.column}>
+            <Button
+              data-id="location"
+              size="small"
+              color="primary"
+              onClick={setSelectedFilter}
+            >
+              Location
+            </Button>
+          </div>
+          <div className={classes.column}>
+            <Button
+              data-id="all"
+              size="small"
+              color="primary"
+              onClick={setSelectedFilter}
+            >
+              All mentors
+            </Button>
+          </div>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails className={classes.details}>
+          {selectedContent && selectedContent === "specialty" && (
+            <FormControl component="fieldset" className={classes.formControl}>
+              <RadioGroup
+                aria-label="Specialty"
+                name="mentor-specialty"
+                className={classes.group}
+                value={selectedSpecialty}
+                onChange={handleSelectedSpecialty}
+              >
+                {specialties &&
+                  specialties.map((specialty, index) => (
+                    <FormControlLabel
+                      value={specialty}
+                      control={<Radio />}
+                      label={specialty}
+                      key={`${specialty}_${index}`}
+                    />
+                  ))}
+              </RadioGroup>
+            </FormControl>
+          )}
+          {selectedContent && selectedContent === "location" && (
+            <FormControl component="fieldset" className={classes.formControl}>
+              <RadioGroup
+                aria-label="Specialty"
+                name="mentor-specialty"
+                className={classes.group}
+                value={selectedLocation}
+                onChange={handleSelectedLocation}
+              >
+                {locations &&
+                  locations.map((location, index) => (
+                    <FormControlLabel
+                      value={location}
+                      control={<Radio />}
+                      label={location}
+                      key={`${location}_${index}`}
+                    />
+                  ))}
+              </RadioGroup>
+            </FormControl>
+          )}
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
     </div>
   );
-};
+}
 
-class AvailableMentors extends React.Component {
+class AvailableMentors extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       mentors: [],
+      mentorDetail: "",
+      mentorId: "",
       uid: "",
-      open: false,
-      mentorKey: "",
-      order: "desc",
-      orderBy: "name",
-      selected: [],
       page: 0,
-      rowsPerPage: 5,
-      mentorData: {},
-      openSnackbarDeleted: false,
-      filterApplied: false,
-      specialty: ""
+      open: false,
+      scroll: "paper",
+      value: "",
+      specialties: [],
+      locations: [],
+      selectedSpecialty: "",
+      selectedLocation: "",
+      filteredMentors: null,
+      selectedContent: "specialty",
+      allMentorsKeys: null,
+      expanded: false
     };
   }
-  handleRequestSort = (event, property) => {
-    const orderBy = property;
-    let order = "desc";
-
-    if (this.state.orderBy === property && this.state.order === "desc") {
-      order = "asc";
-    }
-
-    this.setState({ order, orderBy });
-  };
-
-  handleClick = (event, key, mentorData) => {
-    this.state.mentorKey === key
-      ? this.setState({ mentorKey: "", mentorData: {} })
-      : this.setState({ mentorKey: key, mentorData: mentorData });
-  };
-
-  handleChangePage = (event, page) => {
-    this.setState({ page });
-  };
-
-  /**
-   * handleChange – the handleChange sets the specialty wrote in the state
-   * @param {Object} the object name and event
-   * @return {void}
-   */
-  handleChange = event => {
-    const { target } = event;
-    const { value, name } = target;
-    this.setState({
-      [name]: value
-    });
-  };
-
-  handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
-  };
-
-  isSelected = key => this.state.mentorKey === key;
-
-  arrayToObject = array =>
-    array.reduce((obj, item) => {
-      obj[item[0]] = item[1];
-      return obj;
-    }, {});
-
-  filterBySpecialty = () => {
-    const specialty = this.state.specialty;
-    if (specialty.trim().length > 0) {
-      const mentorsBySpecialty = this.arrayToObject(
-        Object.entries(this.state.mentorsMirror).filter(mentor =>
-          mentor[1].specialty.includes(specialty.toUpperCase())
-        )
-      );
-      this.setState({
-        mentors: mentorsBySpecialty,
-        filterApplied: true
-      });
-    }
-  };
-
-  handleClose = () => {
-    this.setState({ open: false, mentorKey: "" });
-  };
-
-  getMentors = () => {
-    getAvailableMentors().then(snapshot => {
-      this.setState({
-        mentors: snapshot.val(),
-        mentorsMirror: snapshot.val(),
-        filterApplied: false
-      });
-    });
-  };
-
-  /**
-   * handleSnackbarClose - sets the actions when the snackbar is closed
-   * @param {Object} event the event object
-   * @param {Object} reason for closing the snackbar
-   * @return {void}
-   */
-  handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    this.setState({
-      openSnackbarDeleted: false
-    });
-  };
 
   componentDidMount() {
     if (this.props.authUser) {
       this.unregisterObserver = this.getMentors();
     }
   }
+
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
       this.getMentors();
     }
   }
+
   componentWillUnmount() {
     this.unregisterObserver = null;
+    this.imgObserver = null;
   }
+
+  getMentors = () => {
+    db.getMentors().then(snapshot => {
+      const data = snapshot.val();
+      let specialties = [];
+      let locations = [];
+      let keys = [];
+      const mentorsData = Object.keys(data).map(mentorKey => {
+        specialties.push(data[mentorKey].specialty);
+        locations.push(data[mentorKey].location);
+        keys.push(mentorKey);
+        let mentorState =
+          data[mentorKey].mentorState && data[mentorKey].mentorState;
+        let imgUrl = data[mentorKey].pictureName;
+        let setImgUrl =
+          imgUrl === "" || imgUrl === "NA"
+            ? "https://via.placeholder.com/100.png/09f/fff?text=mentor"
+            : imgUrl;
+
+        const mentor = {
+          key: mentorKey,
+          name: toTitleCase(data[mentorKey].name),
+          location: toTitleCase(data[mentorKey].location),
+          specialty: toTitleCase(data[mentorKey].specialty),
+          available: data[mentorKey].available,
+          description: data[mentorKey].description,
+          pictureName: setImgUrl,
+          mentorState: mentorState,
+          mail: data[mentorKey].mail,
+          phone: data[mentorKey].phone,
+          lk: data[mentorKey].linkedin,
+          tw: data[mentorKey].twitter,
+          fb: data[mentorKey].facebook
+        };
+
+        return mentor;
+      });
+
+      data &&
+        this.setState({
+          mentors: mentorsData,
+          filterApplied: false,
+          specialties: sanitizeStrings(specialties).sort(),
+          locations: sanitizeStrings(locations).sort()
+        });
+    });
+  };
+
+  handleClickOpen = (scroll, mentorKey) => () => {
+    const { mentors } = this.state;
+
+    let selectedMentor = mentors.find(mentor => {
+      return mentor.key === mentorKey;
+    });
+
+    this.setState({
+      open: true,
+      scroll,
+      mentorId: mentorKey,
+      mentorDetail: selectedMentor
+    });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  setSelectedFilter = event => {
+    event.preventDefault();
+    const selectedFilter = event.currentTarget.dataset.id;
+
+    selectedFilter === "all"
+      ? this.setState({
+          selectedLocation: "",
+          selectedSpecialty: "",
+          filteredMentors: null,
+          selectedContent: "",
+          expanded: false
+        })
+      : this.setState({
+          selectedContent: selectedFilter,
+          expanded: true
+        });
+  };
+
+  handleSelectedSpecialty = event => {
+    this.setState(
+      {
+        selectedSpecialty: event.target.value
+      },
+      () => {
+        const { selectedSpecialty, mentors } = this.state;
+        const filteredMentors = this.filterOnSpecialty(
+          selectedSpecialty,
+          mentors
+        );
+        this.setState({
+          filteredMentors,
+          selectedLocation: "",
+          expanded: false
+        });
+      }
+    );
+  };
+
+  filterOnSpecialty = (specialty, mentors) => {
+    const isMentor = mentor => mentor.specialty === specialty;
+    return filter(isMentor, mentors);
+  };
+
+  handleSelectedLocation = event => {
+    this.setState(
+      {
+        selectedLocation: event.target.value
+      },
+      () => {
+        const { selectedLocation, mentors } = this.state;
+        const filteredMentors = this.filterOnLocation(
+          selectedLocation,
+          mentors
+        );
+        this.setState({
+          filteredMentors,
+          selectedSpecialty: "",
+          expanded: false
+        });
+      }
+    );
+  };
+
+  filterOnLocation = (location, mentors) => {
+    const isMentor = mentor => mentor.location === location;
+    return filter(isMentor, mentors);
+  };
+
+  handleChange = event => {
+    const { expanded } = this.state;
+    this.setState({
+      expanded: expanded ? true : false
+    });
+  };
 
   render() {
     const { classes } = this.props;
-    const { openSnackbarDeleted, open } = this.state;
+    const {
+      mentors,
+      mentorDetail,
+      specialties,
+      selectedSpecialty,
+      selectedLocation,
+      filteredMentors,
+      locations,
+      selectedContent,
+      expanded
+    } = this.state;
+    const mentorsToShow = filteredMentors ? filteredMentors : mentors;
+
     return (
-      <div className={classes.wrapper}>
-        <div className={classes.root}>
-          <Typography variant="h5" gutterBottom>
-            Mentors
-          </Typography>
-          <MentorsList
+      <div>
+        <div className={classes.wrapper}>
+          <SelectionPanel
             classes={classes}
-            state={this.state}
-            filterBySpecialty={this.filterBySpecialty}
-            handleClose={this.handleClose}
-            isSelected={this.isSelected}
-            handleClick={this.handleClick}
-            handleSelectAllClick={this.handleSelectAllClick}
-            handleRequestSort={this.handleRequestSort}
-            handleChange={this.handleChange}
-            handleChangePage={this.handleChangePage}
-            handleChangeRowsPerPage={this.handleChangeRowsPerPage}
-            getMentors={this.getMentors}
+            data={mentorDetail}
+            state={this.state.value}
+            specialties={specialties}
+            selectedContent={selectedContent}
+            locations={locations}
+            selectedSpecialty={selectedSpecialty}
+            selectedLocation={selectedLocation}
+            handleSelectedSpecialty={this.handleSelectedSpecialty}
+            setSelectedFilter={this.setSelectedFilter}
+            handleSelectedLocation={this.handleSelectedLocation}
+            expanded={expanded}
           />
+          {mentorsToShow.map(mentor => (
+            <Card className={classes.card} key={mentor.key}>
+              <CardActionArea
+                onClick={this.handleClickOpen("paper", mentor.key)}
+              >
+                <CardHeader
+                  avatar={
+                    <Avatar
+                      alt={mentor.name}
+                      src={mentor.pictureName}
+                      className={classes.bigAvatar}
+                    />
+                  }
+                  title={mentor.name}
+                  subheader={mentor.location}
+                />
+                <CardContent>
+                  {mentor.mentorState && (
+                    <blockquote className={classes.quote}>
+                      {mentor.mentorState}
+                    </blockquote>
+                  )}
+                  <Typography variant="body2">{mentor.specialty}</Typography>
+                  {mentor.mail && (
+                    <Typography gutterBottom variant="body2">
+                      {mentor.mail}
+                    </Typography>
+                  )}
+                  <br />
+                  {mentor.available ? (
+                    <hr style={{ border: "1px solid green" }} />
+                  ) : (
+                    <hr style={{ border: "1px solid red" }} />
+                  )}
+                  {mentor.available ? (
+                    <Typography component="p" style={{ color: "green" }}>
+                      available
+                    </Typography>
+                  ) : (
+                    <Typography component="p" style={{ color: "red" }}>
+                      not available
+                    </Typography>
+                  )}
+                </CardContent>
+              </CardActionArea>
+              <CardActions>
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={this.handleClickOpen("paper", mentor.key)}
+                >
+                  Learn More
+                </Button>
+              </CardActions>
+            </Card>
+          ))}
         </div>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={openSnackbarDeleted}
-          autoHideDuration={3000}
-          onClose={this.handleSnackbarClose}
-          id="openSnackbarDeleted"
-          name="openSnackbarDeleted"
-        >
-          <SnackbarContentWrapper
-            onClose={this.handleSnackbarClose}
-            variant="warning"
-            message="Mentor deleted"
-          />
-        </Snackbar>
+
+        {mentorDetail && (
+          <div>
+            <Dialog
+              open={this.state.open}
+              onClose={this.handleClose}
+              scroll="paper"
+              aria-labelledby="scroll-dialog-title"
+            >
+              <DialogTitle
+                id="scroll-dialog-title"
+                className={classes.dialogTitle}
+              >
+                <Avatar
+                  alt="Remy Sharp"
+                  src={mentorDetail.pictureName}
+                  className={classes.bigAvatar}
+                />
+                <span>
+                  {mentorDetail.name}
+                  <Typography variant="body2">
+                    {mentorDetail.specialty}
+                  </Typography>
+                  <Typography gutterBottom variant="body2">
+                    {mentorDetail.location}
+                  </Typography>
+                </span>
+              </DialogTitle>
+
+              <DialogContent>
+                <DialogContentText>
+                  {mentorDetail.description}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                {mentorDetail.fb && (
+                  <Button onClick={this.handleClose} color="primary">
+                    <a href={mentorDetail.fb} target="blank">
+                      <img src={fbLogo} width="32px" alt="facebook" />
+                    </a>
+                  </Button>
+                )}
+                {mentorDetail.tw && (
+                  <Button onClick={this.handleClose} color="primary">
+                    <a href={mentorDetail.tw} target="blank">
+                      <img src={twLogo} width="32px" alt="twitter" />
+                    </a>
+                  </Button>
+                )}
+                {mentorDetail.lk && (
+                  <Button onClick={this.handleClose} color="primary">
+                    <a href={mentorDetail.lk} target="blank">
+                      <img src={inLogo} width="32px" alt="linkedin" />
+                    </a>
+                  </Button>
+                )}
+                {mentorDetail.mail && (
+                  <Button onClick={this.handleClose} color="primary">
+                    <a href={`mailto:${mentorDetail.mail}`}>
+                      <img src={emailLogo} width="32px" alt="linkedin" />
+                    </a>
+                  </Button>
+                )}
+                {mentorDetail.phone && (
+                  <Button disableRipple>
+                    <img src={phoneLogo} width="32px" alt="phone-number" />{" "}
+                    {mentorDetail.phone}
+                  </Button>
+                )}
+              </DialogActions>
+            </Dialog>
+          </div>
+        )}
       </div>
     );
   }
 }
+
+AvailableMentors.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
 const StyledMentors = withStyles(styles)(AvailableMentors);
 const authMentors = authUser => Boolean(authUser);
-
 export default withAuthorization(authMentors)(StyledMentors);
