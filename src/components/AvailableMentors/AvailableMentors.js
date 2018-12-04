@@ -135,12 +135,13 @@ function SelectionPanel(props) {
     setSelectedFilter,
     selectedContent,
     selectedLocation,
-    handleSelectedLocation
+    handleSelectedLocation,
+    expanded
   } = props;
 
   return (
     <div className={classes.root}>
-      <ExpansionPanel>
+      <ExpansionPanel expanded={expanded}>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <div className={classes.column}>
             <Button
@@ -241,7 +242,8 @@ class AvailableMentors extends Component {
       selectedLocation: "",
       filteredMentors: null,
       selectedContent: "specialty",
-      allMentorsKeys: null
+      allMentorsKeys: null,
+      expanded: false
     };
   }
 
@@ -342,10 +344,12 @@ class AvailableMentors extends Component {
           selectedLocation: "",
           selectedSpecialty: "",
           filteredMentors: null,
-          selectedContent: ""
+          selectedContent: "",
+          expanded: false
         })
       : this.setState({
-          selectedContent: selectedFilter
+          selectedContent: selectedFilter,
+          expanded: true
         });
   };
 
@@ -362,7 +366,8 @@ class AvailableMentors extends Component {
         );
         this.setState({
           filteredMentors,
-          selectedLocation: ""
+          selectedLocation: "",
+          expanded: false
         });
       }
     );
@@ -386,7 +391,8 @@ class AvailableMentors extends Component {
         );
         this.setState({
           filteredMentors,
-          selectedSpecialty: ""
+          selectedSpecialty: "",
+          expanded: false
         });
       }
     );
@@ -395,6 +401,13 @@ class AvailableMentors extends Component {
   filterOnLocation = (location, mentors) => {
     const isMentor = mentor => mentor.location === location;
     return filter(isMentor, mentors);
+  };
+
+  handleChange = event => {
+    const { expanded } = this.state;
+    this.setState({
+      expanded: expanded ? true : false
+    });
   };
 
   render() {
@@ -407,7 +420,8 @@ class AvailableMentors extends Component {
       selectedLocation,
       filteredMentors,
       locations,
-      selectedContent
+      selectedContent,
+      expanded
     } = this.state;
     const mentorsToShow = filteredMentors ? filteredMentors : mentors;
 
@@ -426,6 +440,7 @@ class AvailableMentors extends Component {
             handleSelectedSpecialty={this.handleSelectedSpecialty}
             setSelectedFilter={this.setSelectedFilter}
             handleSelectedLocation={this.handleSelectedLocation}
+            expanded={expanded}
           />
           {mentorsToShow.map(mentor => (
             <Card className={classes.card} key={mentor.key}>
