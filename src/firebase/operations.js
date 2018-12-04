@@ -1,14 +1,12 @@
 import { db, storage } from "./firebase.js";
 
-export function writeNewMentor(data, picture) {
-  const newMentorsKey = db
+export function writeNewMentor(uid, data, picture) {
+  putImage(picture, uid);
+  return db
     .ref()
     .child("mentors")
-    .push().key;
-  const updates = {};
-  updates["/mentors/" + newMentorsKey] = data;
-  putImage(picture, newMentorsKey);
-  return db.ref().update(updates);
+    .child(uid)
+    .set(data);
 }
 
 export function writeNewMentee(userId, data) {
@@ -30,9 +28,16 @@ function putImage(picture, pictureName) {
     const storageRef = storage.ref();
     const fullPicturePath = "images/" + pictureName;
     const mentorImageRef = storageRef.child(fullPicturePath);
-    mentorImageRef.put(picture).catch(error => {
-      console.log(error);
-    });
+    mentorImageRef
+      .put(picture)
+      .then(() => {
+        getImage(pictureName).then(url => {
+          setImage(pictureName, url);
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 }
 
@@ -60,6 +65,19 @@ export function getAdmin(uid) {
   return admin.child(uid).once("value");
 }
 
+export function getMentor(uid) {
+  const mentor = db.ref("mentors");
+  return mentor.child(uid).once("value");
+}
+
+export function getMentorState(uid) {
+  const mentor = db.ref("mentors");
+  return mentor
+    .child(uid)
+    .child("mentorState")
+    .once("value");
+}
+
 export function getAvailableMentors() {
   const mentors = db.ref("mentors");
 
@@ -69,7 +87,7 @@ export function getAvailableMentors() {
     .once("value");
 }
 
-export function getImage(key, pictureName) {
+export function getImage(key) {
   const childName = "images/" + key;
   const storageRef = storage.ref();
   const starsRef = storageRef.child(childName);
@@ -83,4 +101,33 @@ export function deleteMentor(mentorKey) {
     .child(mentorKey);
   deleteImage(mentorKey);
   return mentorToDelete.remove();
+}
+
+export function writeMentorWithoutEmail(data, picture) {
+  const newMentorsKey = db
+    .ref()
+    .child("mentors")
+    .push().key;
+  const updates = {};
+  updates["/mentors/" + newMentorsKey] = data;
+  putImage(picture, newMentorsKey);
+  return db.ref().update(updates);
+}
+
+export function setState(mentorsKey, state) {
+  return db
+    .ref()
+    .child("mentors")
+    .child(mentorsKey)
+    .child("mentorState")
+    .set(state);
+}
+
+export function setImage(mentorsKey, url) {
+  return db
+    .ref()
+    .child("mentors")
+    .child(mentorsKey)
+    .child("pictureName")
+    .set(url);
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { firebase } from "../firebase";
 import AuthUserContext from "./AuthUserContext";
-import { getAdmin } from "../firebase/operations";
+import { getAdmin, getMentor } from "../firebase/operations";
 
 const withAuthentication = Component => {
   class WithAuthentication extends React.Component {
@@ -19,11 +19,21 @@ const withAuthentication = Component => {
           ? getAdmin(authUser.uid)
               .then(snapshot => {
                 snapshot.val() &&
-                  this.setState({ authUser: { authUser, admin: true } });
+                  this.setState({ authUser: { authUser, rol: "admin" } });
               })
-              .catch(e =>
-                this.setState({ authUser: { authUser, admin: false } })
-              )
+              .catch(e => {
+                getMentor(authUser.uid)
+                  .then(snapshot => {
+                    snapshot.val()
+                      ? this.setState({ authUser: { authUser, rol: "mentor" } })
+                      : this.setState({
+                          authUser: { authUser, rol: "mentee" }
+                        });
+                  })
+                  .catch(e => {
+                    this.setState({ authUser: { authUser, rol: "mentee" } });
+                  });
+              })
           : this.setState({ authUser: null });
       });
     }

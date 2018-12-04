@@ -9,6 +9,8 @@ import Footer from "./Footer/Footer";
 import Home from "./Home/Home";
 import Mentors from "./Mentors";
 import NewMentor from "./Mentors/NewMentor";
+import Mentor from "./Mentors/Mentor";
+import MentorsHome from "./MentorsHome";
 import Logout from "./LogOut/LogOut";
 import NewMentee from "./Mentees/NewMentee";
 import TermsAndConditions from "./Mentees/TermsAndConditions";
@@ -16,6 +18,7 @@ import AvailableMentors from "./AvailableMentors";
 import PasswordReset from "./PasswordReset/PasswordReset";
 import Settings from "./Settings/Settings";
 import NoFound from "./NoFound/NoFound";
+import LogIn from "./Login/LogIn";
 
 const App = () => (
   <div className="App">
@@ -33,7 +36,9 @@ const App = () => (
         <Route path="/password-reset" component={PasswordReset} />
         <Route path="/settings" component={Settings} />
         <Route path="/nofound" component={NoFound} />
-
+        <Route path="/mentorshome" component={MentorsHome} />
+        <Route path="/mentor" component={Mentor} />
+        <Route path="/login" component={LogIn} />
       </Switch>
       <Footer />
     </MuiThemeProvider>
