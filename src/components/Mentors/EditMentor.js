@@ -2,77 +2,46 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
-import { Redirect } from "react-router-dom";
 import PhotoIcon from "../../images/baseline_photo.png";
 import Grid from "@material-ui/core/Grid";
 import * as R from "ramda";
-import {
-  writeMentorWithoutEmail,
-  editMentor,
-  deleteMentor
-} from "../../firebase/operations";
+import { getMentor, editMentor } from "../../firebase/operations";
 import { validateString } from "../validity";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import { auth } from "../../firebase";
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
-    margin: "120px 0",
-    minHeight: "80vh",
-    [theme.breakpoints.up("sm")]: {
-      margin: "120px 24px"
-    }
-  },
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-    marginTop: theme.spacing.unit * 3
-  },
-  dpMargin: {
-    marginTop: theme.spacing.unit * 6,
-    marginRight: theme.spacing.unit * 3
-  },
-  sectionMargin: {
-    marginTop: theme.spacing.unit * 6
-  },
-  slider: {
-    maxWidth: 400,
-    margin: "24px 0"
-  },
-  selectEmpty: {
-    marginTop: theme.spacing.unit * 2,
-    [theme.breakpoints.between("sm", "md")]: {
-      marginRight: "20%"
-    }
+    padding: theme.spacing.unit * 1
   },
   formControl: {
-    margin: "24px 0",
-    minWidth: 250,
+    margin: "20px 0",
+    [theme.breakpoints.up("xs")]: {
+      margin: "5px 0"
+    },
     [theme.breakpoints.up("sm")]: {
-      width: 400
+      margin: "15px 0"
+    },
+    [theme.breakpoints.up("md")]: {
+      margin: "20px 0"
+    },
+
+    [theme.breakpoints.between("sm", "md")]: {
+      margin: "10px 0"
     }
   },
-
   textField: {
     [theme.breakpoints.up("xs")]: {
-      width: 250
+      width: "auto"
     },
     [theme.breakpoints.up("sm")]: {
       width: 400
@@ -95,29 +64,15 @@ const styles = theme => ({
   buttons: {
     marginTop: theme.spacing.unit * 6
   },
-  paperPadding: {
-    padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 2
-  },
-  notesLegendStyle: {
-    marginRight: "40%",
-    width: "60%",
-    [theme.breakpoints.down("md")]: {
-      marginRight: "0%",
-      width: "100%"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      marginRight: "10%"
-    }
-  },
+
   picture: {
     [theme.breakpoints.up("xs")]: {
       width: 180,
-      height: 200
+      height: 210
     },
     [theme.breakpoints.up("sm")]: {
-      width: 260,
-      height: 280
+      width: 280,
+      height: 330
     },
     [theme.breakpoints.up("md")]: {
       width: 250,
@@ -131,7 +86,7 @@ const styles = theme => ({
   },
   card: {
     paddingBottom: "1%",
-
+    width: "auto",
     [theme.breakpoints.up("xs")]: {
       marginTop: "0px"
     },
@@ -148,7 +103,7 @@ const styles = theme => ({
   }
 });
 
-class NewMentor extends Component {
+class EditMentor extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -166,7 +121,7 @@ class NewMentor extends Component {
       facebook: "",
       description: "",
       descriptionError: "",
-      btnText: "Save",
+      btnText: "Create account",
       openSnackbarSaved: false,
       openSnackbarError: false,
       sectionError: "",
@@ -175,57 +130,17 @@ class NewMentor extends Component {
       returnMentor: false,
       available: false,
       pictureName: PhotoIcon,
-      open: false,
       imageError: "",
-      openSnackbarDeleted: false,
       mentorState: "Let's talk about business"
     };
   }
 
   /**
-   * componentDidMount – sets in the state data to edit
-   * @returns {void}
-   */
-  componentDidMount = () => {
-    this.authUser = this.props.location.state.authUser;
-    if (this.props.location.state.mentor) {
-      const { mentor } = this.props.location.state;
-      this.dataToEdit(mentor);
-    }
-  };
-
-  /**
-   * dataToEdit – sets the state with the parameters sent via url
-   * @returns {void}
-   *
-   */
-  dataToEdit = mentor => {
-    const { key } = this.props.location.state;
-    this.setState({
-      name: mentor.name,
-      specialty: mentor.specialty,
-      mail: mentor.mail,
-      phone: mentor.phone,
-      location: mentor.location,
-      linkedin: mentor.linkedin,
-      twitter: mentor.twitter,
-      facebook: mentor.facebook,
-      description: mentor.description,
-      btnText: "Save changes",
-      key: key,
-      pictureName: mentor.pictureName === "NA" ? PhotoIcon : mentor.pictureName,
-      available: mentor.available,
-      mentorState: mentor.mentorState
-    });
-  };
-
-  /**
-   * checkForErrors - sets an error if the section if there are required fields
+   * allRequiredDataProvided - sets an error if the section if there are required fields
    * without a value
    * @returns {void}
    */
-  checkForErrors = () => {
-    let response = false;
+  allRequiredDataProvided = () => {
     const errorMessages =
       this.state.nameError ||
       this.state.mailError ||
@@ -237,9 +152,10 @@ class NewMentor extends Component {
         openSnackbarError: true,
         sectionError: "The fields with * are required"
       });
-      response = true;
+      return false;
     }
-    return response;
+
+    return true;
   };
 
   /**
@@ -291,7 +207,8 @@ class NewMentor extends Component {
     size <= 5
       ? this.setState({
           pictureName: window.URL.createObjectURL(currentFile),
-          pictureBlob: currentFile
+          pictureBlob: currentFile,
+          imageError: ""
         })
       : this.setState({
           sectionError: "The size of the image must be inferior to 5 MB.",
@@ -331,30 +248,25 @@ class NewMentor extends Component {
    */
   handleSubmit = e => {
     e.preventDefault();
-    const key = this.state.key;
-    if (!this.checkForErrors()) {
-      !key
-        ? writeMentorWithoutEmail(
-            this.getFirebasePayload(),
-            this.state.pictureBlob
-          ).then(
-            this.setState({
-              openSnackbarSaved: true,
-              sectionError: "",
-              successMsg: "Mentor's information has been saved"
-            })
-          )
-        : editMentor(
-            this.getFirebasePayload(),
-            key,
-            this.state.pictureBlob
-          ).then(
-            this.setState({
-              openSnackbarSaved: true,
-              successMsg: "Mentor's information has been modified",
-              sectionError: ""
-            })
-          );
+
+    if (this.allRequiredDataProvided()) {
+      editMentor(
+        this.getFirebasePayload(),
+        auth.currentUserUid(),
+        this.state.pictureBlob
+      )
+        .then(() => {
+          this.setState({
+            openSnackbarSaved: true,
+            sectionError: ""
+          });
+        })
+        .catch(error => {
+          this.setState({
+            sectionError: error.message,
+            openSnackbarError: true
+          });
+        });
     }
   };
 
@@ -373,27 +285,55 @@ class NewMentor extends Component {
           openSnackbarSaved: false,
           returnMentor: true
         })
-      : this.state.openSnackbarDeleted
-      ? this.setState({
-          openSnackbarDeleted: false,
-          returnMentor: true
-        })
       : this.setState({ openSnackbarError: false });
   };
 
-  handleDeleteMentor = () => {
-    const { key } = this.state;
-    deleteMentor(key).then(this.setState({ openSnackbarDeleted: true }));
-    this.handleClose();
+  /**
+   * getMentorData – sets the state with the parameters of the current mentor
+   * @returns {void}
+   *
+   */
+  getMentorData = () => {
+    getMentor(auth.currentUserUid())
+      .then(mentor => {
+        this.setState({
+          name: mentor.val().name,
+          specialty: mentor.val().specialty,
+          mail: mentor.val().mail,
+          phone: mentor.val().phone,
+          location: mentor.val().location,
+          linkedin: mentor.val().linkedin,
+          twitter: mentor.val().twitter,
+          facebook: mentor.val().facebook,
+          description: mentor.val().description,
+          pictureName:
+            mentor.val().pictureName === "NA"
+              ? PhotoIcon
+              : mentor.val().pictureName,
+          available: mentor.val().available,
+          mentorState: mentor.val().mentorState
+        });
+      })
+      .catch();
   };
 
-  handleClickDeleteMentor = () => {
-    this.setState({ open: true });
+  /**
+   * componentDidMount – sets in the state data to edit
+   * @returns {void}
+   */
+  componentDidMount = () => {
+    this.unregisterObserver = this.getMentorData();
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
-  };
+  /**
+   * componentWillUnmount – clean the functions loaded in componentDidMount in
+   * order to avoid leaks of memory.
+   * @returns {void}
+   */
+  componentWillUnmount() {
+    this.unregisterObserver = null;
+  }
+
   render() {
     const { classes } = this.props;
     const {
@@ -406,42 +346,25 @@ class NewMentor extends Component {
       twitter,
       facebook,
       description,
-      btnText,
       openSnackbarSaved,
       openSnackbarError,
       sectionError,
       pictureName,
-      returnMentor,
       nameError,
       specialtyError,
       locationError,
       descriptionError,
       available,
-      open,
-      imageError,
-      key,
-      openSnackbarDeleted,
-      mentorState
+      imageError
     } = this.state;
 
     return (
       <div className={classes.root}>
-        {returnMentor && (
-          <Redirect
-            to={{
-              pathname: "/mentors",
-              state: { from: this.props.location }
-            }}
-          />
-        )}
         <Card className={classes.card}>
           <form onSubmit={this.handleSubmit}>
             <CardContent>
-              <Grid container spacing={24}>
-                <Grid item xs={12} sm={6} md={6} lg={6}>
-                  <div className={classes.sectionMargin}>
-                    <Typography variant="h6">Mentor's information</Typography>
-                  </div>
+              <Grid container spacing={8}>
+                <Grid item xs={12} sm={7} md={7} lg={7}>
                   <div>
                     <img
                       src={pictureName}
@@ -468,7 +391,6 @@ class NewMentor extends Component {
                         onChange={this.handleChange}
                         className={classes.textField}
                         onBlur={this.checkForNull}
-                        margin="normal"
                         required
                       />
                       <FormHelperText error={true}>{nameError}</FormHelperText>
@@ -480,11 +402,11 @@ class NewMentor extends Component {
                         id="specialty"
                         name="specialty"
                         label="Specialty"
+                        placeholder="e.g. Accountant, Visual Arts, Design, etc."
                         value={specialty}
                         onChange={this.handleChange}
                         onBlur={this.checkForNull}
                         className={classes.textField}
-                        margin="normal"
                         required
                       />
                       <FormHelperText error={true}>
@@ -498,14 +420,14 @@ class NewMentor extends Component {
                         id="description"
                         name="description"
                         label="Description"
+                        placeholder="Professional abstract"
                         multiline
                         rowsMax="15"
-                        rows="10"
+                        rows="7"
                         value={description}
                         onBlur={this.checkForNull}
                         onChange={this.handleChange}
                         className={classes.textField}
-                        margin="normal"
                         required
                       />
                     </FormControl>
@@ -514,18 +436,18 @@ class NewMentor extends Component {
                     </FormHelperText>
                   </div>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6} lg={6}>
+                <Grid item xs={12} sm={5} md={5} lg={5}>
                   <div>
                     <FormControl required className={classes.formControl}>
                       <TextField
                         id="location"
                         name="location"
                         label=" Location"
+                        placeholder="Physical location (e.g. New England)"
                         value={location}
                         onBlur={this.checkForNull}
                         onChange={this.handleChange}
                         className={classes.textField}
-                        margin="normal"
                         required
                       />
                     </FormControl>
@@ -538,12 +460,12 @@ class NewMentor extends Component {
                       <TextField
                         id="mail"
                         name="mail"
-                        label="Mail"
+                        label="E-mail"
                         type="email"
                         value={mail}
+                        required
                         onChange={this.handleChange}
                         className={classes.textField}
-                        margin="normal"
                       />
                     </FormControl>
                   </div>
@@ -556,7 +478,6 @@ class NewMentor extends Component {
                         value={phone}
                         onChange={this.handleChange}
                         className={classes.textField}
-                        margin="normal"
                       />
                     </FormControl>
                   </div>
@@ -565,11 +486,10 @@ class NewMentor extends Component {
                       <TextField
                         id="linkedin"
                         name="linkedin"
-                        label="Linkedin"
+                        label="LinkedIn"
                         value={linkedin}
                         onChange={this.handleChange}
                         className={classes.textField}
-                        margin="normal"
                       />
                     </FormControl>
                   </div>
@@ -582,7 +502,6 @@ class NewMentor extends Component {
                         value={twitter}
                         onChange={this.handleChange}
                         className={classes.textField}
-                        margin="normal"
                       />
                     </FormControl>
                   </div>
@@ -593,21 +512,6 @@ class NewMentor extends Component {
                         name="facebook"
                         label="Facebook"
                         value={facebook}
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                        margin="normal"
-                      />
-                    </FormControl>
-                  </div>
-                  <div>
-                    <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="mentorState"
-                        name="mentorState"
-                        multiline
-                        rows="8"
-                        label="Your message"
-                        value={mentorState}
                         onChange={this.handleChange}
                         className={classes.textField}
                       />
@@ -624,7 +528,7 @@ class NewMentor extends Component {
                             value="available"
                           />
                         }
-                        label="Available"
+                        label="Available for mentoring."
                       />
                     </FormControl>
                   </div>
@@ -635,29 +539,8 @@ class NewMentor extends Component {
                       type="submit"
                       className={classes.button}
                     >
-                      {btnText}
+                      Save changes
                     </Button>
-                    <Button
-                      variant="contained"
-                      color="default"
-                      component={Link}
-                      to={{
-                        pathname: "/mentors"
-                      }}
-                      className={classes.button}
-                    >
-                      Return to Mentors
-                    </Button>
-                    {key && (
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={this.handleClickDeleteMentor}
-                        className={classes.button}
-                      >
-                        <DeleteIcon /> Delete
-                      </Button>
-                    )}
                   </div>
                 </Grid>
               </Grid>
@@ -678,7 +561,7 @@ class NewMentor extends Component {
           <SnackbarContentWrapper
             onClose={this.handleSnackbarClose}
             variant="success"
-            message="Entry saved!"
+            message="Your changes have been saved!"
           />
         </Snackbar>
         <Snackbar
@@ -698,52 +581,13 @@ class NewMentor extends Component {
             message={sectionError}
           />
         </Snackbar>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={openSnackbarDeleted}
-          autoHideDuration={3000}
-          onClose={this.handleSnackbarClose}
-          id="openSnackbarDeleted"
-          name="openSnackbarDeleted"
-        >
-          <SnackbarContentWrapper
-            onClose={this.handleSnackbarClose}
-            variant="warning"
-            message="Mentor deleted"
-          />
-        </Snackbar>
-
-        <Dialog
-          open={open}
-          onClose={this.handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{"Delete mentor?"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Are you sure you want to delete this mentor?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleDeleteMentor} color="primary">
-              Yes
-            </Button>
-            <Button onClick={this.handleClose} color="primary" autoFocus>
-              No
-            </Button>
-          </DialogActions>
-        </Dialog>
       </div>
     );
   }
 }
 
-NewMentor.propTypes = {
+EditMentor.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(NewMentor);
+export default withStyles(styles)(EditMentor);

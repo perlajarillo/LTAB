@@ -9,8 +9,11 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 import PermIcon from "@material-ui/icons/PermIdentity";
 import CancelAccount from "../CancelAccount/CancelAccount";
+import EditMentor from "../Mentors/EditMentor";
+import EditMentee from "../Mentees/EditMentee";
 
 const styles = theme => ({
   wrapper: {
@@ -55,6 +58,23 @@ class Settings extends React.Component {
               <PasswordChange />
             </ExpansionPanelDetails>
           </ExpansionPanel>
+          {rol !== "admin" && (
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <EditIcon className={classes.iconStyle} />
+                <Typography className={classes.heading}>
+                  Edit profile
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                {rol === "mentor" ? (
+                  <EditMentor />
+                ) : (
+                  rol === "mentee" && <EditMentee />
+                )}
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          )}
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <DeleteIcon className={classes.iconStyle} />

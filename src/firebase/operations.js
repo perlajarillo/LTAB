@@ -134,3 +134,14 @@ export function deleteUser(userId, rol) {
     .child(userId)
     .remove();
 }
+
+export function getMentee(uid) {
+  const mentor = db.ref("mentee");
+  return mentor.child(uid).once("value");
+}
+
+export function editMentee(data, menteeKey) {
+  const updates = {};
+  updates["/mentee/" + menteeKey] = data;
+  return db.ref().update(updates);
+}
