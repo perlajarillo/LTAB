@@ -36,29 +36,28 @@ const toTitleCase = compose(
 
 const styles = theme => ({
   wrapper: {
-    padding: theme.smallSection.padding,
+    padding: theme.mediumSection.padding,
     [theme.breakpoints.up("sm")]: {
       padding: theme.mediumSection.padding
     },
     backgroundColor: "#fff"
   },
   pageTitle: {
-    padding: "3rem 0",
+    padding: theme.sectionPadding.padding,
     [theme.breakpoints.up("sm")]: {
-      padding: theme.mediumSection.padding
+      padding: theme.smallSection.padding
     }
   },
   section: {
-    padding: "3rem 0",
+    padding: theme.sectionPadding.padding,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    flexWrap: "wrap",
+    flexFlow: "column wrap",
     backgroundColor: "#e0e0e0",
-    [theme.breakpoints.up("sm")]: {
-      padding: "6rem 0",
-      flexWrap: "nowrap",
-      justifyContent: "space-around"
+    [theme.breakpoints.up("lg")]: {
+      flexFlow: "row nowrap",
+      justifyContent: "space-evenly"
     }
   },
   mentorSection: {
@@ -66,24 +65,18 @@ const styles = theme => ({
     display: "flex",
     flexFlow: "row wrap",
     [theme.breakpoints.up("sm")]: {
-      padding: "3rem 0"
+      padding: theme.sectionPadding.padding
     }
   },
   sectionTitle: {
-    padding: "1rem",
-    flexGrow: 1,
-    [theme.breakpoints.up("sm")]: {
-      padding: "1.5rem"
-    }
+    padding: theme.sectionPadding.padding,
+    flexGrow: 1
   },
   socialSection: {
-    padding: "3rem 0",
+    padding: theme.sectionPadding.padding,
     display: "flex",
     alignItems: "center",
-    [theme.breakpoints.up("sm")]: {
-      padding: "6rem 0",
-      justifyContent: "space-around"
-    }
+    justifyContent: "space-evenly"
   },
   button: {
     padding: theme.spacing.unit * 2,
@@ -97,22 +90,10 @@ const styles = theme => ({
   },
 
   logo: {
-    width: "150px"
+    width: "120px"
   },
   icon: {
-    width: "50px",
-    [theme.breakpoints.up("xs")]: {
-      width: "40px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "35px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "95px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "45px"
-    }
+    width: "64px"
   },
   card: {
     margin: theme.spacing.unit,
@@ -135,13 +116,20 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this.getMentorsInfo();
+    const localData = localStorage.getItem("data");
+    console.log(localData);
+    this.regristerObserver = this.getMentorsInfo();
+  }
+
+  componentWillUnmount() {
+    this.regristerObserver = null;
   }
 
   getMentorsInfo() {
     db.getMentors()
       .then(snapshot => {
         const data = snapshot.val();
+        localStorage.setItem("data", data);
         const mentorsData = Object.keys(data).map(mentorKey => {
           let imgUrl = data[mentorKey].pictureName;
           let setImgUrl =
@@ -289,11 +277,11 @@ class Home extends Component {
             >
               <img src={b_business} className={classes.icon} />
             </a>
-            <Typography variant="body1" gutterBottom align="center">
-              Or please reach out to us through email to{"  "}
-              <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
-            </Typography>
           </div>
+          <Typography variant="body1" gutterBottom align="center">
+            Or please reach out to us through email to{"  "}
+            <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
+          </Typography>
         </div>
       </main>
     );

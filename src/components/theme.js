@@ -19,13 +19,19 @@ export default createMuiTheme({
     fontSize: 16,
     useNextVariants: true
   },
+  sectionPadding: {
+    padding: "3rem 0"
+  },
   smallSection: {
     padding: "3rem 1.5rem"
   },
   mediumSection: {
-    padding: "9rem 1.5rem"
+    padding: "6rem 1.5rem"
   },
   bigSection: {
+    padding: "9rem 1.5rem"
+  },
+  largeSection: {
     padding: "18rem 1.5rem"
   }
 });
