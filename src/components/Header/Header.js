@@ -104,7 +104,7 @@ const NavAuthUser = props => {
                       tabIndex="-1"
                       color="inherit"
                       component={Link}
-                      to="/mentorshome"
+                      to="/mentorsmessage"
                     >
                       Share message
                     </Button>
