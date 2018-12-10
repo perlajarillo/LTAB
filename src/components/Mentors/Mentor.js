@@ -29,6 +29,9 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import listsData from "./Literals/listsData";
 
 const styles = theme => ({
   root: {
@@ -148,6 +151,8 @@ const styles = theme => ({
   }
 });
 
+const { states, specialties } = listsData;
+
 class NewMentor extends Component {
   constructor(props) {
     super(props);
@@ -178,7 +183,9 @@ class NewMentor extends Component {
       open: false,
       imageError: "",
       openSnackbarDeleted: false,
-      mentorState: "Let's talk about business"
+      mentorState: "Let's talk about business",
+      stateCode: "",
+      stateCodeError: ""
     };
   }
 
@@ -215,7 +222,8 @@ class NewMentor extends Component {
       key: key,
       pictureName: mentor.pictureName === "NA" ? PhotoIcon : mentor.pictureName,
       available: mentor.available,
-      mentorState: mentor.mentorState
+      mentorState: mentor.mentorState,
+      stateCode: mentor.stateCode
     });
   };
 
@@ -226,13 +234,26 @@ class NewMentor extends Component {
    */
   checkForErrors = () => {
     let response = false;
+    const {
+      nameError,
+      locationError,
+      descriptionError,
+      specialtyError,
+      stateCodeError,
+      specialty,
+      stateCode,
+      location,
+      name
+    } = this.state;
     const errorMessages =
-      this.state.nameError ||
-      this.state.mailError ||
-      this.state.locationError ||
-      this.state.descriptionError ||
-      this.state.specialtyError;
-    if (errorMessages) {
+      nameError ||
+      locationError ||
+      descriptionError ||
+      specialtyError ||
+      stateCodeError;
+    const values =
+      specialty === "" || stateCode === "" || location === "" || name === "";
+    if (errorMessages || values) {
       this.setState({
         openSnackbarError: true,
         sectionError: "The fields with * are required"
@@ -319,7 +340,8 @@ class NewMentor extends Component {
         "description",
         "pictureName",
         "available",
-        "mentorState"
+        "mentorState",
+        "stateCode"
       ],
       this.state
     );
@@ -421,7 +443,9 @@ class NewMentor extends Component {
       imageError,
       key,
       openSnackbarDeleted,
-      mentorState
+      mentorState,
+      stateCode,
+      stateCodeError
     } = this.state;
 
     return (
@@ -475,18 +499,29 @@ class NewMentor extends Component {
                     </FormControl>
                   </div>
                   <div>
+                    <FormHelperText>Specialty/Industry * </FormHelperText>
                     <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="specialty"
-                        name="specialty"
-                        label="Specialty"
+                      <Select
                         value={specialty}
+                        label="Specialty"
                         onChange={this.handleChange}
                         onBlur={this.checkForNull}
-                        className={classes.textField}
-                        margin="normal"
+                        name="specialty"
+                        id="specialty"
+                        displayEmpty
                         required
-                      />
+                        className={classes.textField}
+                      >
+                        <MenuItem value="" disabled>
+                          Select the specialty
+                        </MenuItem>
+                        {specialties.map(specialty => (
+                          <MenuItem key={specialty} value={specialty}>
+                            {specialty}
+                          </MenuItem>
+                        ))}
+                      </Select>
+
                       <FormHelperText error={true}>
                         {specialtyError}
                       </FormHelperText>
@@ -497,7 +532,7 @@ class NewMentor extends Component {
                       <TextField
                         id="description"
                         name="description"
-                        label="Description"
+                        label="Description (professional abstract)"
                         multiline
                         rowsMax="15"
                         rows="10"
@@ -533,6 +568,36 @@ class NewMentor extends Component {
                       {locationError}
                     </FormHelperText>
                   </div>
+                  <div>
+                    <FormHelperText>State * </FormHelperText>
+
+                    <FormControl required className={classes.formControl}>
+                      <Select
+                        value={stateCode}
+                        label="State"
+                        onChange={this.handleChange}
+                        onBlur={this.checkForNull}
+                        name="stateCode"
+                        id="stateCode"
+                        displayEmpty
+                        required
+                        className={classes.textField}
+                      >
+                        <MenuItem value="" disabled>
+                          Select the state
+                        </MenuItem>
+                        {states.map(state => (
+                          <MenuItem key={state.code} value={state.code}>
+                            {state.stateName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormHelperText error={true}>
+                      {stateCodeError}
+                    </FormHelperText>
+                  </div>
+
                   <div>
                     <FormControl required className={classes.formControl}>
                       <TextField
@@ -678,7 +743,7 @@ class NewMentor extends Component {
           <SnackbarContentWrapper
             onClose={this.handleSnackbarClose}
             variant="success"
-            message="Entry saved!"
+            message="Mentor's information saved!"
           />
         </Snackbar>
         <Snackbar
