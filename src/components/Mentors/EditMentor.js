@@ -397,7 +397,7 @@ class EditMentor extends Component {
                     className={classes.textField}
                   >
                     <MenuItem value="" disabled>
-                      Select the state
+                      Select the specialty
                     </MenuItem>
                     {specialties.map(specialty => (
                       <MenuItem key={specialty} value={specialty}>
