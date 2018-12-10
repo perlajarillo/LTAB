@@ -170,12 +170,11 @@ class NewMentor extends Component {
       openSnackbarSaved: false,
       openSnackbarError: false,
       sectionError: "",
-      picture: PhotoIcon,
       picturePath: "",
       pictureBlob: "",
       returnMentor: false,
       available: false,
-      pictureName: "NA",
+      pictureName: PhotoIcon,
       open: false,
       imageError: "",
       openSnackbarDeleted: false,
@@ -196,7 +195,7 @@ class NewMentor extends Component {
   };
 
   /**
-   * areThereParameters – sets the state with the parameters sent via url
+   * dataToEdit – sets the state with the parameters sent via url
    * @returns {void}
    *
    */
@@ -214,7 +213,7 @@ class NewMentor extends Component {
       description: mentor.description,
       btnText: "Save changes",
       key: key,
-      picture: mentor.pictureName === "NA" ? PhotoIcon : mentor.pictureName,
+      pictureName: mentor.pictureName === "NA" ? PhotoIcon : mentor.pictureName,
       available: mentor.available,
       mentorState: mentor.mentorState
     });
@@ -291,8 +290,7 @@ class NewMentor extends Component {
     const size = event.target.files[0].size / 1024 / 1024;
     size <= 5
       ? this.setState({
-          picture: window.URL.createObjectURL(currentFile),
-          pictureName: event.target.files[0].name,
+          pictureName: window.URL.createObjectURL(currentFile),
           pictureBlob: currentFile
         })
       : this.setState({
@@ -412,7 +410,7 @@ class NewMentor extends Component {
       openSnackbarSaved,
       openSnackbarError,
       sectionError,
-      picture,
+      pictureName,
       returnMentor,
       nameError,
       specialtyError,
@@ -446,7 +444,7 @@ class NewMentor extends Component {
                   </div>
                   <div>
                     <img
-                      src={picture}
+                      src={pictureName}
                       alt="mentor photography"
                       className={classes.picture}
                     />
