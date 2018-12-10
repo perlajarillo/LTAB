@@ -6,8 +6,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
+
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
@@ -32,23 +31,6 @@ const styles = theme => ({
 
     [theme.breakpoints.between("sm", "md")]: {
       width: 550
-    }
-  },
-
-  card: {
-    width: "500px",
-    paddingBottom: "1%",
-    [theme.breakpoints.up("xs")]: {
-      width: "auto"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "250px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "980px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "620px"
     }
   }
 });
@@ -217,82 +199,72 @@ class EditMentee extends React.Component {
 
     return (
       <div className={classes.wrapper}>
-        <Card className={classes.card}>
-          <form onSubmit={this.handleSubmit}>
-            <CardContent>
-              <div>
-                <FormControl required className={classes.formControl}>
-                  <TextField
-                    id="name"
-                    name="name"
-                    label="Name:"
-                    placeholder="Your name"
-                    value={name}
-                    className={classes.textField}
-                    margin="normal"
-                    onChange={this.handleChange}
-                    onBlur={this.checkForNull}
-                    required
-                  />
-                  <FormHelperText error={true}>{nameError}</FormHelperText>
-                </FormControl>
-              </div>
-              <div>
-                <FormControl required className={classes.formControl}>
-                  <TextField
-                    id="location"
-                    name="location"
-                    label="Location:"
-                    placeholder="Where are you living?"
-                    value={location}
-                    className={classes.textField}
-                    margin="normal"
-                    onChange={this.handleChange}
-                    onBlur={this.checkForNull}
-                    required
-                  />
-                  <FormHelperText error={true}>{locationError}</FormHelperText>
-                </FormControl>
-              </div>
-
-              <div>
-                <FormControl required className={classes.formControl}>
-                  <Select
-                    value={descendent}
-                    onChange={this.handleChange}
-                    name="descendent"
-                    displayEmpty
-                    className={classes.selectEmpty}
-                    onBlur={this.checkForNull}
-                    required
-                  >
-                    <MenuItem value="" disabled>
-                      Descendent
-                    </MenuItem>
-                    <MenuItem value={"Portuguese"}>Portuguese</MenuItem>
-                    <MenuItem value={"Portuguese descendent"}>
-                      Portuguese descendent
-                    </MenuItem>
-                    <MenuItem value={"American"}>American</MenuItem>
-                  </Select>
-                  <FormHelperText error={true}>
-                    {descendentError}
-                  </FormHelperText>
-                </FormControl>
-              </div>
-              <div>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  color="primary"
-                  fullWidth
-                >
-                  Save changes
-                </Button>
-              </div>
-            </CardContent>
-          </form>
-        </Card>
+        <form onSubmit={this.handleSubmit}>
+          <div>
+            <FormControl required className={classes.formControl}>
+              <TextField
+                id="name"
+                name="name"
+                label="Name:"
+                placeholder="Your name"
+                value={name}
+                className={classes.textField}
+                margin="normal"
+                onChange={this.handleChange}
+                onBlur={this.checkForNull}
+                required
+              />
+              <FormHelperText error={true}>{nameError}</FormHelperText>
+            </FormControl>
+          </div>
+          <div>
+            <FormControl required className={classes.formControl}>
+              <TextField
+                id="location"
+                name="location"
+                label="Location:"
+                placeholder="city, state and country"
+                value={location}
+                className={classes.textField}
+                margin="normal"
+                onChange={this.handleChange}
+                onBlur={this.checkForNull}
+                required
+              />
+              <FormHelperText error={true}>{locationError}</FormHelperText>
+            </FormControl>
+          </div>
+          <div>
+            <br />
+            <FormHelperText>Descendent * </FormHelperText>
+            <FormControl required className={classes.formControl}>
+              <Select
+                value={descendent}
+                onChange={this.handleChange}
+                name="descendent"
+                displayEmpty
+                className={classes.selectEmpty}
+                onBlur={this.checkForNull}
+                required
+              >
+                <MenuItem value="" disabled>
+                  Descendent
+                </MenuItem>
+                <MenuItem value={"Portuguese"}>Portuguese</MenuItem>
+                <MenuItem value={"Portuguese descendent"}>
+                  Portuguese descendent
+                </MenuItem>
+                <MenuItem value={"American"}>American</MenuItem>
+              </Select>
+              <FormHelperText error={true}>{descendentError}</FormHelperText>
+            </FormControl>
+          </div>
+          <div>
+            <Button variant="contained" type="submit" color="primary" fullWidth>
+              Save changes
+            </Button>
+          </div>
+        </form>
         <Snackbar
           anchorOrigin={{
             vertical: "bottom",

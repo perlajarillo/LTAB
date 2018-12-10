@@ -14,9 +14,10 @@ import { getMentor, editMentor } from "../../firebase/operations";
 import { validateString } from "../validity";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import { auth } from "../../firebase";
+import listsData from "./Literals/listsData";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 
 const styles = theme => ({
   root: {
@@ -83,26 +84,10 @@ const styles = theme => ({
       width: 200,
       height: 240
     }
-  },
-  card: {
-    paddingBottom: "1%",
-    width: "auto",
-    [theme.breakpoints.up("xs")]: {
-      marginTop: "0px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      marginTop: "5px"
-    },
-    [theme.breakpoints.up("md")]: {
-      marginTop: "20px"
-    },
-
-    [theme.breakpoints.between("sm", "md")]: {
-      marginTop: "15px"
-    }
   }
 });
 
+const { states, specialties } = listsData;
 class EditMentor extends Component {
   constructor(props) {
     super(props);
@@ -131,7 +116,8 @@ class EditMentor extends Component {
       available: false,
       pictureName: PhotoIcon,
       imageError: "",
-      mentorState: "Let's talk about business"
+      mentorState: "Let's talk about business",
+      stateCode: ""
     };
   }
 
@@ -229,6 +215,7 @@ class EditMentor extends Component {
         "specialty",
         "mail",
         "phone",
+        "stateCode",
         "location",
         "linkedin",
         "twitter",
@@ -301,6 +288,7 @@ class EditMentor extends Component {
           specialty: mentor.val().specialty,
           mail: mentor.val().mail,
           phone: mentor.val().phone,
+          stateCode: mentor.val().stateCode,
           location: mentor.val().location,
           linkedin: mentor.val().linkedin,
           twitter: mentor.val().twitter,
@@ -355,198 +343,225 @@ class EditMentor extends Component {
       locationError,
       descriptionError,
       available,
-      imageError
+      imageError,
+      stateCode
     } = this.state;
 
     return (
       <div className={classes.root}>
-        <Card className={classes.card}>
-          <form onSubmit={this.handleSubmit}>
-            <CardContent>
-              <Grid container spacing={8}>
-                <Grid item xs={12} sm={7} md={7} lg={7}>
-                  <div>
-                    <img
-                      src={pictureName}
-                      alt="mentor photography"
-                      className={classes.picture}
-                    />
+        <form onSubmit={this.handleSubmit}>
+          <Grid container spacing={8}>
+            <Grid item xs={12} sm={7} md={7} lg={7}>
+              <div>
+                <img
+                  src={pictureName}
+                  alt="mentor photography"
+                  className={classes.picture}
+                />
 
-                    <input
-                      type="file"
-                      id="picture"
-                      name="picture"
-                      accept=".jpg, .jpeg, .png"
-                      onChange={this.handlePicture}
-                    />
-                    <FormHelperText error={true}>{imageError}</FormHelperText>
-                  </div>
-                  <div>
-                    <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="name"
-                        name="name"
-                        label="Name"
-                        value={name}
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                        onBlur={this.checkForNull}
-                        required
+                <input
+                  type="file"
+                  id="picture"
+                  name="picture"
+                  accept=".jpg, .jpeg, .png"
+                  onChange={this.handlePicture}
+                />
+                <FormHelperText error={true}>{imageError}</FormHelperText>
+              </div>
+              <div>
+                <FormControl required className={classes.formControl}>
+                  <TextField
+                    id="name"
+                    name="name"
+                    label="Name"
+                    value={name}
+                    onChange={this.handleChange}
+                    className={classes.textField}
+                    onBlur={this.checkForNull}
+                    required
+                  />
+                  <FormHelperText error={true}>{nameError}</FormHelperText>
+                </FormControl>
+              </div>
+              <div>
+                <FormHelperText>Specialty/Industry * </FormHelperText>
+                <FormControl required className={classes.formControl}>
+                  <Select
+                    value={specialty}
+                    label="Specialty"
+                    onChange={this.handleChange}
+                    name="specialty"
+                    id="specialty"
+                    displayEmpty
+                    required
+                    className={classes.textField}
+                  >
+                    <MenuItem value="" disabled>
+                      Select the state
+                    </MenuItem>
+                    {specialties.map(specialty => (
+                      <MenuItem key={specialty} value={specialty}>
+                        {specialty}
+                      </MenuItem>
+                    ))}
+                  </Select>
+
+                  <FormHelperText error={true}>{specialtyError}</FormHelperText>
+                </FormControl>
+              </div>
+              <div>
+                <FormControl required className={classes.formControl}>
+                  <TextField
+                    id="description"
+                    name="description"
+                    label="Description"
+                    placeholder="Professional abstract"
+                    multiline
+                    rowsMax="15"
+                    rows="7"
+                    value={description}
+                    onBlur={this.checkForNull}
+                    onChange={this.handleChange}
+                    className={classes.textField}
+                    required
+                  />
+                </FormControl>
+                <FormHelperText error={true}>{descriptionError}</FormHelperText>
+              </div>
+            </Grid>
+            <Grid item xs={12} sm={5} md={5} lg={5}>
+              <div>
+                <FormControl required className={classes.formControl}>
+                  <TextField
+                    id="location"
+                    name="location"
+                    label=" City"
+                    placeholder="Physical location (e.g. New England)"
+                    value={location}
+                    onBlur={this.checkForNull}
+                    onChange={this.handleChange}
+                    className={classes.textField}
+                    required
+                  />
+                </FormControl>
+                <FormHelperText error={true}>{locationError}</FormHelperText>
+              </div>
+              <div>
+                <FormHelperText>State * </FormHelperText>
+
+                <FormControl required className={classes.formControl}>
+                  <Select
+                    value={stateCode}
+                    label="State"
+                    onChange={this.handleChange}
+                    name="stateCode"
+                    id="stateCode"
+                    displayEmpty
+                    required
+                    className={classes.textField}
+                  >
+                    <MenuItem value="" disabled>
+                      Select the state
+                    </MenuItem>
+                    {states.map(state => (
+                      <MenuItem key={state.code} value={state.code}>
+                        {state.stateName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+
+              <div>
+                <FormControl required className={classes.formControl}>
+                  <TextField
+                    id="mail"
+                    name="mail"
+                    label="E-mail"
+                    type="email"
+                    value={mail}
+                    required
+                    onChange={this.handleChange}
+                    className={classes.textField}
+                  />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl required className={classes.formControl}>
+                  <TextField
+                    id="phone"
+                    name="phone"
+                    label="Phone"
+                    value={phone}
+                    onChange={this.handleChange}
+                    className={classes.textField}
+                  />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl required className={classes.formControl}>
+                  <TextField
+                    id="linkedin"
+                    name="linkedin"
+                    label="LinkedIn"
+                    value={linkedin}
+                    onChange={this.handleChange}
+                    className={classes.textField}
+                  />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl required className={classes.formControl}>
+                  <TextField
+                    id="twitter"
+                    name="twitter"
+                    label="Twitter"
+                    value={twitter}
+                    onChange={this.handleChange}
+                    className={classes.textField}
+                  />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl required className={classes.formControl}>
+                  <TextField
+                    id="facebook"
+                    name="facebook"
+                    label="Facebook"
+                    value={facebook}
+                    onChange={this.handleChange}
+                    className={classes.textField}
+                  />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl className={classes.formControl}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={available}
+                        onChange={this.handleChangeCheck}
+                        color="primary"
+                        value="available"
                       />
-                      <FormHelperText error={true}>{nameError}</FormHelperText>
-                    </FormControl>
-                  </div>
-                  <div>
-                    <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="specialty"
-                        name="specialty"
-                        label="Specialty"
-                        placeholder="e.g. Accountant, Visual Arts, Design, etc."
-                        value={specialty}
-                        onChange={this.handleChange}
-                        onBlur={this.checkForNull}
-                        className={classes.textField}
-                        required
-                      />
-                      <FormHelperText error={true}>
-                        {specialtyError}
-                      </FormHelperText>
-                    </FormControl>
-                  </div>
-                  <div>
-                    <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="description"
-                        name="description"
-                        label="Description"
-                        placeholder="Professional abstract"
-                        multiline
-                        rowsMax="15"
-                        rows="7"
-                        value={description}
-                        onBlur={this.checkForNull}
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                        required
-                      />
-                    </FormControl>
-                    <FormHelperText error={true}>
-                      {descriptionError}
-                    </FormHelperText>
-                  </div>
-                </Grid>
-                <Grid item xs={12} sm={5} md={5} lg={5}>
-                  <div>
-                    <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="location"
-                        name="location"
-                        label=" Location"
-                        placeholder="Physical location (e.g. New England)"
-                        value={location}
-                        onBlur={this.checkForNull}
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                        required
-                      />
-                    </FormControl>
-                    <FormHelperText error={true}>
-                      {locationError}
-                    </FormHelperText>
-                  </div>
-                  <div>
-                    <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="mail"
-                        name="mail"
-                        label="E-mail"
-                        type="email"
-                        value={mail}
-                        required
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                      />
-                    </FormControl>
-                  </div>
-                  <div>
-                    <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="phone"
-                        name="phone"
-                        label="Phone"
-                        value={phone}
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                      />
-                    </FormControl>
-                  </div>
-                  <div>
-                    <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="linkedin"
-                        name="linkedin"
-                        label="LinkedIn"
-                        value={linkedin}
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                      />
-                    </FormControl>
-                  </div>
-                  <div>
-                    <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="twitter"
-                        name="twitter"
-                        label="Twitter"
-                        value={twitter}
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                      />
-                    </FormControl>
-                  </div>
-                  <div>
-                    <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="facebook"
-                        name="facebook"
-                        label="Facebook"
-                        value={facebook}
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                      />
-                    </FormControl>
-                  </div>
-                  <div>
-                    <FormControl className={classes.formControl}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={available}
-                            onChange={this.handleChangeCheck}
-                            color="primary"
-                            value="available"
-                          />
-                        }
-                        label="Available for mentoring."
-                      />
-                    </FormControl>
-                  </div>
-                  <div className={classes.buttons}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                      className={classes.button}
-                    >
-                      Save changes
-                    </Button>
-                  </div>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </form>
-        </Card>
+                    }
+                    label="Available for mentoring."
+                  />
+                </FormControl>
+              </div>
+              <div className={classes.buttons}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  className={classes.button}
+                >
+                  Save changes
+                </Button>
+              </div>
+            </Grid>
+          </Grid>
+        </form>
         <Snackbar
           anchorOrigin={{
             vertical: "bottom",
