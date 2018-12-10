@@ -45,9 +45,14 @@ function deleteImage(pictureName) {
   const storageRef = storage.ref();
   let desertRef = storageRef.child("images/" + pictureName);
   if (desertRef) {
-    desertRef.delete().catch(function(error) {});
+    desertRef.delete().catch(function(error) {
+      if (error.code === "storage/unauthorized") {
+        console.log("No image for this mentor was storaged");
+      }
+    });
   }
 }
+
 export function getMentors() {
   const mentors = db.ref("mentors");
   return mentors.once("value");
@@ -88,11 +93,23 @@ export function getImage(key) {
 }
 
 export function deleteMentor(mentorKey) {
+  getImageName(mentorKey)
+    .then(snapshot => {
+      if (
+        snapshot.val().pictureName !==
+        "/static/media/baseline_photo.2f761052.png"
+      ) {
+        deleteImage(mentorKey);
+      }
+    })
+    .catch(error => {
+      let msg = "No image was founded";
+    });
+
   const mentorToDelete = db
     .ref()
     .child("mentors")
     .child(mentorKey);
-  deleteImage(mentorKey);
   return mentorToDelete.remove();
 }
 
@@ -126,8 +143,23 @@ export function setImage(mentorsKey, url) {
 }
 
 export function deleteUser(userId, rol) {
-  rol === "mentor" && (rol = "mentors");
-  deleteImage(userId);
+  if (rol === "mentor") {
+    getImageName(userId)
+      .then(snapshot => {
+        if (
+          snapshot.val().pictureName !==
+          "/static/media/baseline_photo.2f761052.png"
+        ) {
+          deleteImage(userId);
+        }
+      })
+      .catch(error => {
+        let msg = "No image was founded";
+      });
+
+    rol = "mentors";
+  }
+
   return db
     .ref()
     .child(rol)
@@ -144,4 +176,12 @@ export function editMentee(data, menteeKey) {
   const updates = {};
   updates["/mentee/" + menteeKey] = data;
   return db.ref().update(updates);
+}
+
+export function getImageName(uid) {
+  const mentor = db.ref("mentors");
+  return mentor
+    .child(uid)
+    .child("pictureName")
+    .once("value");
 }
