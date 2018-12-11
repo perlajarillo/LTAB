@@ -19,7 +19,6 @@ import PasswordReset from "./PasswordReset/PasswordReset";
 import Settings from "./Settings";
 import NoFound from "./NoFound/NoFound";
 import LogIn from "./Login/LogIn";
-import MentorsMessage from "./MentorsHome/MentorsMessage";
 
 const App = () => (
   <div className="App">
@@ -40,7 +39,6 @@ const App = () => (
         <Route path="/mentorshome" component={MentorsHome} />
         <Route path="/mentor" component={Mentor} />
         <Route path="/login" component={LogIn} />
-        <Route path="/mentorsmessage" component={MentorsMessage} />
       </Switch>
       <Footer />
     </MuiThemeProvider>
