@@ -166,7 +166,7 @@ class MentorsHome extends Component {
             name="mentorState"
             multiline
             rows="5"
-            label="Your message (200 characters max)"
+            label="max. 200 characters"
             value={mentorState}
             onChange={this.handleChange}
             className={classes.textField}

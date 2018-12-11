@@ -41,6 +41,9 @@ const styles = theme => ({
       width: "145px",
       marginLeft: theme.spacing.unit * 7
     }
+  },
+  note: {
+    color: theme.palette.secondary.dark
   }
 });
 
@@ -85,7 +88,8 @@ class MentorsHome extends Component {
                 <MentorsMessage />
               </CardContent>
             </Card>
-            <Typography variant="body2">
+            <br />
+            <Typography variant="body2" className={classes.note}>
               {" "}
               You can also set your message from the settings menu.
             </Typography>
