@@ -1,256 +1,285 @@
-import React, { Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
 import backgroundImg from "../../images/letstalk_logo_3.jpg";
-import logo_original from "../../images/logo_original.png";
-import Divider from "@material-ui/core/Divider";
+import logo from "../../images/logo.png";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import icon_facebook from "../../images/icon_facebook.png";
 import b_business from "../../images/b_business.jpg";
 import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
+import Avatar from "@material-ui/core/Avatar";
+import { db } from "../../firebase";
+import { uniq, map, compose } from "ramda";
+
+const SPACE = " ";
+
+const splitOnSpace = x => x.split(SPACE);
+const joinWithSpace = x => x.join(SPACE);
+
+const capitalizeWord = str => {
+  if (typeof str !== "string") {
+    return "";
+  }
+  let newStr = str.toLowerCase();
+  return newStr.charAt(0).toUpperCase() + newStr.slice(1);
+};
+
+const toTitleCase = compose(
+  joinWithSpace,
+  map(capitalizeWord),
+  splitOnSpace
+);
 
 const styles = theme => ({
   wrapper: {
-    margin: "65px 0"
-  },
-  sectionStyles: {
-    padding: theme.spacing.unit * 1,
+    padding: theme.mediumSection.padding,
     [theme.breakpoints.up("sm")]: {
-      padding: "0 100 px 0 100px"
+      padding: theme.mediumSection.padding
     },
-    [theme.breakpoints.up("md")]: {
-      padding: "0 90px 0 90px"
-    }
+    backgroundColor: "#fff"
   },
   pageTitle: {
-    paddingTop: theme.spacing.unit * 3,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2
+    padding: theme.sectionPadding.padding,
+    [theme.breakpoints.up("sm")]: {
+      padding: theme.smallSection.padding
+    }
+  },
+  section: {
+    padding: theme.sectionPadding.padding,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexFlow: "column wrap",
+    backgroundColor: "#e0e0e0",
+    [theme.breakpoints.up("lg")]: {
+      flexFlow: "row nowrap",
+      justifyContent: "space-evenly"
+    }
+  },
+  mentorSection: {
+    padding: "1rem 0",
+    display: "flex",
+    flexFlow: "row wrap",
+    [theme.breakpoints.up("sm")]: {
+      padding: theme.sectionPadding.padding
+    }
+  },
+  sectionTitle: {
+    padding: theme.sectionPadding.padding,
+    flexGrow: 1
+  },
+  socialSection: {
+    padding: theme.sectionPadding.padding,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  socialIcon: {
+    margin: "1em"
+  },
+  button: {
+    padding: theme.spacing.unit * 2,
+    color: "#fff",
+    margin: "1em 0"
   },
   backImg: {
     background: "url(" + backgroundImg + ")",
     backgroundPosition: "center 70%",
     padding: "13% 0",
-    backgroundSize: "contain",
-    [theme.breakpoints.up("xs")]: {
-      marginTop: "83px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      marginTop: "70px"
-    },
-    [theme.breakpoints.up("md")]: {
-      marginTop: "110px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      marginTop: "130px"
-    }
-  },
-  principalLogo: {
-    marginLeft: theme.spacing.unit * 1,
-    [theme.breakpoints.up("xs")]: {
-      width: "140px",
-      marginLeft: theme.spacing.unit * 9
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "275px",
-      marginLeft: theme.spacing.unit * 11
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "355px",
-      marginLeft: theme.spacing.unit * 2
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "145px",
-      marginLeft: theme.spacing.unit * 7
-    }
+    backgroundSize: "contain"
   },
 
-  icons: {
-    width: "50px",
-    marginLeft: 75,
-    paddingBottom: "1%",
-    [theme.breakpoints.up("xs")]: {
-      width: "40px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "35px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "95px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "45px"
-    }
+  logo: {
+    width: "250px"
   },
-  iconBusiness: {
-    width: "50px",
-    marginTop: "50px",
-    marginLeft: 75,
-    border: "2px solid green",
-    paddingBottom: "1%",
-    [theme.breakpoints.up("xs")]: {
-      width: "40px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "35px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "95px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "45px"
-    }
+  icon: {
+    width: "64px"
   },
   card: {
-    marginTop: "30px",
-    paddingBottom: "1%",
-    [theme.breakpoints.up("xs")]: {
-      width: "auto"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "250px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "650px",
-      marginLeft: "50px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "320px",
-      marginLeft: "50px"
-    }
+    margin: theme.spacing.unit,
+    width: 300,
+    flexGrow: 1
   },
-  menteeCard: {
-    marginTop: "30px",
-    paddingBottom: "1%",
-
-    [theme.breakpoints.up("xs")]: {
-      width: "auto",
-      height: "auto"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "250px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "650px",
-      height: "540px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "320px",
-      height: "478px"
-    }
-  },
-
-  text: {
-    marginTop: theme.spacing.unit * 2
+  bigAvatar: {
+    margin: 10,
+    width: 100,
+    height: 100
   }
 });
 
-const Home = props => {
-  const { classes } = props;
-  const { history } = props;
+class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mentorsImgs: []
+    };
+  }
 
-  return (
-    <main className={classes.wrapper}>
-      <div className={classes.backImg} />
-      <div className={classes.pageTitle}>
-        <Typography variant="h6" gutterBottom>
-          Mentorship is incredibly important because it provides participating
-          mentees with valuable insight to assist and guide them in creating,
-          growing, and strengthening their businesses, and achieve success.
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          It also provides mentors with insight into other business areas, and
-          involves them in a wide business network!
-        </Typography>
-      </div>
-      <br />
-      <Divider />
-      <Grid container spacing={8}>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
-          <Card className={classes.card}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Do you want to be a #LetsTalkAboutBusiness mentor?
-              </Typography>
-              <Button
-                variant="outlined"
-                color="primary"
-                fullWidth
-                component={Link}
-                to="/newmentor"
-                className={classes.button}
-              >
-                Create a mentor account
-              </Button>
+  componentDidMount() {
+    this.regristerObserver = this.getMentorsInfo();
+  }
 
-              <Typography variant="body1" gutterBottom className={classes.text}>
-                Or please reach out to us through email to{" "}
-                <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
-              </Typography>
-              <div>
-                <img
-                  src={logo_original}
-                  alt="Let's talk about business"
-                  className={classes.principalLogo}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </Grid>
+  componentWillUnmount() {
+    this.regristerObserver = null;
+  }
 
-        <Grid item xs={12} sm={6} md={6} lg={6}>
-          <Card className={classes.menteeCard}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Are you looking for a mentor and your are not registered yet?
-              </Typography>
-              <br />
-              <Button
-                variant="outlined"
-                color="primary"
-                fullWidth
-                component={Link}
-                to="/newmentee"
-                className={classes.button}
-              >
-                Create an account
-              </Button>
+  getMentorsInfo() {
+    db.getMentors()
+      .then(snapshot => {
+        const data = snapshot.val();
+        const mentorsData = Object.keys(data).map(mentorKey => {
+          let imgUrl = data[mentorKey].pictureName;
+          let setImgUrl =
+            imgUrl === "" ||
+            imgUrl === "NA" ||
+            imgUrl === "/static/media/baseline_photo.2f761052.png"
+              ? "https://via.placeholder.com/150/53833a/FFFFFF?text=mentor"
+              : imgUrl;
 
-              <Typography variant="body1" className={classes.text}>
-                Or visit our Facebook page and Web Site to know more about the
-                program:
-              </Typography>
-              <a
-                href="https://www.facebook.com/TalkBusinessFlad/"
-                target="blank"
-              >
-                <img
-                  src={icon_facebook}
-                  alt="Facebook"
-                  className={classes.icons}
-                />
-              </a>
-              <a
-                href="https://www.flad.pt/en/lets-talk-about-business/"
-                target="blank"
-              >
-                <img
-                  src={b_business}
-                  alt="Let's talk about business"
-                  className={classes.iconBusiness}
-                />
-              </a>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </main>
-  );
-};
+          const mentorImg = {
+            key: mentorKey,
+            name: toTitleCase(data[mentorKey].name),
+            specialty: toTitleCase(data[mentorKey].specialty),
+            pictureName: setImgUrl
+          };
+
+          return mentorImg;
+        });
+
+        this.setState({
+          mentorsImgs: mentorsData
+        });
+      })
+      .catch(error => {
+        console.log("error", error);
+      });
+  }
+
+  render() {
+    const { classes } = this.props;
+    const { mentorsImgs } = this.state;
+
+    return (
+      <main className={classes.wrapper}>
+        <div className={classes.backImg} />
+
+        <div className={classes.pageTitle}>
+          <Typography variant="h6" gutterBottom>
+            Mentorship is incredibly important because it provides participating
+            mentees with valuable insight to assist and guide them in creating,
+            growing, and strengthening their businesses, and achieve success.
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            It also provides mentors with insight into other business areas, and
+            involves them in a wide business network!
+          </Typography>
+        </div>
+
+        <div className={classes.section}>
+          <div>
+            <img src={logo} className={classes.logo} />
+          </div>
+          <div>
+            <Typography variant="h6" gutterBottom align="center">
+              Do you want to be a #LetsTalkAboutBusiness mentor?
+            </Typography>
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              size="large"
+              component={Link}
+              to="/newmentor"
+              className={classes.button}
+            >
+              Create a mentor account
+            </Button>
+            <Typography variant="body1" gutterBottom align="center">
+              Or please reach out to us through
+            </Typography>
+            <Typography variant="body1" gutterBottom align="center">
+              email{" "}
+              <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
+            </Typography>
+          </div>
+        </div>
+        <div className={classes.sectionTitle}>
+          <Typography variant="body1" align="center">
+            Visit our Facebook page and Web Site to know more about the program:
+          </Typography>
+          <div className={classes.socialSection}>
+            <a
+              className={classes.socialIcon}
+              href="https://www.facebook.com/TalkBusinessFlad/"
+              target="blank"
+            >
+              <img src={icon_facebook} className={classes.icon} />
+            </a>
+            <a
+              className={classes.socialIcon}
+              href="https://www.flad.pt/en/lets-talk-about-business/"
+              target="blank"
+            >
+              <img src={b_business} className={classes.icon} />
+            </a>
+          </div>
+        </div>
+        <div className={classes.section}>
+          <div>
+            <img src={b_business} className={classes.logo} />
+          </div>
+          <div>
+            <Typography variant="h6" gutterBottom align="center">
+              Are you looking for a mentor and your are not registered yet?
+            </Typography>
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              component={Link}
+              to="/newmentee"
+              className={classes.button}
+            >
+              Create a mentee account
+            </Button>
+          </div>
+        </div>
+        <div className={classes.sectionTitle}>
+          <div>
+            <Typography variant="h6">
+              We are proud to introduce our Let's Talk about Business mentors:
+            </Typography>
+          </div>
+          <div className={classes.mentorSection}>
+            {mentorsImgs &&
+              mentorsImgs.map(mentor => (
+                <Card className={classes.card} key={mentor.key}>
+                  <CardHeader
+                    avatar={
+                      <Avatar
+                        src={mentor.pictureName}
+                        alt={mentor.name}
+                        className={classes.bigAvatar}
+                      />
+                    }
+                    title={mentor.name}
+                    subheader={mentor.specialty}
+                  />
+                </Card>
+              ))}
+          </div>
+        </div>
+      </main>
+    );
+  }
+}
 
 Home.propTypes = {
   classes: PropTypes.object.isRequired

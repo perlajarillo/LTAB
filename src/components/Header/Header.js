@@ -10,13 +10,14 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { Link } from "react-router-dom";
 import LogOut from "../LogOut/LogOut";
-import logo from "../../images/logo.png";
+import logo from "../../images/logo_square.png";
 import AuthUserContext from "../AuthUserContext";
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    display: "flex"
+    display: "flex",
+    maxHeight: "100px"
   },
   menuButton: {
     marginLeft: -12
@@ -32,20 +33,8 @@ const styles = theme => ({
     flex: 1
   },
   logo: {
-    width: "25px",
-    height: "25px",
-    [theme.breakpoints.up("xs")]: {
-      width: "60px",
-      height: "60px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "110px",
-      height: "110px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "115px",
-      height: "115px"
-    }
+    width: "48px",
+    height: "48px"
   }
 });
 
@@ -156,6 +145,9 @@ const NavNoAuth = props => {
     <div>
       <AppBar className={classes.root}>
         <Toolbar>
+          <IconButton style={{ backgroundColor: "#25560e" }} disabled={true}>
+            <MenuIcon style={{ color: "#25560e" }} />
+          </IconButton>
           <Link to="/" className={classes.logoStyles}>
             <img src={logo} alt="FLAD Mentorship" className={classes.logo} />
           </Link>
