@@ -76,11 +76,15 @@ const styles = theme => ({
     padding: theme.sectionPadding.padding,
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-evenly"
+    justifyContent: "center"
+  },
+  socialIcon: {
+    margin: "1em"
   },
   button: {
     padding: theme.spacing.unit * 2,
-    color: "#fff"
+    color: "#fff",
+    margin: "1em 0"
   },
   backImg: {
     background: "url(" + backgroundImg + ")",
@@ -134,7 +138,7 @@ class Home extends Component {
           let imgUrl = data[mentorKey].pictureName;
           let setImgUrl =
             imgUrl === "" || imgUrl === "NA"
-              ? "https://via.placeholder.com/100.png/09f/fff?text=mentor"
+              ? "https://via.placeholder.com/150/25560e/FFFFFF?text=mentor"
               : imgUrl;
 
           const mentorImg = {
@@ -197,49 +201,33 @@ class Home extends Component {
             >
               Create a mentor account
             </Button>
+            <Typography variant="body1" gutterBottom align="center">
+              Or please reach out to us through email to{"  "}
+              <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
+            </Typography>
           </div>
         </div>
         <div className={classes.sectionTitle}>
-          <div>
-            <Typography variant="h6">
-              We are proud to introduce our Let's Talk about Business mentors:
-            </Typography>
-          </div>
-          <div className={classes.mentorSection}>
-            <Card className={classes.card}>
-              <CardContent>
-                <CardHeader
-                  avatar={
-                    <Avatar
-                      src="https://via.placeholder.com/100.png/09f/fff?text=mentor"
-                      alt="Join us"
-                      className={classes.bigAvatar}
-                    />
-                  }
-                  title={"Join us!"}
-                />
-              </CardContent>
-            </Card>
-
-            {mentorsImgs &&
-              mentorsImgs.map(mentor => (
-                <Card className={classes.card} key={mentor.key}>
-                  <CardHeader
-                    avatar={
-                      <Avatar
-                        src={mentor.pictureName}
-                        alt={mentor.name}
-                        className={classes.bigAvatar}
-                      />
-                    }
-                    title={mentor.name}
-                    subheader={mentor.specialty}
-                  />
-                </Card>
-              ))}
+          <Typography variant="body1" align="center">
+            Visit our Facebook page and Web Site to know more about the program:
+          </Typography>
+          <div className={classes.socialSection}>
+            <a
+              className={classes.socialIcon}
+              href="https://www.facebook.com/TalkBusinessFlad/"
+              target="blank"
+            >
+              <img src={icon_facebook} className={classes.icon} />
+            </a>
+            <a
+              className={classes.socialIcon}
+              href="https://www.flad.pt/en/lets-talk-about-business/"
+              target="blank"
+            >
+              <img src={b_business} className={classes.icon} />
+            </a>
           </div>
         </div>
-
         <div className={classes.section}>
           <div>
             <img src={b_business} className={classes.logo} />
@@ -259,29 +247,34 @@ class Home extends Component {
               to="/newmentee"
               className={classes.button}
             >
-              Create an account
+              Create a mentee account
             </Button>
           </div>
         </div>
         <div className={classes.sectionTitle}>
-          <Typography variant="body1" align="center">
-            Visit our Facebook page and Web Site to know more about the program:
-          </Typography>
-          <div className={classes.socialSection}>
-            <a href="https://www.facebook.com/TalkBusinessFlad/" target="blank">
-              <img src={icon_facebook} className={classes.icon} />
-            </a>
-            <a
-              href="https://www.flad.pt/en/lets-talk-about-business/"
-              target="blank"
-            >
-              <img src={b_business} className={classes.icon} />
-            </a>
+          <div>
+            <Typography variant="h6">
+              We are proud to introduce our Let's Talk about Business mentors:
+            </Typography>
           </div>
-          <Typography variant="body1" gutterBottom align="center">
-            Or please reach out to us through email to{"  "}
-            <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
-          </Typography>
+          <div className={classes.mentorSection}>
+            {mentorsImgs &&
+              mentorsImgs.map(mentor => (
+                <Card className={classes.card} key={mentor.key}>
+                  <CardHeader
+                    avatar={
+                      <Avatar
+                        src={mentor.pictureName}
+                        alt={mentor.name}
+                        className={classes.bigAvatar}
+                      />
+                    }
+                    title={mentor.name}
+                    subheader={mentor.specialty}
+                  />
+                </Card>
+              ))}
+          </div>
         </div>
       </main>
     );
