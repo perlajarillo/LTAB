@@ -10,7 +10,6 @@ import icon_facebook from "../../images/icon_facebook.png";
 import b_business from "../../images/b_business.jpg";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
 import { db } from "../../firebase";
 import { uniq, map, compose } from "ramda";
