@@ -19,7 +19,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -61,15 +60,17 @@ const sanitizeStrings = compose(
   map(toTitleCase)
 );
 
+const sanitizeStateStrings = compose(
+  uniq,
+  filter(Boolean)
+);
+
 const styles = theme => ({
   wrapper: {
     display: "flex",
     flexWrap: "wrap",
     marginTop: "160px",
-    minHeight: "70vh",
-    [theme.breakpoints.up("sm")]: {
-      marginTop: "225px"
-    }
+    minHeight: "70vh"
   },
   card: {
     maxWidth: 345,
@@ -91,16 +92,12 @@ const styles = theme => ({
     width: "100%",
     zIndex: 1000,
     position: "fixed",
-    top: "90px",
-    [theme.breakpoints.up("sm")]: {
-      top: "145px"
-    },
-    [theme.breakpoints.up("md")]: {
-      top: "150px"
-    }
+    top: "80px"
   },
   details: {
-    width: "100%"
+    width: "100%",
+    overflow: "scroll",
+    maxHeight: "350px"
   },
   formControl: {
     width: "100%",
@@ -130,20 +127,20 @@ function SelectionPanel(props) {
   const {
     classes,
     specialties,
-    locations,
+    states,
     selectedSpecialty,
     handleSelectedSpecialty,
     setSelectedFilter,
     selectedContent,
-    selectedLocation,
-    handleSelectedLocation,
+    selectedState,
+    handleSelectedState,
     expanded
   } = props;
 
   return (
     <div className={classes.root}>
       <ExpansionPanel expanded={expanded}>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+        <ExpansionPanelSummary>
           <div className={classes.column}>
             <Button
               data-id="specialty"
@@ -156,12 +153,12 @@ function SelectionPanel(props) {
           </div>
           <div className={classes.column}>
             <Button
-              data-id="location"
+              data-id="state"
               size="small"
               color="primary"
               onClick={setSelectedFilter}
             >
-              Location
+              State
             </Button>
           </div>
           <div className={classes.column}>
@@ -197,22 +194,22 @@ function SelectionPanel(props) {
               </RadioGroup>
             </FormControl>
           )}
-          {selectedContent && selectedContent === "location" && (
+          {selectedContent && selectedContent === "state" && (
             <FormControl component="fieldset" className={classes.formControl}>
               <RadioGroup
                 aria-label="Specialty"
                 name="mentor-specialty"
                 className={classes.group}
-                value={selectedLocation}
-                onChange={handleSelectedLocation}
+                value={selectedState}
+                onChange={handleSelectedState}
               >
-                {locations &&
-                  locations.map((location, index) => (
+                {states &&
+                  states.map((state, index) => (
                     <FormControlLabel
-                      value={location}
+                      value={state}
                       control={<Radio />}
-                      label={location}
-                      key={`${location}_${index}`}
+                      label={state}
+                      key={`${state}_${index}`}
                     />
                   ))}
               </RadioGroup>
@@ -238,9 +235,9 @@ class AvailableMentors extends Component {
       scroll: "paper",
       value: "",
       specialties: [],
-      locations: [],
+      states: [],
       selectedSpecialty: "",
-      selectedLocation: "",
+      selectedState: "",
       filteredMentors: null,
       selectedContent: "specialty",
       allMentorsKeys: null,
@@ -269,24 +266,32 @@ class AvailableMentors extends Component {
     db.getMentors().then(snapshot => {
       const data = snapshot.val();
       let specialties = [];
-      let locations = [];
+      let states = [];
       let keys = [];
       const mentorsData = Object.keys(data).map(mentorKey => {
         specialties.push(data[mentorKey].specialty);
-        locations.push(data[mentorKey].location);
+        states.push(data[mentorKey].stateCode);
         keys.push(mentorKey);
         let mentorState =
           data[mentorKey].mentorState && data[mentorKey].mentorState;
         let imgUrl = data[mentorKey].pictureName;
         let setImgUrl =
-          imgUrl === "" || imgUrl === "NA"
-            ? "https://via.placeholder.com/100.png/09f/fff?text=mentor"
+          imgUrl === "" ||
+          imgUrl === "NA" ||
+          imgUrl === "/static/media/baseline_photo.2f761052.png"
+            ? "https://via.placeholder.com/150/53833a/FFFFFF?text=mentor"
             : imgUrl;
+
+        const city = toTitleCase(data[mentorKey].location);
+        const state = data[mentorKey].stateCode;
+        const mentorLocation = `${city}, ${state}`;
 
         const mentor = {
           key: mentorKey,
           name: toTitleCase(data[mentorKey].name),
-          location: toTitleCase(data[mentorKey].location),
+          city: city,
+          state: state,
+          mentorLocation: mentorLocation,
           specialty: toTitleCase(data[mentorKey].specialty),
           available: data[mentorKey].available,
           description: data[mentorKey].description,
@@ -307,7 +312,7 @@ class AvailableMentors extends Component {
           mentors: mentorsData,
           filterApplied: false,
           specialties: sanitizeStrings(specialties).sort(),
-          locations: sanitizeStrings(locations).sort()
+          states: sanitizeStateStrings(states).sort()
         });
     });
   };
@@ -337,7 +342,7 @@ class AvailableMentors extends Component {
 
     selectedFilter === "all"
       ? this.setState({
-          selectedLocation: "",
+          selectedState: "",
           selectedSpecialty: "",
           filteredMentors: null,
           selectedContent: "",
@@ -362,7 +367,7 @@ class AvailableMentors extends Component {
         );
         this.setState({
           filteredMentors,
-          selectedLocation: "",
+          selectedState: "",
           expanded: false
         });
       }
@@ -374,17 +379,14 @@ class AvailableMentors extends Component {
     return filter(isMentor, mentors);
   };
 
-  handleSelectedLocation = event => {
+  handleSelectedState = event => {
     this.setState(
       {
-        selectedLocation: event.target.value
+        selectedState: event.target.value
       },
       () => {
-        const { selectedLocation, mentors } = this.state;
-        const filteredMentors = this.filterOnLocation(
-          selectedLocation,
-          mentors
-        );
+        const { selectedState, mentors } = this.state;
+        const filteredMentors = this.filterOnState(selectedState, mentors);
         this.setState({
           filteredMentors,
           selectedSpecialty: "",
@@ -394,8 +396,8 @@ class AvailableMentors extends Component {
     );
   };
 
-  filterOnLocation = (location, mentors) => {
-    const isMentor = mentor => mentor.location === location;
+  filterOnState = (state, mentors) => {
+    const isMentor = mentor => mentor.state === state;
     return filter(isMentor, mentors);
   };
 
@@ -413,9 +415,9 @@ class AvailableMentors extends Component {
       mentorDetail,
       specialties,
       selectedSpecialty,
-      selectedLocation,
+      selectedState,
       filteredMentors,
-      locations,
+      states,
       selectedContent,
       expanded
     } = this.state;
@@ -430,12 +432,12 @@ class AvailableMentors extends Component {
             state={this.state.value}
             specialties={specialties}
             selectedContent={selectedContent}
-            locations={locations}
+            states={states}
             selectedSpecialty={selectedSpecialty}
-            selectedLocation={selectedLocation}
+            selectedState={selectedState}
             handleSelectedSpecialty={this.handleSelectedSpecialty}
             setSelectedFilter={this.setSelectedFilter}
-            handleSelectedLocation={this.handleSelectedLocation}
+            handleSelectedState={this.handleSelectedState}
             expanded={expanded}
           />
           {mentorsToShow.map(mentor => (
@@ -452,7 +454,7 @@ class AvailableMentors extends Component {
                     />
                   }
                   title={mentor.name}
-                  subheader={mentor.location}
+                  subheader={mentor.mentorLocation}
                 />
                 <CardContent>
                   {mentor.mentorState && (
@@ -519,7 +521,7 @@ class AvailableMentors extends Component {
                     {mentorDetail.specialty}
                   </Typography>
                   <Typography gutterBottom variant="body2">
-                    {mentorDetail.location}
+                    {mentorDetail.mentorLocation}
                   </Typography>
                 </span>
               </DialogTitle>
