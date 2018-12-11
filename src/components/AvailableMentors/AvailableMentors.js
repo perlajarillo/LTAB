@@ -99,6 +99,9 @@ const styles = theme => ({
     overflow: "scroll",
     maxHeight: "350px"
   },
+  socialIcon: {
+    width: "32px"
+  },
   formControl: {
     width: "100%",
     margin: "8px 24px 16px 24px",
@@ -523,6 +526,16 @@ class AvailableMentors extends Component {
                   <Typography gutterBottom variant="body2">
                     {mentorDetail.mentorLocation}
                   </Typography>
+                  {mentorDetail.phone && (
+                    <Typography gutterBottom variant="body2">
+                      <img
+                        src={phoneLogo}
+                        className={classes.socialIcon}
+                        alt="phone-number"
+                      />
+                      {mentorDetail.phone}
+                    </Typography>
+                  )}
                 </span>
               </DialogTitle>
 
@@ -535,35 +548,45 @@ class AvailableMentors extends Component {
                 {mentorDetail.fb && (
                   <Button onClick={this.handleClose} color="primary">
                     <a href={mentorDetail.fb} target="blank">
-                      <img src={fbLogo} width="32px" alt="facebook" />
+                      <img
+                        src={fbLogo}
+                        className={classes.socialIcon}
+                        alt="facebook"
+                      />
                     </a>
                   </Button>
                 )}
                 {mentorDetail.tw && (
                   <Button onClick={this.handleClose} color="primary">
                     <a href={mentorDetail.tw} target="blank">
-                      <img src={twLogo} width="32px" alt="twitter" />
+                      <img
+                        src={twLogo}
+                        className={classes.socialIcon}
+                        alt="twitter"
+                      />
                     </a>
                   </Button>
                 )}
                 {mentorDetail.lk && (
                   <Button onClick={this.handleClose} color="primary">
                     <a href={mentorDetail.lk} target="blank">
-                      <img src={inLogo} width="32px" alt="linkedin" />
+                      <img
+                        src={inLogo}
+                        className={classes.socialIcon}
+                        alt="linkedin"
+                      />
                     </a>
                   </Button>
                 )}
                 {mentorDetail.mail && (
                   <Button onClick={this.handleClose} color="primary">
                     <a href={`mailto:${mentorDetail.mail}`}>
-                      <img src={emailLogo} width="32px" alt="linkedin" />
+                      <img
+                        src={emailLogo}
+                        className={classes.socialIcon}
+                        alt="linkedin"
+                      />
                     </a>
-                  </Button>
-                )}
-                {mentorDetail.phone && (
-                  <Button disableRipple>
-                    <img src={phoneLogo} width="32px" alt="phone-number" />{" "}
-                    {mentorDetail.phone}
                   </Button>
                 )}
               </DialogActions>
