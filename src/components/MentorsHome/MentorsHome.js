@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import logo_original from "../../images/logo_original.png";
+import logo_original from "../../images/logo.png";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
+import MentorsMessage from "./MentorsMessage";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 
 const styles = theme => ({
   root: {
@@ -21,14 +22,29 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 3,
     paddingLeft: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2
+  },
+  principalLogo: {
+    marginLeft: theme.spacing.unit * 1,
+    [theme.breakpoints.up("xs")]: {
+      width: "140px",
+      marginLeft: theme.spacing.unit * 9
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: "275px",
+      marginLeft: theme.spacing.unit * 11
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "355px",
+      marginLeft: theme.spacing.unit * 2
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      width: "145px",
+      marginLeft: theme.spacing.unit * 7
+    }
   }
 });
 
 class MentorsHome extends Component {
-  constructor(props, context) {
-    super(props, context);
-  }
-
   render() {
     const { classes } = this.props;
 
@@ -39,15 +55,15 @@ class MentorsHome extends Component {
             Welcome to FLAD Mentorship
           </Typography>
         </div>
-        <Grid container>
-          <Grid item xs={12} sm={6} md={6} lg={6}>
+        <Grid container spacing={8}>
+          <Grid item xs={12} sm={4} md={4} lg={4}>
             <img
               src={logo_original}
               alt="Let's talk about business"
               className={classes.principalLogo}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={6} lg={6}>
+          <Grid item xs={12} sm={7} md={7} lg={7}>
             <Typography variant="h6" color="primary" gutterBottom>
               Thank you for being a mentor!
             </Typography>
@@ -64,23 +80,15 @@ class MentorsHome extends Component {
               community and be involve with a wide business network!.
             </Typography>
             <br />
-            <Typography variant="body1">
+            <Card>
+              <CardContent>
+                <MentorsMessage />
+              </CardContent>
+            </Card>
+            <Typography variant="body2">
               {" "}
-              You can share a message with our community anytime clicking the
-              button bellow.
+              You can also set your message from the settings menu.
             </Typography>
-            <br />
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                component={Link}
-                to="/mentorsmessage"
-                className={classes.button}
-              >
-                Write a message
-              </Button>
-            </div>
           </Grid>
         </Grid>
       </div>
