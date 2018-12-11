@@ -19,6 +19,9 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { auth } from "../../firebase";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import listsData from "./Literals/listsData";
 
 const styles = theme => ({
   root: {
@@ -158,6 +161,8 @@ const styles = theme => ({
   }
 });
 
+const { states, specialties } = listsData;
+
 class NewMentor extends Component {
   constructor(props) {
     super(props);
@@ -192,7 +197,9 @@ class NewMentor extends Component {
       passwordError: "",
       repeatPasswordError: "",
       imageError: "",
-      mentorState: "Let's talk about business"
+      mentorState: "Let's talk about business",
+      stateCode: "",
+      stateCodeError: ""
     };
   }
 
@@ -202,14 +209,30 @@ class NewMentor extends Component {
    * @returns {void}
    */
   allRequiredDataProvided = () => {
-    const { password, repeatPassword } = this.state;
+    const {
+      nameError,
+      locationError,
+      descriptionError,
+      specialtyError,
+      stateCodeError,
+      specialty,
+      stateCode,
+      location,
+      name,
+      mailError,
+      password,
+      repeatPassword
+    } = this.state;
     const errorMessages =
-      this.state.nameError ||
-      this.state.mailError ||
-      this.state.locationError ||
-      this.state.descriptionError ||
-      this.state.specialtyError;
-    if (errorMessages) {
+      nameError ||
+      locationError ||
+      descriptionError ||
+      specialtyError ||
+      stateCodeError ||
+      mailError;
+    const values =
+      specialty === "" || stateCode === "" || location === "" || name === "";
+    if (errorMessages || values) {
       this.setState({
         openSnackbarError: true,
         sectionError: "The fields with * are required"
@@ -315,7 +338,8 @@ class NewMentor extends Component {
         "description",
         "pictureName",
         "available",
-        "mentorState"
+        "mentorState",
+        "stateCode"
       ],
       this.state
     );
@@ -346,6 +370,9 @@ class NewMentor extends Component {
                 this.state.pictureBlob
               )
                 .then(() => {
+                  this.setState({
+                    openSnackbarSaved: true
+                  });
                   history.push("/mentorshome");
                 })
                 .catch(error => {
@@ -417,7 +444,9 @@ class NewMentor extends Component {
       repeatPassword,
       passwordError,
       repeatPasswordError,
-      imageError
+      imageError,
+      stateCode,
+      stateCodeError
     } = this.state;
 
     return (
@@ -472,23 +501,35 @@ class NewMentor extends Component {
                     </FormControl>
                   </div>
                   <div>
+                    <FormHelperText>Specialty/Industry * </FormHelperText>
                     <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="specialty"
-                        name="specialty"
-                        label="Specialty"
-                        placeholder="e.g. Accountant, Visual Arts, Design, etc."
+                      <Select
                         value={specialty}
+                        label="Specialty"
                         onChange={this.handleChange}
                         onBlur={this.checkForNull}
-                        className={classes.textField}
+                        name="specialty"
+                        id="specialty"
+                        displayEmpty
                         required
-                      />
+                        className={classes.textField}
+                      >
+                        <MenuItem value="" disabled>
+                          Select the specialty
+                        </MenuItem>
+                        {specialties.map(specialty => (
+                          <MenuItem key={specialty} value={specialty}>
+                            {specialty}
+                          </MenuItem>
+                        ))}
+                      </Select>
+
                       <FormHelperText error={true}>
                         {specialtyError}
                       </FormHelperText>
                     </FormControl>
                   </div>
+
                   <div>
                     <FormControl required className={classes.formControl}>
                       <TextField
@@ -567,6 +608,36 @@ class NewMentor extends Component {
                       {locationError}
                     </FormHelperText>
                   </div>
+                  <div>
+                    <FormHelperText>State * </FormHelperText>
+
+                    <FormControl required className={classes.formControl}>
+                      <Select
+                        value={stateCode}
+                        label="State"
+                        onChange={this.handleChange}
+                        onBlur={this.checkForNull}
+                        name="stateCode"
+                        id="stateCode"
+                        displayEmpty
+                        required
+                        className={classes.textField}
+                      >
+                        <MenuItem value="" disabled>
+                          Select the state
+                        </MenuItem>
+                        {states.map(state => (
+                          <MenuItem key={state.code} value={state.code}>
+                            {state.stateName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormHelperText error={true}>
+                      {stateCodeError}
+                    </FormHelperText>
+                  </div>
+
                   <div>
                     <FormControl required className={classes.formControl}>
                       <TextField
@@ -692,7 +763,7 @@ class NewMentor extends Component {
           <SnackbarContentWrapper
             onClose={this.handleSnackbarClose}
             variant="success"
-            message="Entry saved!"
+            message="Your account has been created!"
           />
         </Snackbar>
         <Snackbar
