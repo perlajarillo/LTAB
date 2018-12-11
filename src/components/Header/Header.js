@@ -75,6 +75,7 @@ const NavAuthUser = props => {
                       Mentors
                     </Button>
                   </List>
+                  {/* we will removing the comment once the reports are ready
                   <List>
                     <Button
                       tabIndex="-1"
@@ -84,7 +85,7 @@ const NavAuthUser = props => {
                     >
                       Reports
                     </Button>
-                  </List>
+                  </List> */}
                 </div>
               ) : rol === "mentor" ? (
                 <div>
@@ -98,6 +99,7 @@ const NavAuthUser = props => {
                       Share message
                     </Button>
                   </List>
+                  {/*  we will removing the comment once the reports are ready
                   <List>
                     <Button
                       tabIndex="-1"
@@ -107,7 +109,7 @@ const NavAuthUser = props => {
                     >
                       Reports
                     </Button>
-                  </List>
+                  </List> */}
                 </div>
               ) : (
                 <List>
