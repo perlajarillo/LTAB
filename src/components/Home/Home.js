@@ -94,7 +94,7 @@ const styles = theme => ({
   },
 
   logo: {
-    width: "120px"
+    width: "250px"
   },
   icon: {
     width: "64px"
@@ -120,8 +120,6 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    const localData = localStorage.getItem("data");
-    console.log(localData);
     this.regristerObserver = this.getMentorsInfo();
   }
 
@@ -133,12 +131,13 @@ class Home extends Component {
     db.getMentors()
       .then(snapshot => {
         const data = snapshot.val();
-        localStorage.setItem("data", data);
         const mentorsData = Object.keys(data).map(mentorKey => {
           let imgUrl = data[mentorKey].pictureName;
           let setImgUrl =
-            imgUrl === "" || imgUrl === "NA"
-              ? "https://via.placeholder.com/150/25560e/FFFFFF?text=mentor"
+            imgUrl === "" ||
+            imgUrl === "NA" ||
+            imgUrl === "/static/media/baseline_photo.2f761052.png"
+              ? "https://via.placeholder.com/150/53833a/FFFFFF?text=mentor"
               : imgUrl;
 
           const mentorImg = {
@@ -161,7 +160,7 @@ class Home extends Component {
   }
 
   render() {
-    const { classes, history } = this.props;
+    const { classes } = this.props;
     const { mentorsImgs } = this.state;
 
     return (
@@ -194,7 +193,6 @@ class Home extends Component {
               variant="contained"
               color="secondary"
               size="large"
-              fullWidth
               component={Link}
               to="/newmentor"
               className={classes.button}
@@ -202,7 +200,10 @@ class Home extends Component {
               Create a mentor account
             </Button>
             <Typography variant="body1" gutterBottom align="center">
-              Or please reach out to us through email to{"  "}
+              Or please reach out to us through
+            </Typography>
+            <Typography variant="body1" gutterBottom align="center">
+              email{" "}
               <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
             </Typography>
           </div>
@@ -242,7 +243,6 @@ class Home extends Component {
               variant="contained"
               color="primary"
               size="large"
-              fullWidth
               component={Link}
               to="/newmentee"
               className={classes.button}
