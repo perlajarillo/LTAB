@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
+
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { setState, getMentorState } from "../../firebase/operations";
@@ -15,50 +14,27 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
-    margin: "95px 0",
-    minHeight: "80vh",
-    [theme.breakpoints.up("sm")]: {
-      margin: "120px 24px"
-    }
+    margin: "5px 0"
   },
   pageTitle: {
-    paddingTop: theme.spacing.unit * 3,
-    paddingLeft: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2
   },
   textField: {
     marginTop: 20,
     [theme.breakpoints.up("xs")]: {
+      width: 200
+    },
+    [theme.breakpoints.up("sm")]: {
       width: 250
     },
-    [theme.breakpoints.up("sm")]: {
-      width: 800
-    },
     [theme.breakpoints.up("md")]: {
-      width: 750
+      width: 730
     },
-
     [theme.breakpoints.between("sm", "md")]: {
+      width: 280
+    },
+    [theme.breakpoints.between("lg")]: {
       width: 550
-    }
-  },
-
-  card: {
-    width: "500px",
-    margin: "30px auto",
-    paddingBottom: "1%",
-    [theme.breakpoints.up("xs")]: {
-      width: "auto",
-      margin: "0px auto"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "250px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "950px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "620px"
     }
   }
 });
@@ -147,13 +123,16 @@ class MentorsHome extends Component {
    */
   componentDidMount = () => {
     if (this.props.authUser) {
-      this.mentorState();
+      this.unregisterObserver = this.mentorState();
     }
   };
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
-      this.mentorState();
+      this.unregisterObserver = this.mentorState();
     }
+  }
+  componentWillUnmount() {
+    this.unregisterObserver = null;
   }
   render() {
     const { classes } = this.props;
@@ -171,45 +150,41 @@ class MentorsHome extends Component {
             Your message to FLAD Mentorship community
           </Typography>
         </div>
-
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography variant="body1">
-              Write here about the expertise you can share with the community of
-              mentees (e.g. "I am an speaker and author, I can help you to
-              prepare your speech").
-            </Typography>
-            <Typography variant="caption" gutterBottom>
-              {mentorState ? HAVE_SET_STATE : HAVENT_SET_STATE}
-            </Typography>
-            <div>
-              <br />
-              <TextField
-                id="mentorState"
-                name="mentorState"
-                multiline
-                rows="5"
-                label="Your message (200 characters max)"
-                value={mentorState}
-                onChange={this.handleChange}
-                className={classes.textField}
-                inputProps={{ maxLength: 200 }}
-              />
-            </div>{" "}
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                fullWidth
-                className={classes.button}
-                onClick={this.handleSubmit}
-              >
-                Share
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        <Typography variant="body1">
+          Write here about the expertise you can share with the community of
+          mentees (e.g. "I am an speaker and author, I can help you to prepare
+          your speech").
+        </Typography>
+        <br />
+        <Typography variant="caption" gutterBottom>
+          {mentorState ? HAVE_SET_STATE : HAVENT_SET_STATE}
+        </Typography>
+        <div>
+          <br />
+          <TextField
+            id="mentorState"
+            name="mentorState"
+            multiline
+            rows="5"
+            label="Your message (200 characters max)"
+            value={mentorState}
+            onChange={this.handleChange}
+            className={classes.textField}
+            inputProps={{ maxLength: 200 }}
+          />
+        </div>{" "}
+        <br />
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            className={classes.button}
+            onClick={this.handleSubmit}
+          >
+            Share message
+          </Button>
+        </div>
         <Snackbar
           anchorOrigin={{
             vertical: "bottom",
