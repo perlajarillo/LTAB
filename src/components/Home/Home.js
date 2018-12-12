@@ -10,10 +10,10 @@ import icon_facebook from "../../images/icon_facebook.png";
 import b_business from "../../images/b_business.jpg";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
+import Divider from "@material-ui/core/Divider";
 import { db } from "../../firebase";
-import { uniq, map, compose } from "ramda";
+import { map, compose } from "ramda";
 
 const SPACE = " ";
 
@@ -36,14 +36,16 @@ const toTitleCase = compose(
 
 const styles = theme => ({
   wrapper: {
-    padding: theme.mediumSection.padding,
-    [theme.breakpoints.up("sm")]: {
+    padding: "6em 0",
+    /* [theme.breakpoints.up("sm")]: {
       padding: theme.mediumSection.padding
-    },
+    }, */
     backgroundColor: "#fff"
   },
   pageTitle: {
-    padding: theme.sectionPadding.padding,
+    padding: theme.smallSection.padding,
+    maxWidth: "80%",
+    margin: "0 auto",
     [theme.breakpoints.up("sm")]: {
       padding: theme.smallSection.padding
     }
@@ -54,7 +56,7 @@ const styles = theme => ({
     alignItems: "center",
     justifyContent: "center",
     flexFlow: "column wrap",
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#f1f8e9",
     [theme.breakpoints.up("lg")]: {
       flexFlow: "row nowrap",
       justifyContent: "space-evenly"
@@ -69,10 +71,16 @@ const styles = theme => ({
     }
   },
   sectionTitle: {
-    padding: theme.sectionPadding.padding,
-    flexGrow: 1
+    padding: theme.smallSection.padding,
+    flexGrow: 1,
+    background: "#fff"
   },
-  socialSection: {
+  sectSocial: {
+    padding: theme.smallSection.padding,
+    flexGrow: 1,
+    background: theme.palette.primary.dark
+  },
+  iconsSection: {
     padding: theme.sectionPadding.padding,
     display: "flex",
     alignItems: "center",
@@ -208,11 +216,11 @@ class Home extends Component {
             </Typography>
           </div>
         </div>
-        <div className={classes.sectionTitle}>
-          <Typography variant="body1" align="center">
-            Visit our Facebook page and Web Site to know more about the program:
+        <div className={classes.sectSocial}>
+          <Typography variant="h6" align="center" style={{ color: "#fff" }}>
+            Visit our Facebook page and Web Site to know more about the program
           </Typography>
-          <div className={classes.socialSection}>
+          <div className={classes.iconsSection}>
             <a
               className={classes.socialIcon}
               href="https://www.facebook.com/TalkBusinessFlad/"
@@ -254,7 +262,7 @@ class Home extends Component {
         <div className={classes.sectionTitle}>
           <div>
             <Typography variant="h6">
-              We are proud to introduce our Let's Talk about Business mentors:
+              We are proud to introduce our Let's Talk about Business mentors
             </Typography>
           </div>
           <div className={classes.mentorSection}>
