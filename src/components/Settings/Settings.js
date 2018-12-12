@@ -10,10 +10,12 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import MessageIcon from "@material-ui/icons/Message";
 import PermIcon from "@material-ui/icons/PermIdentity";
 import CancelAccount from "../CancelAccount/CancelAccount";
 import EditMentor from "../Mentors/EditMentor";
 import EditMentee from "../Mentees/EditMentee";
+import MentorsMessage from "../MentorsHome/MentorsMessage";
 
 const styles = theme => ({
   wrapper: {
@@ -58,6 +60,19 @@ class Settings extends React.Component {
               <PasswordChange />
             </ExpansionPanelDetails>
           </ExpansionPanel>
+          {rol === "mentor" && (
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <MessageIcon className={classes.iconStyle} />
+                <Typography className={classes.heading}>
+                  Set a message
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <MentorsMessage />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          )}
           {rol !== "admin" && (
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -75,6 +90,7 @@ class Settings extends React.Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           )}
+
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <DeleteIcon className={classes.iconStyle} />
