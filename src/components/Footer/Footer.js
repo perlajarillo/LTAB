@@ -3,18 +3,15 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Paper, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import icon_facebook from "../../images/icon_facebook.png";
-import b_business from "../../images/logo_square.png";
-import emailLogo from "../../images/email.png";
 
 const styles = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 6,
+    marginTop: theme.spacing.unit * 3,
     bottom: 0,
     width: "100vw"
   },
   paper: {
-    padding: theme.spacing.unit * 6,
+    padding: theme.spacing.unit * 3,
     backgroundColor: theme.palette.primary.main,
     borderRadius: 0
   },
@@ -26,17 +23,26 @@ const styles = theme => ({
     fontSize: "0.55rem"
   },
   links: {
-    color: "white"
+    color: "white",
+    margin: "0.5em",
+    textDecoration: "none"
   },
   icon: {
     width: "26px"
   },
-  socialIcon: {
-    marginRight: "0px",
-    margin: "1em"
+  linksText: {
+    fontSize: "0.7rem"
   },
-  iconSection: {
-    marginRight: "0px"
+  linksSection: {
+    textAlign: "center"
+  },
+  creditsRow: {
+    backgroundColor: theme.palette.primary.dark,
+    display: "flex",
+    padding: theme.spacing.unit
+  },
+  authors: {
+    textAlign: "right"
   }
 });
 
@@ -57,66 +63,93 @@ function Footer(props) {
           </Grid>
           <Grid item xs={12} sm={7} md={7} lg={7}>
             <Typography
-              variant="caption"
+              variant="overline"
               align="center"
               className={classes.textColor}
             >
-              Developed by{" "}
-              <a
-                className={classes.links}
-                href="https://www.linkedin.com/in/perla-jarillo-98290436/"
-                target="blank"
-              >
-                Perla Jarillo{" "}
-              </a>{" "}
-              and{" "}
-              <a
-                href="https://www.fabiolavieyra.com/"
-                className={classes.links}
-                target="blank"
-              >
-                Fabiola Vieyra{" "}
-              </a>
+              Social{" "}
             </Typography>
+            <div className={classes.linksSection}>
+              <Typography
+                variant="caption"
+                align="center"
+                className={classes.linksText}
+              >
+                <a
+                  className={classes.links}
+                  href="https://www.facebook.com/TalkBusinessFlad/"
+                  target="blank"
+                >
+                  Facebook
+                </a>
+                <a
+                  className={classes.links}
+                  href="https://www.flad.pt/en/lets-talk-about-business/"
+                  target="blank"
+                >
+                  Flad Mentorship
+                </a>
+                <a className={classes.links} href="mailto:talkbusiness@flad.pt">
+                  e-mail: talkbusiness@flad.pt
+                </a>
+              </Typography>
+            </div>
           </Grid>
           <Grid item xs={12} sm={2} md={2} lg={2}>
-            <div className={classes.iconSection}>
-              <a
-                className={classes.socialIcon}
-                href="https://www.facebook.com/TalkBusinessFlad/"
-                target="blank"
+            <Typography
+              variant="overline"
+              align="center"
+              className={classes.textColor}
+            >
+              Join us{" "}
+            </Typography>
+            <div className={classes.linksSection}>
+              <Typography
+                variant="caption"
+                align="center"
+                className={classes.linksText}
               >
-                <img
-                  src={icon_facebook}
-                  alt="Let's talk about business in Facebook"
-                  className={classes.icon}
-                />
-              </a>
-              <a
-                className={classes.socialIcon}
-                href="https://www.flad.pt/en/lets-talk-about-business/"
-                target="blank"
-              >
-                <img
-                  src={b_business}
-                  alt="Let's talk about business"
-                  className={classes.icon}
-                />
-              </a>
-              <a
-                className={classes.socialIcon}
-                href="mailto:talkbusiness@flad.pt"
-              >
-                <img
-                  src={emailLogo}
-                  alt="Let's talk about business mail"
-                  className={classes.icon}
-                />
-              </a>
+                {" "}
+                <a className={classes.links} href="/newmentee">
+                  As mentee{" "}
+                </a>
+                {"  "}
+                <a href="/newmentor" className={classes.links}>
+                  As mentor{" "}
+                </a>
+              </Typography>
             </div>
           </Grid>
         </Grid>
-        <div>
+      </Paper>
+
+      <Grid container spacing={8} className={classes.creditsRow}>
+        <Grid item xs={12} sm={5} md={5} lg={5}>
+          <Typography
+            variant="caption"
+            align="left"
+            gutterBottom
+            className={classes.textColor}
+          >
+            Developed by
+            <a
+              className={classes.links}
+              href="https://www.linkedin.com/in/perla-jarillo-98290436/"
+              target="blank"
+            >
+              Perla Jarillo
+            </a>
+            and
+            <a
+              href="https://www.fabiolavieyra.com/"
+              className={classes.links}
+              target="blank"
+            >
+              Fabiola Vieyra
+            </a>
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={6} md={6} lg={6}>
           <Typography
             variant="caption"
             align="center"
@@ -183,8 +216,8 @@ function Footer(props) {
               reference table.
             </a>
           </Typography>
-        </div>
-      </Paper>
+        </Grid>
+      </Grid>
     </footer>
   );
 }
