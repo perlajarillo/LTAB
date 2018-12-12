@@ -21,7 +21,10 @@ const styles = theme => ({
     margin: "80px 0",
     alignItems: "center",
     justifyContent: "center",
-    display: "flex"
+    display: "flex",
+    [theme.breakpoints.up("sm")]: {
+      margin: "70px 0"
+    }
   },
 
   container: {
@@ -57,21 +60,22 @@ const styles = theme => ({
   text: {
     padding: theme.spacing.unit * 3,
     marginLeft: theme.spacing.unit * 2,
-    color: theme.palette.text.secondary
+    color: theme.palette.primary.main
   },
   card: {
     width: "500px",
     paddingBottom: "1%",
     [theme.breakpoints.up("xs")]: {
-      width: "auto"
+      width: "auto",
+      marginTop: "5px"
     },
     [theme.breakpoints.up("sm")]: {
       width: "250px",
-      marginTop: "60px"
+      marginTop: "40px"
     },
     [theme.breakpoints.up("md")]: {
       width: "500px",
-      marginTop: "60px"
+      marginTop: "40px"
     },
     [theme.breakpoints.between("sm", "md")]: {
       width: "520px"
