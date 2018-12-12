@@ -6,12 +6,10 @@ import backgroundImg from "../../images/letstalk_logo_3.jpg";
 import logo from "../../images/logo.png";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
-import icon_facebook from "../../images/icon_facebook.png";
-import b_business from "../../images/b_business.jpg";
+import b_business from "../../images/logo_square_transparent.png";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
-import Divider from "@material-ui/core/Divider";
 import { db } from "../../firebase";
 import { map, compose } from "ramda";
 
@@ -37,9 +35,6 @@ const toTitleCase = compose(
 const styles = theme => ({
   wrapper: {
     padding: "6em 0",
-    /* [theme.breakpoints.up("sm")]: {
-      padding: theme.mediumSection.padding
-    }, */
     backgroundColor: "#fff"
   },
   pageTitle: {
@@ -56,11 +51,12 @@ const styles = theme => ({
     alignItems: "center",
     justifyContent: "center",
     flexFlow: "column wrap",
-    backgroundColor: "#f1f8e9",
-    [theme.breakpoints.up("lg")]: {
+    backgroundColor: "#f1f8e9"
+    /* TO HAVE HORIZONTAL SECTIONS UN COMMENT */
+    /* [theme.breakpoints.up("lg")]: {
       flexFlow: "row nowrap",
       justifyContent: "space-evenly"
-    }
+    } */
   },
   mentorSection: {
     padding: "1rem 0",
@@ -76,18 +72,22 @@ const styles = theme => ({
     background: "#fff"
   },
   sectSocial: {
-    padding: theme.smallSection.padding,
+    padding: theme.sectionPadding.padding,
     flexGrow: 1,
     background: theme.palette.primary.dark
   },
   iconsSection: {
-    padding: theme.sectionPadding.padding,
     display: "flex",
     alignItems: "center",
     justifyContent: "center"
   },
   socialIcon: {
     margin: "1em"
+  },
+  socialLinks: {
+    textDecoration: "none",
+    color: "#fff",
+    borderBottom: "1px solid currentColor"
   },
   button: {
     padding: theme.spacing.unit * 2,
@@ -189,7 +189,7 @@ class Home extends Component {
 
         <div className={classes.section}>
           <div>
-            <img src={logo} className={classes.logo} />
+            <img src={logo} alt="" className={classes.logo} />
           </div>
           <div>
             <Typography variant="h6" gutterBottom align="center">
@@ -217,29 +217,29 @@ class Home extends Component {
           </div>
         </div>
         <div className={classes.sectSocial}>
-          <Typography variant="h6" align="center" style={{ color: "#fff" }}>
-            Visit our Facebook page and Web Site to know more about the program
-          </Typography>
-          <div className={classes.iconsSection}>
+          <Typography variant="body1" align="center" style={{ color: "#fff" }}>
+            Visit our{" "}
             <a
-              className={classes.socialIcon}
               href="https://www.facebook.com/TalkBusinessFlad/"
               target="blank"
+              className={classes.socialLinks}
             >
-              <img src={icon_facebook} className={classes.icon} />
-            </a>
+              Facebook page
+            </a>{" "}
+            and{" "}
             <a
-              className={classes.socialIcon}
               href="https://www.flad.pt/en/lets-talk-about-business/"
               target="blank"
+              className={classes.socialLinks}
             >
-              <img src={b_business} className={classes.icon} />
-            </a>
-          </div>
+              Web Site
+            </a>{" "}
+            to know more about the program
+          </Typography>
         </div>
         <div className={classes.section}>
           <div>
-            <img src={b_business} className={classes.logo} />
+            <img src={b_business} alt="" className={classes.logo} />
           </div>
           <div>
             <Typography variant="h6" gutterBottom align="center">
