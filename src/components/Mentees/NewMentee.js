@@ -22,8 +22,10 @@ import { validateString } from "../validity";
 
 const styles = theme => ({
   wrapper: {
-    margin: "80px 0",
-    marginTop: 200
+    marginTop: "6rem",
+    [theme.breakpoints.up("md")]: {
+      marginTop: "9rem"
+    }
   },
 
   formControl: {
@@ -63,22 +65,14 @@ const styles = theme => ({
       width: "620px"
     }
   },
-
+  cardTitle: {
+    display: "flex",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-around"
+  },
   iconBusiness: {
-    width: "50px",
-    marginLeft: 75,
-    [theme.breakpoints.up("xs")]: {
-      width: "60px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "65px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "115px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "105px"
-    }
+    width: "100px"
   },
   pos: {
     marginBottom: 24
@@ -269,10 +263,16 @@ class NewMentee extends React.Component {
         <Card className={classes.card}>
           <form onSubmit={this.handleSubmit}>
             <CardContent>
-              <Typography variant="h6">
-                Register to look for a mentor.{" "}
-                <img src={b_business} className={classes.iconBusiness} />
-              </Typography>
+              <div className={classes.cardTitle}>
+                <Typography variant="h6" color="primary">
+                  Register to look for a mentor.{" "}
+                </Typography>
+                <img
+                  src={b_business}
+                  alt="Register to look for a mentor"
+                  className={classes.iconBusiness}
+                />
+              </div>
               <div>
                 <FormControl required className={classes.formControl}>
                   <TextField
