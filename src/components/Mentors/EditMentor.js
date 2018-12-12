@@ -76,7 +76,7 @@ const styles = theme => ({
       height: 330
     },
     [theme.breakpoints.up("md")]: {
-      width: 250,
+      width: 220,
       height: 280
     },
 
@@ -436,7 +436,7 @@ class EditMentor extends Component {
                     id="location"
                     name="location"
                     label=" City"
-                    placeholder="Physical location (e.g. New England)"
+                    placeholder="Physical location (e.g. New Bedford)"
                     value={location}
                     onBlur={this.checkForNull}
                     onChange={this.handleChange}
@@ -479,6 +479,7 @@ class EditMentor extends Component {
                     name="mail"
                     label="E-mail"
                     type="email"
+                    placeholder="e.g. your@email.com"
                     value={mail}
                     required
                     onChange={this.handleChange}
@@ -492,6 +493,7 @@ class EditMentor extends Component {
                     id="phone"
                     name="phone"
                     label="Phone"
+                    placeholder="(nnn) nnn-nnnn "
                     value={phone}
                     onChange={this.handleChange}
                     className={classes.textField}
@@ -504,6 +506,7 @@ class EditMentor extends Component {
                     id="linkedin"
                     name="linkedin"
                     label="LinkedIn"
+                    placeholder="https://www.linkedin.com/in/your-profile/"
                     value={linkedin}
                     onChange={this.handleChange}
                     className={classes.textField}
@@ -516,6 +519,7 @@ class EditMentor extends Component {
                     id="twitter"
                     name="twitter"
                     label="Twitter"
+                    placeholder="https://twitter.com/your_user"
                     value={twitter}
                     onChange={this.handleChange}
                     className={classes.textField}
@@ -528,6 +532,7 @@ class EditMentor extends Component {
                     id="facebook"
                     name="facebook"
                     label="Facebook"
+                    placeholder="https://www.facebook.com/your_profile"
                     value={facebook}
                     onChange={this.handleChange}
                     className={classes.textField}

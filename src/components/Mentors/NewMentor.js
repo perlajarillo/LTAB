@@ -27,10 +27,10 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
-    margin: "90px 0",
+    margin: "80px 0",
     minHeight: "80vh",
     [theme.breakpoints.up("sm")]: {
-      margin: "120px 24px"
+      margin: "90px 24px"
     }
   },
   container: {
@@ -133,7 +133,7 @@ const styles = theme => ({
       height: 330
     },
     [theme.breakpoints.up("md")]: {
-      width: 250,
+      width: 220,
       height: 280
     },
 
@@ -465,7 +465,7 @@ class NewMentor extends Component {
               <Grid container spacing={8}>
                 <Grid item xs={12} sm={7} md={7} lg={7}>
                   <div className={classes.sectionMargin}>
-                    <Typography variant="h6">
+                    <Typography variant="h6" color="primary">
                       Fill this form to become a Mentor
                     </Typography>
                   </div>
@@ -536,6 +536,7 @@ class NewMentor extends Component {
                         id="password"
                         name="password"
                         label="Password:"
+                        placeholder="More than 6 characters"
                         value={password}
                         className={classes.textField}
                         onChange={this.handleChange}
@@ -554,6 +555,7 @@ class NewMentor extends Component {
                         id="repeatPassword"
                         name="repeatPassword"
                         label="Repeat password:"
+                        placeholder="More than 6 characters"
                         value={repeatPassword}
                         className={classes.textField}
                         type="password"
@@ -595,8 +597,8 @@ class NewMentor extends Component {
                       <TextField
                         id="location"
                         name="location"
-                        label=" Location"
-                        placeholder="Physical location (e.g. New England)"
+                        label="City"
+                        placeholder="Physical location (e.g. New Bedford)"
                         value={location}
                         onBlur={this.checkForNull}
                         onChange={this.handleChange}
@@ -645,6 +647,7 @@ class NewMentor extends Component {
                         name="mail"
                         label="E-mail"
                         type="email"
+                        placeholder="e.g. your@email.com"
                         value={mail}
                         required
                         onChange={this.handleChange}
@@ -658,6 +661,7 @@ class NewMentor extends Component {
                         id="phone"
                         name="phone"
                         label="Phone"
+                        placeholder="(nnn) nnn-nnnn "
                         value={phone}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -670,6 +674,7 @@ class NewMentor extends Component {
                         id="linkedin"
                         name="linkedin"
                         label="LinkedIn"
+                        placeholder="https://www.linkedin.com/in/your-profile/"
                         value={linkedin}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -682,6 +687,7 @@ class NewMentor extends Component {
                         id="twitter"
                         name="twitter"
                         label="Twitter"
+                        placeholder="https://twitter.com/your_user"
                         value={twitter}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -694,6 +700,7 @@ class NewMentor extends Component {
                         id="facebook"
                         name="facebook"
                         label="Facebook"
+                        placeholder="https://www.facebook.com/your_profile"
                         value={facebook}
                         onChange={this.handleChange}
                         className={classes.textField}

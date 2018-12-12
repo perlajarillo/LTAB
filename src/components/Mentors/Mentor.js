@@ -37,16 +37,16 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
-    margin: "120px 0",
+    margin: "80px 0",
     minHeight: "80vh",
     [theme.breakpoints.up("sm")]: {
-      margin: "120px 24px"
+      margin: "90px 24px"
     }
   },
   container: {
     display: "flex",
     flexWrap: "wrap",
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 2
   },
   dpMargin: {
     marginTop: theme.spacing.unit * 6,
@@ -123,7 +123,7 @@ const styles = theme => ({
       height: 280
     },
     [theme.breakpoints.up("md")]: {
-      width: 250,
+      width: 220,
       height: 280
     },
 
@@ -464,7 +464,9 @@ class NewMentor extends Component {
               <Grid container spacing={24}>
                 <Grid item xs={12} sm={6} md={6} lg={6}>
                   <div className={classes.sectionMargin}>
-                    <Typography variant="h6">Mentor's information</Typography>
+                    <Typography variant="h6" color="primary">
+                      Mentor's information
+                    </Typography>
                   </div>
                   <div>
                     <img
@@ -555,7 +557,8 @@ class NewMentor extends Component {
                       <TextField
                         id="location"
                         name="location"
-                        label=" Location"
+                        label="City"
+                        placeholder="Physical location (e.g. New Bedford)"
                         value={location}
                         onBlur={this.checkForNull}
                         onChange={this.handleChange}
@@ -605,6 +608,7 @@ class NewMentor extends Component {
                         name="mail"
                         label="Mail"
                         type="email"
+                        placeholder="e.g. mentor@email.com"
                         value={mail}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -618,6 +622,7 @@ class NewMentor extends Component {
                         id="phone"
                         name="phone"
                         label="Phone"
+                        placeholder="(nnn) nnn-nnnn "
                         value={phone}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -631,6 +636,7 @@ class NewMentor extends Component {
                         id="linkedin"
                         name="linkedin"
                         label="Linkedin"
+                        placeholder="https://www.linkedin.com/in/mentors-profile/"
                         value={linkedin}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -644,6 +650,7 @@ class NewMentor extends Component {
                         id="twitter"
                         name="twitter"
                         label="Twitter"
+                        placeholder="https://twitter.com/mentors_user"
                         value={twitter}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -657,6 +664,7 @@ class NewMentor extends Component {
                         id="facebook"
                         name="facebook"
                         label="Facebook"
+                        placeholder="https://www.facebook.com/mentors_profile"
                         value={facebook}
                         onChange={this.handleChange}
                         className={classes.textField}
