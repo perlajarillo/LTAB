@@ -297,7 +297,7 @@ class NewMentee extends React.Component {
                     name="email"
                     label="E-mail:"
                     value={email}
-                    placeholder="Your email"
+                    placeholder="my@email.com"
                     className={classes.textField}
                     margin="normal"
                     onChange={this.handleChange}
@@ -313,7 +313,7 @@ class NewMentee extends React.Component {
                     id="location"
                     name="location"
                     label="Location:"
-                    placeholder="Where are you living?"
+                    placeholder="State, city, country you live in"
                     value={location}
                     className={classes.textField}
                     margin="normal"
@@ -330,6 +330,7 @@ class NewMentee extends React.Component {
                     id="password"
                     name="password"
                     label="Password:"
+                    placeholder="More than 6 characters"
                     value={password}
                     className={classes.textField}
                     onChange={this.handleChange}
@@ -347,6 +348,7 @@ class NewMentee extends React.Component {
                     id="repeatPassword"
                     name="repeatPassword"
                     label="Repeat password:"
+                    placeholder="Repeat the password"
                     value={repeatPassword}
                     className={classes.textField}
                     type="password"
