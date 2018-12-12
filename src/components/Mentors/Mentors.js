@@ -97,6 +97,12 @@ const styles = theme => ({
     width: "7px",
     align: "center",
     whiteSpace: "nowrap"
+  },
+  welcomeText: {
+    color: theme.palette.secondary.light
+  },
+  welcomeDiv: {
+    textAlign: "right"
   }
 });
 
@@ -486,13 +492,21 @@ class Mentors extends React.Component {
   };
 
   getMentors = () => {
-    getMentors().then(snapshot => {
-      this.setState({
-        mentors: snapshot.val(),
-        mentorsMirror: snapshot.val(),
-        filterApplied: false
-      });
-    });
+    getMentors()
+      .then(snapshot => {
+        this.setState({
+          mentors: snapshot.val(),
+          mentorsMirror: snapshot.val(),
+          filterApplied: false
+        });
+      })
+      .catch(
+        this.setState({
+          mentors: "",
+          mentorsMirror: "",
+          filterApplied: false
+        })
+      );
   };
 
   componentDidMount() {
@@ -514,10 +528,21 @@ class Mentors extends React.Component {
     const { from } = this.props.location.state || {
       from: { pathname: "/nofound" }
     };
+    const name = this.props.authUser ? this.props.authUser.userName : "";
+
     return (
       <div className={classes.wrapper}>
         {!authUser.rol === "admin" && <Redirect to={from} />}
         <div className={classes.root}>
+          <div className={classes.welcomeDiv}>
+            <Typography
+              variant="overline"
+              gutterBottom
+              className={classes.welcomeText}
+            >
+              {"Welcome " + name + "!"}
+            </Typography>
+          </div>
           <Typography variant="h5" gutterBottom>
             Mentors
           </Typography>
