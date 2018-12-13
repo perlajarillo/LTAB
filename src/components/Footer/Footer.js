@@ -39,7 +39,8 @@ const styles = theme => ({
   creditsRow: {
     backgroundColor: theme.palette.primary.dark,
     display: "flex",
-    padding: theme.spacing.unit
+    padding: theme.spacing.unit,
+    borderRadius: 0
   },
   authors: {
     textAlign: "right"
@@ -122,102 +123,103 @@ function Footer(props) {
           </Grid>
         </Grid>
       </Paper>
-
-      <Grid container spacing={8} className={classes.creditsRow}>
-        <Grid item xs={12} sm={5} md={5} lg={5}>
-          <Typography
-            variant="caption"
-            align="left"
-            gutterBottom
-            className={classes.textColor}
-          >
-            Developed by
-            <a
-              className={classes.links}
-              href="https://www.linkedin.com/in/perla-jarillo-98290436/"
-              target="blank"
+      <Paper className={classes.creditsRow} elevation={0}>
+        <Grid container spacing={8} className={classes.creditsRow}>
+          <Grid item xs={12} sm={5} md={5} lg={5}>
+            <Typography
+              variant="caption"
+              align="left"
+              gutterBottom
+              className={classes.textColor}
             >
-              Perla Jarillo
-            </a>
-            and
-            <a
-              href="https://www.fabiolavieyra.com/"
-              className={classes.links}
-              target="blank"
+              Developed by
+              <a
+                className={classes.links}
+                href="https://www.linkedin.com/in/perla-jarillo-98290436/"
+                target="blank"
+              >
+                Perla Jarillo
+              </a>
+              and
+              <a
+                href="https://www.fabiolavieyra.com/"
+                className={classes.links}
+                target="blank"
+              >
+                Fabiola Vieyra
+              </a>
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6} md={6} lg={6}>
+            <Typography
+              variant="caption"
+              align="center"
+              className={classes.credits}
+              gutterBottom
             >
-              Fabiola Vieyra
-            </a>
-          </Typography>
+              CREDITS - Logos cards social media and phone: Icons made by{" "}
+              <a
+                href="http://www.freepik.com/"
+                title="Freepik"
+                className={classes.links}
+              >
+                Freepik
+              </a>{" "}
+              from{" "}
+              <a
+                href="https://www.flaticon.com/"
+                title="Flaticon"
+                className={classes.links}
+              >
+                www.flaticon.com
+              </a>{" "}
+              is licensed by{" "}
+              <a
+                href="http://creativecommons.org/licenses/by/3.0/"
+                title="Creative Commons BY 3.0"
+                target="_blank"
+                className={classes.links}
+              >
+                CC 3.0 BY{", "}
+              </a>
+              Email icon made by{" "}
+              <a
+                href="https://www.flaticon.com/authors/vectors-market"
+                title="Vectors Market"
+                className={classes.links}
+              >
+                Vectors Market
+              </a>{" "}
+              from{" "}
+              <a
+                href="https://www.flaticon.com/"
+                title="Flaticon"
+                className={classes.links}
+              >
+                www.flaticon.com
+              </a>{" "}
+              is licensed by{" "}
+              <a
+                href="http://creativecommons.org/licenses/by/3.0/"
+                title="Creative Commons BY 3.0"
+                className={classes.links}
+                target="_blank"
+              >
+                CC 3.0 BY{" "}
+              </a>
+              List of specialties/industries based on LinkedIn's{" "}
+              <a
+                href="https://developer.linkedin.com/docs/reference/industry-codes"
+                title="Industry codes"
+                className={classes.links}
+                target="_blank"
+              >
+                reference table.
+              </a>
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
-          <Typography
-            variant="caption"
-            align="center"
-            className={classes.credits}
-            gutterBottom
-          >
-            CREDITS - Logos cards social media and phone: Icons made by{" "}
-            <a
-              href="http://www.freepik.com/"
-              title="Freepik"
-              className={classes.links}
-            >
-              Freepik
-            </a>{" "}
-            from{" "}
-            <a
-              href="https://www.flaticon.com/"
-              title="Flaticon"
-              className={classes.links}
-            >
-              www.flaticon.com
-            </a>{" "}
-            is licensed by{" "}
-            <a
-              href="http://creativecommons.org/licenses/by/3.0/"
-              title="Creative Commons BY 3.0"
-              target="_blank"
-              className={classes.links}
-            >
-              CC 3.0 BY{", "}
-            </a>
-            Email icon made by{" "}
-            <a
-              href="https://www.flaticon.com/authors/vectors-market"
-              title="Vectors Market"
-              className={classes.links}
-            >
-              Vectors Market
-            </a>{" "}
-            from{" "}
-            <a
-              href="https://www.flaticon.com/"
-              title="Flaticon"
-              className={classes.links}
-            >
-              www.flaticon.com
-            </a>{" "}
-            is licensed by{" "}
-            <a
-              href="http://creativecommons.org/licenses/by/3.0/"
-              title="Creative Commons BY 3.0"
-              className={classes.links}
-              target="_blank"
-            >
-              CC 3.0 BY{" "}
-            </a>
-            List of specialties/industries based on LinkedIn's{" "}
-            <a
-              href="https://developer.linkedin.com/docs/reference/industry-codes"
-              title="Industry codes"
-              className={classes.links}
-              target="_blank"
-            >
-              reference table.
-            </a>
-          </Typography>
-        </Grid>
-      </Grid>
+      </Paper>
     </footer>
   );
 }
