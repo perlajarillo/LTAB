@@ -21,10 +21,11 @@ const styles = theme => ({
   wrapper: {
     marginTop: "6rem",
 
-    minHeight: "60vh",
+    minHeight: "65vh",
     [theme.breakpoints.up("md")]: {
       marginTop: "7rem"
-    }
+    },
+    [theme.breakpoints.up("xs")]: { minHeight: "75vh" }
   },
 
   sectionStyles: {
