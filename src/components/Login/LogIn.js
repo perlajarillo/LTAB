@@ -24,7 +24,8 @@ const styles = theme => ({
     display: "flex",
     [theme.breakpoints.up("sm")]: {
       margin: "70px 0"
-    }
+    },
+    [theme.breakpoints.up("xs")]: { minHeight: "70vh" }
   },
 
   container: {
