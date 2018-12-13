@@ -38,7 +38,7 @@ const styles = theme => ({
     height: "48px"
   },
   welcomeText: {
-    color: theme.palette.primary.light
+    color: "#fff"
   }
 });
 
@@ -60,12 +60,8 @@ const NavAuthUser = props => {
           <Link to="/" className={classes.logoStyles}>
             <img src={logo} alt="Flad Mentorship" className={classes.logo} />
           </Link>
-          <Typography
-            variant="overline"
-            gutterBottom
-            className={classes.welcomeText}
-          >
-            {"Signed in as " + userName}
+          <Typography variant="caption" className={classes.welcomeText}>
+            {"Hi, " + userName}
           </Typography>
           <LogOut />
           <SwipeableDrawer

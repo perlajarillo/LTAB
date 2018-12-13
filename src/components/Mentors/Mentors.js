@@ -97,12 +97,6 @@ const styles = theme => ({
     width: "7px",
     align: "center",
     whiteSpace: "nowrap"
-  },
-  welcomeText: {
-    color: theme.palette.secondary.light
-  },
-  welcomeDiv: {
-    textAlign: "right"
   }
 });
 
@@ -250,8 +244,7 @@ const MentorsList = ({
     orderBy,
     rowsPerPage,
     page,
-    mentorKey,
-    mentorData
+    mentorKey
   } = state;
   const emptyRows = mentors
     ? rowsPerPage - Math.min(rowsPerPage, mentors.length - page * rowsPerPage)
@@ -534,15 +527,6 @@ class Mentors extends React.Component {
       <div className={classes.wrapper}>
         {!authUser.rol === "admin" && <Redirect to={from} />}
         <div className={classes.root}>
-          <div className={classes.welcomeDiv}>
-            <Typography
-              variant="overline"
-              gutterBottom
-              className={classes.welcomeText}
-            >
-              {"Welcome " + name + "!"}
-            </Typography>
-          </div>
           <Typography variant="h5" gutterBottom>
             Mentors
           </Typography>
