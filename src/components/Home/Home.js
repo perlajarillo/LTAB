@@ -52,11 +52,6 @@ const styles = theme => ({
     justifyContent: "center",
     flexFlow: "column wrap",
     backgroundColor: "#f1f8e9"
-    /* TO HAVE HORIZONTAL SECTIONS UN COMMENT */
-    /* [theme.breakpoints.up("lg")]: {
-      flexFlow: "row nowrap",
-      justifyContent: "space-evenly"
-    } */
   },
   mentorSection: {
     padding: "1rem 0",
