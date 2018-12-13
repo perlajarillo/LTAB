@@ -19,15 +19,18 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { auth } from "../../firebase";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import listsData from "./Literals/listsData";
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
-    margin: "90px 0",
+    margin: "80px 0",
     minHeight: "80vh",
     [theme.breakpoints.up("sm")]: {
-      margin: "120px 24px"
+      margin: "90px 24px"
     }
   },
   container: {
@@ -82,7 +85,7 @@ const styles = theme => ({
   },
   textField: {
     [theme.breakpoints.up("xs")]: {
-      width: 250
+      width: 200
     },
     [theme.breakpoints.up("sm")]: {
       width: 400
@@ -121,23 +124,8 @@ const styles = theme => ({
     }
   },
   picture: {
-    [theme.breakpoints.up("xs")]: {
-      width: 180,
-      height: 210
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: 280,
-      height: 330
-    },
-    [theme.breakpoints.up("md")]: {
-      width: 250,
-      height: 280
-    },
-
-    [theme.breakpoints.between("sm", "md")]: {
-      width: 200,
-      height: 240
-    }
+    width: 200,
+    height: 200
   },
   card: {
     paddingBottom: "1%",
@@ -157,6 +145,8 @@ const styles = theme => ({
     }
   }
 });
+
+const { states, specialties } = listsData;
 
 class NewMentor extends Component {
   constructor(props) {
@@ -192,7 +182,9 @@ class NewMentor extends Component {
       passwordError: "",
       repeatPasswordError: "",
       imageError: "",
-      mentorState: "Let's talk about business"
+      mentorState: "Let's talk about business",
+      stateCode: "",
+      stateCodeError: ""
     };
   }
 
@@ -202,14 +194,30 @@ class NewMentor extends Component {
    * @returns {void}
    */
   allRequiredDataProvided = () => {
-    const { password, repeatPassword } = this.state;
+    const {
+      nameError,
+      locationError,
+      descriptionError,
+      specialtyError,
+      stateCodeError,
+      specialty,
+      stateCode,
+      location,
+      name,
+      mailError,
+      password,
+      repeatPassword
+    } = this.state;
     const errorMessages =
-      this.state.nameError ||
-      this.state.mailError ||
-      this.state.locationError ||
-      this.state.descriptionError ||
-      this.state.specialtyError;
-    if (errorMessages) {
+      nameError ||
+      locationError ||
+      descriptionError ||
+      specialtyError ||
+      stateCodeError ||
+      mailError;
+    const values =
+      specialty === "" || stateCode === "" || location === "" || name === "";
+    if (errorMessages || values) {
       this.setState({
         openSnackbarError: true,
         sectionError: "The fields with * are required"
@@ -315,7 +323,8 @@ class NewMentor extends Component {
         "description",
         "pictureName",
         "available",
-        "mentorState"
+        "mentorState",
+        "stateCode"
       ],
       this.state
     );
@@ -346,6 +355,9 @@ class NewMentor extends Component {
                 this.state.pictureBlob
               )
                 .then(() => {
+                  this.setState({
+                    openSnackbarSaved: true
+                  });
                   history.push("/mentorshome");
                 })
                 .catch(error => {
@@ -417,7 +429,9 @@ class NewMentor extends Component {
       repeatPassword,
       passwordError,
       repeatPasswordError,
-      imageError
+      imageError,
+      stateCode,
+      stateCodeError
     } = this.state;
 
     return (
@@ -436,7 +450,7 @@ class NewMentor extends Component {
               <Grid container spacing={8}>
                 <Grid item xs={12} sm={7} md={7} lg={7}>
                   <div className={classes.sectionMargin}>
-                    <Typography variant="h6">
+                    <Typography variant="h6" color="primary">
                       Fill this form to become a Mentor
                     </Typography>
                   </div>
@@ -472,29 +486,42 @@ class NewMentor extends Component {
                     </FormControl>
                   </div>
                   <div>
+                    <FormHelperText>Specialty/Industry * </FormHelperText>
                     <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="specialty"
-                        name="specialty"
-                        label="Specialty"
-                        placeholder="e.g. Accountant, Visual Arts, Design, etc."
+                      <Select
                         value={specialty}
+                        label="Specialty"
                         onChange={this.handleChange}
                         onBlur={this.checkForNull}
-                        className={classes.textField}
+                        name="specialty"
+                        id="specialty"
+                        displayEmpty
                         required
-                      />
+                        className={classes.textField}
+                      >
+                        <MenuItem value="" disabled>
+                          Select the specialty
+                        </MenuItem>
+                        {specialties.map(specialty => (
+                          <MenuItem key={specialty} value={specialty}>
+                            {specialty}
+                          </MenuItem>
+                        ))}
+                      </Select>
+
                       <FormHelperText error={true}>
                         {specialtyError}
                       </FormHelperText>
                     </FormControl>
                   </div>
+
                   <div>
                     <FormControl required className={classes.formControl}>
                       <TextField
                         id="password"
                         name="password"
                         label="Password:"
+                        placeholder="More than 6 characters"
                         value={password}
                         className={classes.textField}
                         onChange={this.handleChange}
@@ -513,6 +540,7 @@ class NewMentor extends Component {
                         id="repeatPassword"
                         name="repeatPassword"
                         label="Repeat password:"
+                        placeholder="More than 6 characters"
                         value={repeatPassword}
                         className={classes.textField}
                         type="password"
@@ -554,8 +582,8 @@ class NewMentor extends Component {
                       <TextField
                         id="location"
                         name="location"
-                        label=" Location"
-                        placeholder="Physical location (e.g. New England)"
+                        label="City"
+                        placeholder="e.g. New Bedford"
                         value={location}
                         onBlur={this.checkForNull}
                         onChange={this.handleChange}
@@ -568,12 +596,43 @@ class NewMentor extends Component {
                     </FormHelperText>
                   </div>
                   <div>
+                    <FormHelperText>State * </FormHelperText>
+
+                    <FormControl required className={classes.formControl}>
+                      <Select
+                        value={stateCode}
+                        label="State"
+                        onChange={this.handleChange}
+                        onBlur={this.checkForNull}
+                        name="stateCode"
+                        id="stateCode"
+                        displayEmpty
+                        required
+                        className={classes.textField}
+                      >
+                        <MenuItem value="" disabled>
+                          Select the state
+                        </MenuItem>
+                        {states.map(state => (
+                          <MenuItem key={state.code} value={state.code}>
+                            {state.stateName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormHelperText error={true}>
+                      {stateCodeError}
+                    </FormHelperText>
+                  </div>
+
+                  <div>
                     <FormControl required className={classes.formControl}>
                       <TextField
                         id="mail"
                         name="mail"
                         label="E-mail"
                         type="email"
+                        placeholder="e.g. your@email.com"
                         value={mail}
                         required
                         onChange={this.handleChange}
@@ -587,6 +646,7 @@ class NewMentor extends Component {
                         id="phone"
                         name="phone"
                         label="Phone"
+                        placeholder="(nnn) nnn-nnnn "
                         value={phone}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -604,6 +664,9 @@ class NewMentor extends Component {
                         className={classes.textField}
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://www.linkedin.com/in/your-profile
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl required className={classes.formControl}>
@@ -616,6 +679,9 @@ class NewMentor extends Component {
                         className={classes.textField}
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://twitter.com/your_user
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl required className={classes.formControl}>
@@ -628,6 +694,9 @@ class NewMentor extends Component {
                         className={classes.textField}
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://www.facebook.com/your_profile
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl className={classes.formControl}>
@@ -692,7 +761,7 @@ class NewMentor extends Component {
           <SnackbarContentWrapper
             onClose={this.handleSnackbarClose}
             variant="success"
-            message="Entry saved!"
+            message="Your account has been created!"
           />
         </Snackbar>
         <Snackbar

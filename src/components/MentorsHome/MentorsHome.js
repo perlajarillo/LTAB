@@ -2,23 +2,20 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import logo_original from "../../images/logo.png";
+import Grid from "@material-ui/core/Grid";
+import MentorsMessage from "./MentorsMessage";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import { setState, getMentorState } from "../../firebase/operations";
-import { auth } from "../../firebase";
-import Snackbar from "@material-ui/core/Snackbar";
-import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
-    margin: "95px 0",
+    margin: "70px 0",
     minHeight: "80vh",
     [theme.breakpoints.up("sm")]: {
-      margin: "120px 24px"
+      margin: "80px 24px"
     }
   },
   pageTitle: {
@@ -26,216 +23,82 @@ const styles = theme => ({
     paddingLeft: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2
   },
-  textField: {
+  principalLogo: {
+    marginLeft: theme.spacing.unit * 1,
     [theme.breakpoints.up("xs")]: {
-      width: 250
+      width: "140px",
+      marginLeft: theme.spacing.unit * 9
     },
     [theme.breakpoints.up("sm")]: {
-      width: 800
+      width: "275px",
+      marginLeft: theme.spacing.unit * 11
     },
     [theme.breakpoints.up("md")]: {
-      width: 750
+      width: "355px",
+      marginLeft: theme.spacing.unit * 2
     },
-
     [theme.breakpoints.between("sm", "md")]: {
-      width: 550
+      width: "145px",
+      marginLeft: theme.spacing.unit * 7
     }
   },
-
-  card: {
-    width: "500px",
-    margin: "30px auto",
-    paddingBottom: "1%",
-    [theme.breakpoints.up("xs")]: {
-      width: "auto",
-      margin: "0px auto"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "250px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "950px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "620px"
-    }
+  note: {
+    color: theme.palette.secondary.dark
+  },
+  welcomeText: {
+    color: theme.palette.primary.dark
   }
 });
 
-const HAVENT_SET_STATE =
-  "Please share something with our community. What would you like for our mentees to know about you?";
-const HAVE_SET_STATE =
-  "The next message has been shared with our community. You can change it any time.";
-
 class MentorsHome extends Component {
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {
-      mentorState: "",
-      openSnackbarSaved: false,
-      openSnackbarError: false,
-      sectionError: "",
-      successMsg: ""
-    };
-  }
-
-  /**
-   * handleChange – the handleChange sets the value selected in a select list
-   * or a text field
-   * @param {Object} the object name and event
-   * @return {void}
-   */
-  handleChange = event => {
-    const { target } = event;
-    const { value, name } = target;
-    this.setState({
-      [name]: value
-    });
-  };
-
-  handleSubmit = () => {
-    const { mentorState } = this.state;
-    mentorState &&
-      setState(auth.currentUserUid(), mentorState)
-        .then(
-          this.setState({
-            openSnackbarSaved: true,
-            sectionError: "",
-            successMsg: "Your message have been shared with our community."
-          })
-        )
-        .catch(error => {
-          this.setState({
-            openSnackbarError: true,
-            sectionError: error.message
-          });
-        });
-  };
-  /**
-   * handleSnackbarClose - sets the actions when the snackbar is closed
-   * @param {Object} event the event object
-   * @param {Object} reason for closing the snackbar
-   * @return {void}
-   */
-  handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    this.state.openSnackbarSaved
-      ? this.setState({
-          openSnackbarSaved: false,
-          returnMentor: true
-        })
-      : this.setState({ openSnackbarError: false });
-  };
-  /**
-   * mentorState – sets in the state data to edit
-   * @returns {void}
-   */
-  mentorState = () => {
-    getMentorState(auth.currentUserUid()).then(snapshot => {
-      this.setState({
-        mentorState: snapshot.val()
-      });
-    });
-  };
-  /**
-   * componentDidMount – call the method mentorState
-   * @returns {void}
-   */
-  componentDidMount = () => {
-    if (this.props.authUser) {
-      this.mentorState();
-    }
-  };
-  componentDidUpdate(prevProps) {
-    if (this.props !== prevProps) {
-      this.mentorState();
-    }
-  }
   render() {
     const { classes } = this.props;
-    const {
-      mentorState,
-      openSnackbarSaved,
-      openSnackbarError,
-      sectionError,
-      successMsg
-    } = this.state;
+    const name = this.props.authUser ? this.props.authUser.userName : "";
     return (
       <div className={classes.root}>
         <div className={classes.pageTitle}>
-          <Typography variant="h6" gutterBottom>
-            Thank you for being a mentor
+
+          <Typography variant="h6" gutterBottom className={classes.welcomeText}>
+            {"Welcome to FLAD Mentorship " + name + "!"}
           </Typography>
         </div>
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography variant="body1" gutterBottom>
-              {mentorState ? HAVE_SET_STATE : HAVENT_SET_STATE}
+        <Grid container spacing={8}>
+          <Grid item xs={12} sm={4} md={4} lg={4}>
+            <img
+              src={logo_original}
+              alt="Let's talk about business"
+              className={classes.principalLogo}
+            />
+          </Grid>
+          <Grid item xs={12} sm={7} md={7} lg={7}>
+            <Typography variant="h6" color="primary" gutterBottom>
+              Thank you for being a mentor!
             </Typography>
-            <div>
-              <TextField
-                id="mentorState"
-                name="mentorState"
-                multiline
-                rows="5"
-                label="Your message (200 characters max)"
-                value={mentorState}
-                onChange={this.handleChange}
-                className={classes.textField}
-                inputProps={{ maxLength: 200 }}
-              />
-            </div>{" "}
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                fullWidth
-                className={classes.button}
-                onClick={this.handleSubmit}
-              >
-                Share
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={openSnackbarSaved}
-          autoHideDuration={3000}
-          onClose={this.handleSnackbarClose}
-          id="openSnackbarSaved"
-          name="openSnackbarSaved"
-        >
-          <SnackbarContentWrapper
-            onClose={this.handleSnackbarClose}
-            variant="success"
-            message={successMsg}
-          />
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={openSnackbarError}
-          autoHideDuration={3000}
-          onClose={this.handleSnackbarClose}
-          id="openSnackbarError"
-          name="openSnackbarError"
-        >
-          <SnackbarContentWrapper
-            onClose={this.handleSnackbarClose}
-            variant="error"
-            message={sectionError}
-          />
-        </Snackbar>
+            <Typography variant="body1">
+              Mentorship is incredibly important because it provides
+              participating mentees with valuable insight to assist and guide
+              them in creating, growing, and strengthening their businesses, and
+              achieve success.
+            </Typography>
+            <br />
+            <Typography variant="body1">
+              {" "}
+              As a mentor, you will be able to share your expertice with the
+              community and be involve with a wide business network!.
+            </Typography>
+            <br />
+            <Card>
+              <CardContent>
+                <MentorsMessage />
+              </CardContent>
+            </Card>
+            <br />
+            <Typography variant="body2" className={classes.note}>
+              {" "}
+              You can also set your message from the settings menu.
+            </Typography>
+          </Grid>
+        </Grid>
       </div>
     );
   }

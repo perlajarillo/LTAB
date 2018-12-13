@@ -22,8 +22,10 @@ import { validateString } from "../validity";
 
 const styles = theme => ({
   wrapper: {
-    margin: "80px 0",
-    marginTop: 200
+    marginTop: "6rem",
+    [theme.breakpoints.up("md")]: {
+      marginTop: "9rem"
+    }
   },
 
   formControl: {
@@ -63,22 +65,14 @@ const styles = theme => ({
       width: "620px"
     }
   },
-
+  cardTitle: {
+    display: "flex",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-around"
+  },
   iconBusiness: {
-    width: "50px",
-    marginLeft: 75,
-    [theme.breakpoints.up("xs")]: {
-      width: "60px"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "65px"
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "115px"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: "105px"
-    }
+    width: "100px"
   },
   pos: {
     marginBottom: 24
@@ -269,10 +263,16 @@ class NewMentee extends React.Component {
         <Card className={classes.card}>
           <form onSubmit={this.handleSubmit}>
             <CardContent>
-              <Typography variant="h6">
-                Register to look for a mentor.{" "}
-                <img src={b_business} className={classes.iconBusiness} />
-              </Typography>
+              <div className={classes.cardTitle}>
+                <Typography variant="h6" color="primary">
+                  Register to look for a mentor.{" "}
+                </Typography>
+                <img
+                  src={b_business}
+                  alt="Register to look for a mentor"
+                  className={classes.iconBusiness}
+                />
+              </div>
               <div>
                 <FormControl required className={classes.formControl}>
                   <TextField
@@ -297,7 +297,7 @@ class NewMentee extends React.Component {
                     name="email"
                     label="E-mail:"
                     value={email}
-                    placeholder="Your email"
+                    placeholder="your@email.com"
                     className={classes.textField}
                     margin="normal"
                     onChange={this.handleChange}
@@ -313,7 +313,7 @@ class NewMentee extends React.Component {
                     id="location"
                     name="location"
                     label="Location:"
-                    placeholder="Where are you living?"
+                    placeholder="State, city, country you live in"
                     value={location}
                     className={classes.textField}
                     margin="normal"
@@ -330,6 +330,7 @@ class NewMentee extends React.Component {
                     id="password"
                     name="password"
                     label="Password:"
+                    placeholder="More than 6 characters"
                     value={password}
                     className={classes.textField}
                     onChange={this.handleChange}
@@ -347,6 +348,7 @@ class NewMentee extends React.Component {
                     id="repeatPassword"
                     name="repeatPassword"
                     label="Repeat password:"
+                    placeholder="Repeat the password"
                     value={repeatPassword}
                     className={classes.textField}
                     type="password"

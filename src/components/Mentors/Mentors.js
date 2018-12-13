@@ -53,7 +53,14 @@ const styles = theme => ({
     transform: "scale(0.8)"
   },
   button: {
-    marginLeft: 20
+    marginLeft: 20,
+    marginTop: 20,
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: 5
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      marginLeft: 5
+    }
   },
 
   textField: {
@@ -244,8 +251,7 @@ const MentorsList = ({
     orderBy,
     rowsPerPage,
     page,
-    mentorKey,
-    mentorData
+    mentorKey
   } = state;
   const emptyRows = mentors
     ? rowsPerPage - Math.min(rowsPerPage, mentors.length - page * rowsPerPage)
@@ -294,7 +300,7 @@ const MentorsList = ({
           <Button
             size="small"
             variant="extendedFab"
-            color="primary"
+            color="default"
             aria-label="Add"
             className={classes.button}
             onClick={getMentors}
@@ -486,13 +492,21 @@ class Mentors extends React.Component {
   };
 
   getMentors = () => {
-    getMentors().then(snapshot => {
-      this.setState({
-        mentors: snapshot.val(),
-        mentorsMirror: snapshot.val(),
-        filterApplied: false
-      });
-    });
+    getMentors()
+      .then(snapshot => {
+        this.setState({
+          mentors: snapshot.val(),
+          mentorsMirror: snapshot.val(),
+          filterApplied: false
+        });
+      })
+      .catch(
+        this.setState({
+          mentors: "",
+          mentorsMirror: "",
+          filterApplied: false
+        })
+      );
   };
 
   componentDidMount() {
@@ -514,13 +528,16 @@ class Mentors extends React.Component {
     const { from } = this.props.location.state || {
       from: { pathname: "/nofound" }
     };
+    const name = this.props.authUser ? this.props.authUser.userName : "";
+
     return (
       <div className={classes.wrapper}>
         {!authUser.rol === "admin" && <Redirect to={from} />}
         <div className={classes.root}>
-          <Typography variant="h5" gutterBottom>
-            Mentors
+          <Typography variant="h5" gutterBottom color="primary">
+            Mentor's administration
           </Typography>
+
           <MentorsList
             classes={classes}
             state={this.state}

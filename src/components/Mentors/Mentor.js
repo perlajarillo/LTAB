@@ -29,21 +29,24 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import listsData from "./Literals/listsData";
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
-    margin: "120px 0",
+    margin: "80px 0",
     minHeight: "80vh",
     [theme.breakpoints.up("sm")]: {
-      margin: "120px 24px"
+      margin: "90px 24px"
     }
   },
   container: {
     display: "flex",
     flexWrap: "wrap",
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 2
   },
   dpMargin: {
     marginTop: theme.spacing.unit * 6,
@@ -72,7 +75,7 @@ const styles = theme => ({
 
   textField: {
     [theme.breakpoints.up("xs")]: {
-      width: 250
+      width: 200
     },
     [theme.breakpoints.up("sm")]: {
       width: 400
@@ -111,23 +114,8 @@ const styles = theme => ({
     }
   },
   picture: {
-    [theme.breakpoints.up("xs")]: {
-      width: 180,
-      height: 200
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: 260,
-      height: 280
-    },
-    [theme.breakpoints.up("md")]: {
-      width: 250,
-      height: 280
-    },
-
-    [theme.breakpoints.between("sm", "md")]: {
-      width: 200,
-      height: 240
-    }
+    width: 200,
+    height: 200
   },
   card: {
     paddingBottom: "1%",
@@ -147,6 +135,8 @@ const styles = theme => ({
     }
   }
 });
+
+const { states, specialties } = listsData;
 
 class NewMentor extends Component {
   constructor(props) {
@@ -170,16 +160,17 @@ class NewMentor extends Component {
       openSnackbarSaved: false,
       openSnackbarError: false,
       sectionError: "",
-      picture: PhotoIcon,
       picturePath: "",
       pictureBlob: "",
       returnMentor: false,
       available: false,
-      pictureName: "NA",
+      pictureName: PhotoIcon,
       open: false,
       imageError: "",
       openSnackbarDeleted: false,
-      mentorState: "Let's talk about business"
+      mentorState: "Let's talk about business",
+      stateCode: "",
+      stateCodeError: ""
     };
   }
 
@@ -196,7 +187,7 @@ class NewMentor extends Component {
   };
 
   /**
-   * areThereParameters – sets the state with the parameters sent via url
+   * dataToEdit – sets the state with the parameters sent via url
    * @returns {void}
    *
    */
@@ -214,9 +205,10 @@ class NewMentor extends Component {
       description: mentor.description,
       btnText: "Save changes",
       key: key,
-      picture: mentor.pictureName === "NA" ? PhotoIcon : mentor.pictureName,
+      pictureName: mentor.pictureName === "NA" ? PhotoIcon : mentor.pictureName,
       available: mentor.available,
-      mentorState: mentor.mentorState
+      mentorState: mentor.mentorState,
+      stateCode: mentor.stateCode
     });
   };
 
@@ -227,13 +219,26 @@ class NewMentor extends Component {
    */
   checkForErrors = () => {
     let response = false;
+    const {
+      nameError,
+      locationError,
+      descriptionError,
+      specialtyError,
+      stateCodeError,
+      specialty,
+      stateCode,
+      location,
+      name
+    } = this.state;
     const errorMessages =
-      this.state.nameError ||
-      this.state.mailError ||
-      this.state.locationError ||
-      this.state.descriptionError ||
-      this.state.specialtyError;
-    if (errorMessages) {
+      nameError ||
+      locationError ||
+      descriptionError ||
+      specialtyError ||
+      stateCodeError;
+    const values =
+      specialty === "" || stateCode === "" || location === "" || name === "";
+    if (errorMessages || values) {
       this.setState({
         openSnackbarError: true,
         sectionError: "The fields with * are required"
@@ -291,8 +296,7 @@ class NewMentor extends Component {
     const size = event.target.files[0].size / 1024 / 1024;
     size <= 5
       ? this.setState({
-          picture: window.URL.createObjectURL(currentFile),
-          pictureName: event.target.files[0].name,
+          pictureName: window.URL.createObjectURL(currentFile),
           pictureBlob: currentFile
         })
       : this.setState({
@@ -321,7 +325,8 @@ class NewMentor extends Component {
         "description",
         "pictureName",
         "available",
-        "mentorState"
+        "mentorState",
+        "stateCode"
       ],
       this.state
     );
@@ -412,7 +417,7 @@ class NewMentor extends Component {
       openSnackbarSaved,
       openSnackbarError,
       sectionError,
-      picture,
+      pictureName,
       returnMentor,
       nameError,
       specialtyError,
@@ -423,7 +428,9 @@ class NewMentor extends Component {
       imageError,
       key,
       openSnackbarDeleted,
-      mentorState
+      mentorState,
+      stateCode,
+      stateCodeError
     } = this.state;
 
     return (
@@ -442,11 +449,13 @@ class NewMentor extends Component {
               <Grid container spacing={24}>
                 <Grid item xs={12} sm={6} md={6} lg={6}>
                   <div className={classes.sectionMargin}>
-                    <Typography variant="h6">Mentor's information</Typography>
+                    <Typography variant="h6" color="primary">
+                      Mentor's information
+                    </Typography>
                   </div>
                   <div>
                     <img
-                      src={picture}
+                      src={pictureName}
                       alt="mentor photography"
                       className={classes.picture}
                     />
@@ -477,18 +486,29 @@ class NewMentor extends Component {
                     </FormControl>
                   </div>
                   <div>
+                    <FormHelperText>Specialty/Industry * </FormHelperText>
                     <FormControl required className={classes.formControl}>
-                      <TextField
-                        id="specialty"
-                        name="specialty"
-                        label="Specialty"
+                      <Select
                         value={specialty}
+                        label="Specialty"
                         onChange={this.handleChange}
                         onBlur={this.checkForNull}
-                        className={classes.textField}
-                        margin="normal"
+                        name="specialty"
+                        id="specialty"
+                        displayEmpty
                         required
-                      />
+                        className={classes.textField}
+                      >
+                        <MenuItem value="" disabled>
+                          Select the specialty
+                        </MenuItem>
+                        {specialties.map(specialty => (
+                          <MenuItem key={specialty} value={specialty}>
+                            {specialty}
+                          </MenuItem>
+                        ))}
+                      </Select>
+
                       <FormHelperText error={true}>
                         {specialtyError}
                       </FormHelperText>
@@ -499,7 +519,7 @@ class NewMentor extends Component {
                       <TextField
                         id="description"
                         name="description"
-                        label="Description"
+                        label="Description (professional abstract)"
                         multiline
                         rowsMax="15"
                         rows="10"
@@ -522,7 +542,8 @@ class NewMentor extends Component {
                       <TextField
                         id="location"
                         name="location"
-                        label=" Location"
+                        label="City"
+                        placeholder="e.g. New Bedford"
                         value={location}
                         onBlur={this.checkForNull}
                         onChange={this.handleChange}
@@ -536,12 +557,43 @@ class NewMentor extends Component {
                     </FormHelperText>
                   </div>
                   <div>
+                    <FormHelperText>State * </FormHelperText>
+
+                    <FormControl required className={classes.formControl}>
+                      <Select
+                        value={stateCode}
+                        label="State"
+                        onChange={this.handleChange}
+                        onBlur={this.checkForNull}
+                        name="stateCode"
+                        id="stateCode"
+                        displayEmpty
+                        required
+                        className={classes.textField}
+                      >
+                        <MenuItem value="" disabled>
+                          Select the state
+                        </MenuItem>
+                        {states.map(state => (
+                          <MenuItem key={state.code} value={state.code}>
+                            {state.stateName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormHelperText error={true}>
+                      {stateCodeError}
+                    </FormHelperText>
+                  </div>
+
+                  <div>
                     <FormControl required className={classes.formControl}>
                       <TextField
                         id="mail"
                         name="mail"
                         label="Mail"
                         type="email"
+                        placeholder="e.g. mentor@email.com"
                         value={mail}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -555,6 +607,7 @@ class NewMentor extends Component {
                         id="phone"
                         name="phone"
                         label="Phone"
+                        placeholder="(nnn) nnn-nnnn "
                         value={phone}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -568,12 +621,16 @@ class NewMentor extends Component {
                         id="linkedin"
                         name="linkedin"
                         label="Linkedin"
+                        placeholder="https://www.linkedin.com/in/mentors-profile/"
                         value={linkedin}
                         onChange={this.handleChange}
                         className={classes.textField}
                         margin="normal"
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://www.linkedin.com/in/your-profile
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl required className={classes.formControl}>
@@ -581,12 +638,16 @@ class NewMentor extends Component {
                         id="twitter"
                         name="twitter"
                         label="Twitter"
+                        placeholder="https://twitter.com/mentors_user"
                         value={twitter}
                         onChange={this.handleChange}
                         className={classes.textField}
                         margin="normal"
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://twitter.com/your_user
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl required className={classes.formControl}>
@@ -594,21 +655,28 @@ class NewMentor extends Component {
                         id="facebook"
                         name="facebook"
                         label="Facebook"
+                        placeholder="https://www.facebook.com/mentors_profile"
                         value={facebook}
                         onChange={this.handleChange}
                         className={classes.textField}
                         margin="normal"
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://www.facebook.com/your_profile
+                    </FormHelperText>
                   </div>
                   <div>
+                    <br />
+                    <Typography variant="body2" color="primary">
+                      A message to share with FLAD Mentorship community
+                    </Typography>
                     <FormControl required className={classes.formControl}>
                       <TextField
                         id="mentorState"
                         name="mentorState"
                         multiline
                         rows="8"
-                        label="Your message"
                         value={mentorState}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -680,7 +748,7 @@ class NewMentor extends Component {
           <SnackbarContentWrapper
             onClose={this.handleSnackbarClose}
             variant="success"
-            message="Entry saved!"
+            message="Mentor's information saved!"
           />
         </Snackbar>
         <Snackbar

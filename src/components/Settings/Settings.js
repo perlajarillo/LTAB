@@ -9,18 +9,24 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import MessageIcon from "@material-ui/icons/Message";
 import PermIcon from "@material-ui/icons/PermIdentity";
 import CancelAccount from "../CancelAccount/CancelAccount";
+import EditMentor from "../Mentors/EditMentor";
+import EditMentee from "../Mentees/EditMentee";
+import MentorsMessage from "../MentorsHome/MentorsMessage";
 
 const styles = theme => ({
   wrapper: {
-    margin: "80px 0",
-    marginTop: "20%",
-    minHeight: "70vh",
+    marginTop: "6rem",
+
+    minHeight: "60vh",
     [theme.breakpoints.up("md")]: {
-      marginTop: "15%"
+      marginTop: "7rem"
     }
   },
+
   sectionStyles: {
     padding: theme.spacing.unit * 3
   },
@@ -41,7 +47,9 @@ class Settings extends React.Component {
     return (
       <main className={classes.wrapper}>
         <section className={classes.sectionStyles}>
-          <Typography variant="h5">Settings</Typography>
+          <Typography variant="h5" color="primary">
+            Settings
+          </Typography>
           <br />
           <br />
           <ExpansionPanel>
@@ -55,6 +63,37 @@ class Settings extends React.Component {
               <PasswordChange />
             </ExpansionPanelDetails>
           </ExpansionPanel>
+          {rol === "mentor" && (
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <MessageIcon className={classes.iconStyle} />
+                <Typography className={classes.heading}>
+                  Set a message
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <MentorsMessage />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          )}
+          {rol !== "admin" && (
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <EditIcon className={classes.iconStyle} />
+                <Typography className={classes.heading}>
+                  Edit profile
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                {rol === "mentor" ? (
+                  <EditMentor />
+                ) : (
+                  rol === "mentee" && <EditMentee />
+                )}
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          )}
+
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <DeleteIcon className={classes.iconStyle} />
