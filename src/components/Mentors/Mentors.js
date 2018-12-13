@@ -251,8 +251,7 @@ const MentorsList = ({
     orderBy,
     rowsPerPage,
     page,
-    mentorKey,
-    mentorData
+    mentorKey
   } = state;
   const emptyRows = mentors
     ? rowsPerPage - Math.min(rowsPerPage, mentors.length - page * rowsPerPage)
@@ -493,13 +492,21 @@ class Mentors extends React.Component {
   };
 
   getMentors = () => {
-    getMentors().then(snapshot => {
-      this.setState({
-        mentors: snapshot.val(),
-        mentorsMirror: snapshot.val(),
-        filterApplied: false
-      });
-    });
+    getMentors()
+      .then(snapshot => {
+        this.setState({
+          mentors: snapshot.val(),
+          mentorsMirror: snapshot.val(),
+          filterApplied: false
+        });
+      })
+      .catch(
+        this.setState({
+          mentors: "",
+          mentorsMirror: "",
+          filterApplied: false
+        })
+      );
   };
 
   componentDidMount() {
@@ -521,6 +528,8 @@ class Mentors extends React.Component {
     const { from } = this.props.location.state || {
       from: { pathname: "/nofound" }
     };
+    const name = this.props.authUser ? this.props.authUser.userName : "";
+
     return (
       <div className={classes.wrapper}>
         {!authUser.rol === "admin" && <Redirect to={from} />}

@@ -185,3 +185,11 @@ export function getImageName(uid) {
     .child("pictureName")
     .once("value");
 }
+
+export function getUserName(uid, rol) {
+  const userRef = db.ref(rol);
+  return userRef
+    .child(uid)
+    .child("name")
+    .once("value");
+}

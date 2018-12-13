@@ -53,12 +53,13 @@ const styles = theme => ({
 class MentorsHome extends Component {
   render() {
     const { classes } = this.props;
-
+    const name = this.props.authUser ? this.props.authUser.userName : "";
     return (
       <div className={classes.root}>
         <div className={classes.pageTitle}>
+
           <Typography variant="h6" gutterBottom className={classes.welcomeText}>
-            Welcome to FLAD Mentorship
+            {"Welcome to FLAD Mentorship " + name + "!"}
           </Typography>
         </div>
         <Grid container spacing={8}>
