@@ -53,7 +53,14 @@ const styles = theme => ({
     transform: "scale(0.8)"
   },
   button: {
-    marginLeft: 20
+    marginLeft: 20,
+    marginTop: 20,
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: 5
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      marginLeft: 5
+    }
   },
 
   textField: {
@@ -294,7 +301,7 @@ const MentorsList = ({
           <Button
             size="small"
             variant="extendedFab"
-            color="primary"
+            color="default"
             aria-label="Add"
             className={classes.button}
             onClick={getMentors}
@@ -518,9 +525,10 @@ class Mentors extends React.Component {
       <div className={classes.wrapper}>
         {!authUser.rol === "admin" && <Redirect to={from} />}
         <div className={classes.root}>
-          <Typography variant="h5" gutterBottom>
-            Mentors
+          <Typography variant="h5" gutterBottom color="primary">
+            Mentor's administration
           </Typography>
+
           <MentorsList
             classes={classes}
             state={this.state}
