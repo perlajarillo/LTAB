@@ -85,7 +85,7 @@ const styles = theme => ({
   },
   textField: {
     [theme.breakpoints.up("xs")]: {
-      width: 250
+      width: 200
     },
     [theme.breakpoints.up("sm")]: {
       width: 400
@@ -124,23 +124,8 @@ const styles = theme => ({
     }
   },
   picture: {
-    [theme.breakpoints.up("xs")]: {
-      width: 180,
-      height: 210
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: 280,
-      height: 330
-    },
-    [theme.breakpoints.up("md")]: {
-      width: 220,
-      height: 280
-    },
-
-    [theme.breakpoints.between("sm", "md")]: {
-      width: 200,
-      height: 240
-    }
+    width: 200,
+    height: 200
   },
   card: {
     paddingBottom: "1%",
@@ -598,7 +583,7 @@ class NewMentor extends Component {
                         id="location"
                         name="location"
                         label="City"
-                        placeholder="Physical location (e.g. New Bedford)"
+                        placeholder="e.g. New Bedford"
                         value={location}
                         onBlur={this.checkForNull}
                         onChange={this.handleChange}
@@ -674,12 +659,14 @@ class NewMentor extends Component {
                         id="linkedin"
                         name="linkedin"
                         label="LinkedIn"
-                        placeholder="https://www.linkedin.com/in/your-profile/"
                         value={linkedin}
                         onChange={this.handleChange}
                         className={classes.textField}
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://www.linkedin.com/in/your-profile
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl required className={classes.formControl}>
@@ -687,12 +674,14 @@ class NewMentor extends Component {
                         id="twitter"
                         name="twitter"
                         label="Twitter"
-                        placeholder="https://twitter.com/your_user"
                         value={twitter}
                         onChange={this.handleChange}
                         className={classes.textField}
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://twitter.com/your_user
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl required className={classes.formControl}>
@@ -700,12 +689,14 @@ class NewMentor extends Component {
                         id="facebook"
                         name="facebook"
                         label="Facebook"
-                        placeholder="https://www.facebook.com/your_profile"
                         value={facebook}
                         onChange={this.handleChange}
                         className={classes.textField}
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://www.facebook.com/your_profile
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl className={classes.formControl}>

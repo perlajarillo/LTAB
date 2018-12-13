@@ -75,7 +75,7 @@ const styles = theme => ({
 
   textField: {
     [theme.breakpoints.up("xs")]: {
-      width: 250
+      width: 200
     },
     [theme.breakpoints.up("sm")]: {
       width: 400
@@ -114,23 +114,8 @@ const styles = theme => ({
     }
   },
   picture: {
-    [theme.breakpoints.up("xs")]: {
-      width: 180,
-      height: 200
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: 260,
-      height: 280
-    },
-    [theme.breakpoints.up("md")]: {
-      width: 220,
-      height: 280
-    },
-
-    [theme.breakpoints.between("sm", "md")]: {
-      width: 200,
-      height: 240
-    }
+    width: 200,
+    height: 200
   },
   card: {
     paddingBottom: "1%",
@@ -558,7 +543,7 @@ class NewMentor extends Component {
                         id="location"
                         name="location"
                         label="City"
-                        placeholder="Physical location (e.g. New Bedford)"
+                        placeholder="e.g. New Bedford"
                         value={location}
                         onBlur={this.checkForNull}
                         onChange={this.handleChange}
@@ -643,6 +628,9 @@ class NewMentor extends Component {
                         margin="normal"
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://www.linkedin.com/in/your-profile
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl required className={classes.formControl}>
@@ -657,6 +645,9 @@ class NewMentor extends Component {
                         margin="normal"
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://twitter.com/your_user
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl required className={classes.formControl}>
@@ -671,15 +662,21 @@ class NewMentor extends Component {
                         margin="normal"
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://www.facebook.com/your_profile
+                    </FormHelperText>
                   </div>
                   <div>
+                    <br />
+                    <Typography variant="body2" color="primary">
+                      A message to share with FLAD Mentorship community
+                    </Typography>
                     <FormControl required className={classes.formControl}>
                       <TextField
                         id="mentorState"
                         name="mentorState"
                         multiline
                         rows="8"
-                        label="Your message"
                         value={mentorState}
                         onChange={this.handleChange}
                         className={classes.textField}
