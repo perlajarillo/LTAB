@@ -7,6 +7,8 @@ import Grid from "@material-ui/core/Grid";
 import MentorsMessage from "./MentorsMessage";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import { Link } from "react-router-dom";
+import Button from "@material-ui/core/Button";
 
 const styles = theme => ({
   root: {
@@ -57,7 +59,6 @@ class MentorsHome extends Component {
     return (
       <div className={classes.root}>
         <div className={classes.pageTitle}>
-
           <Typography variant="h6" gutterBottom className={classes.welcomeText}>
             {"Welcome to FLAD Mentorship " + name + "!"}
           </Typography>
@@ -69,7 +70,11 @@ class MentorsHome extends Component {
               alt="Let's talk about business"
               className={classes.principalLogo}
             />
+            <a href="http://ior.ad/FDW">
+              Read this tutorial if you need help using this site.
+            </a>
           </Grid>
+
           <Grid item xs={12} sm={7} md={7} lg={7}>
             <Typography variant="h6" color="primary" gutterBottom>
               Thank you for being a mentor!
