@@ -37,12 +37,41 @@ const styles = theme => ({
     padding: "6em 0",
     backgroundColor: "#fff"
   },
-  pageTitle: {
-    padding: theme.smallSection.padding,
-    maxWidth: "80%",
-    margin: "0 auto",
+  mainSection: {
+    padding: 0,
+    display: "flex",
+    flexFlow: "row wrap",
+    justifyContent: "center",
+    alignItems: "flex-start",
     [theme.breakpoints.up("sm")]: {
+      justifyContent: "center",
       padding: theme.smallSection.padding
+    },
+    [theme.breakpoints.up("md")]: {
+      flexFlow: "row nowrap",
+      justifyContent: "space-between"
+    }
+  },
+  pageTitle: {
+    padding: "0 1.5em",
+    fontSize: "0.5em",
+    margin: "0 auto",
+    alignSelf: "center",
+    [theme.breakpoints.up("md")]: {
+      flexShrink: 2,
+      paddingTop: "2.1rem"
+    }
+  },
+  backImg: {
+    background: "url(" + backgroundImg + ")",
+    backgroundPosition: "center 70%",
+    backgroundRepeat: "no-repeat",
+    padding: "10% 0",
+    marginBottom: "1rem",
+    backgroundSize: "contain",
+    width: "100vw",
+    [theme.breakpoints.up("sm")]: {
+      width: "90%"
     }
   },
   section: {
@@ -52,6 +81,14 @@ const styles = theme => ({
     justifyContent: "center",
     flexFlow: "column wrap",
     backgroundColor: "#f1f8e9"
+  },
+  sectionMentee: {
+    padding: theme.sectionPadding.padding,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexFlow: "column wrap",
+    backgroundColor: "#fafafa"
   },
   mentorSection: {
     padding: "1rem 0",
@@ -66,10 +103,24 @@ const styles = theme => ({
     flexGrow: 1,
     background: "#fff"
   },
-  sectSocial: {
-    padding: theme.sectionPadding.padding,
+  joinUsSec: {
+    padding: "1em",
     flexGrow: 1,
-    background: theme.palette.primary.dark
+    background: "#fafafa"
+  },
+  joinUs: {
+    display: "flex",
+    justifyContent: "center",
+    paddingTop: "1em"
+  },
+  joinUsLinks: {
+    textDecoration: "none",
+    scrollBehavior: "smooth",
+    color: theme.palette.secondary.dark,
+    borderBottom: "1px solid currentColor"
+  },
+  joinUsBtn: {
+    margin: theme.spacing.unit
   },
   iconsSection: {
     display: "flex",
@@ -79,21 +130,10 @@ const styles = theme => ({
   socialIcon: {
     margin: "1em"
   },
-  socialLinks: {
-    textDecoration: "none",
-    color: "#fff",
-    borderBottom: "1px solid currentColor"
-  },
   button: {
     padding: theme.spacing.unit * 2,
     color: "#fff",
     margin: "1em 0"
-  },
-  backImg: {
-    background: "url(" + backgroundImg + ")",
-    backgroundPosition: "center 70%",
-    padding: "13% 0",
-    backgroundSize: "contain"
   },
 
   logo: {
@@ -168,21 +208,43 @@ class Home extends Component {
 
     return (
       <main className={classes.wrapper}>
-        <div className={classes.backImg} />
-
-        <div className={classes.pageTitle}>
-          <Typography variant="h6" gutterBottom>
-            Mentorship is incredibly important because it provides participating
-            mentees with valuable insight to assist and guide them in creating,
-            growing, and strengthening their businesses, and achieve success.
-          </Typography>
-          <Typography variant="h6" gutterBottom>
-            It also provides mentors with insight into other business areas, and
-            involves them in a wide business network!
-          </Typography>
+        <div className={classes.mainSection}>
+          <div className={classes.backImg} />
+          <div className={classes.pageTitle}>
+            <Typography variant="subtitle1" gutterBottom>
+              Mentorship is incredibly important because it provides
+              participating mentees with valuable insight to assist and guide
+              them in creating, growing, and strengthening their businesses, and
+              achieve success.
+            </Typography>
+            <Typography variant="subtitle1" gutterBottom>
+              It also provides mentors with insight into other business areas,
+              and involves them in a wide business network!
+            </Typography>
+          </div>
         </div>
-
-        <div className={classes.section}>
+        <div className={classes.joinUsSec}>
+          <Typography variant="h5" align="center" style={{ color: "#000" }}>
+            Join us!
+          </Typography>
+          <div className={classes.joinUs}>
+            <div>
+              <Button size="small" className={classes.joinUsBtn}>
+                <a href="#mentor" className={classes.joinUsLinks}>
+                  As mentor
+                </a>
+              </Button>
+            </div>
+            <div>
+              <Button size="small" className={classes.joinUsBtn}>
+                <a href="#mentee" className={classes.joinUsLinks}>
+                  As mentee
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div id="mentor" className={classes.section}>
           <div>
             <img src={logo} alt="" className={classes.logo} />
           </div>
@@ -211,28 +273,7 @@ class Home extends Component {
             </Typography>
           </div>
         </div>
-        <div className={classes.sectSocial}>
-          <Typography variant="body1" align="center" style={{ color: "#fff" }}>
-            Visit our{" "}
-            <a
-              href="https://www.facebook.com/TalkBusinessFlad/"
-              target="blank"
-              className={classes.socialLinks}
-            >
-              Facebook page
-            </a>{" "}
-            and{" "}
-            <a
-              href="https://www.flad.pt/en/lets-talk-about-business/"
-              target="blank"
-              className={classes.socialLinks}
-            >
-              Web Site
-            </a>{" "}
-            to know more about the program
-          </Typography>
-        </div>
-        <div className={classes.section}>
+        <div id="mentee" className={classes.sectionMentee}>
           <div>
             <img src={b_business} alt="" className={classes.logo} />
           </div>
