@@ -19,13 +19,15 @@ import MentorsMessage from "../MentorsHome/MentorsMessage";
 
 const styles = theme => ({
   wrapper: {
-    margin: "80px 0",
-    marginTop: "20%",
-    minHeight: "70vh",
+    marginTop: "6rem",
+
+    minHeight: "65vh",
     [theme.breakpoints.up("md")]: {
-      marginTop: "15%"
-    }
+      marginTop: "7rem"
+    },
+    [theme.breakpoints.up("xs")]: { minHeight: "75vh" }
   },
+
   sectionStyles: {
     padding: theme.spacing.unit * 3
   },
@@ -46,7 +48,9 @@ class Settings extends React.Component {
     return (
       <main className={classes.wrapper}>
         <section className={classes.sectionStyles}>
-          <Typography variant="h5">Settings</Typography>
+          <Typography variant="h5" color="primary">
+            Settings
+          </Typography>
           <br />
           <br />
           <ExpansionPanel>

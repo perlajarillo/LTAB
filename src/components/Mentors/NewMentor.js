@@ -27,10 +27,10 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
-    margin: "90px 0",
+    margin: "80px 0",
     minHeight: "80vh",
     [theme.breakpoints.up("sm")]: {
-      margin: "120px 24px"
+      margin: "90px 24px"
     }
   },
   container: {
@@ -85,7 +85,7 @@ const styles = theme => ({
   },
   textField: {
     [theme.breakpoints.up("xs")]: {
-      width: 250
+      width: 200
     },
     [theme.breakpoints.up("sm")]: {
       width: 400
@@ -124,23 +124,8 @@ const styles = theme => ({
     }
   },
   picture: {
-    [theme.breakpoints.up("xs")]: {
-      width: 180,
-      height: 210
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: 280,
-      height: 330
-    },
-    [theme.breakpoints.up("md")]: {
-      width: 250,
-      height: 280
-    },
-
-    [theme.breakpoints.between("sm", "md")]: {
-      width: 200,
-      height: 240
-    }
+    width: 200,
+    height: 200
   },
   card: {
     paddingBottom: "1%",
@@ -465,7 +450,7 @@ class NewMentor extends Component {
               <Grid container spacing={8}>
                 <Grid item xs={12} sm={7} md={7} lg={7}>
                   <div className={classes.sectionMargin}>
-                    <Typography variant="h6">
+                    <Typography variant="h6" color="primary">
                       Fill this form to become a Mentor
                     </Typography>
                   </div>
@@ -536,6 +521,7 @@ class NewMentor extends Component {
                         id="password"
                         name="password"
                         label="Password:"
+                        placeholder="More than 6 characters"
                         value={password}
                         className={classes.textField}
                         onChange={this.handleChange}
@@ -554,6 +540,7 @@ class NewMentor extends Component {
                         id="repeatPassword"
                         name="repeatPassword"
                         label="Repeat password:"
+                        placeholder="More than 6 characters"
                         value={repeatPassword}
                         className={classes.textField}
                         type="password"
@@ -595,8 +582,8 @@ class NewMentor extends Component {
                       <TextField
                         id="location"
                         name="location"
-                        label=" Location"
-                        placeholder="Physical location (e.g. New England)"
+                        label="City"
+                        placeholder="e.g. New Bedford"
                         value={location}
                         onBlur={this.checkForNull}
                         onChange={this.handleChange}
@@ -645,6 +632,7 @@ class NewMentor extends Component {
                         name="mail"
                         label="E-mail"
                         type="email"
+                        placeholder="e.g. your@email.com"
                         value={mail}
                         required
                         onChange={this.handleChange}
@@ -658,6 +646,7 @@ class NewMentor extends Component {
                         id="phone"
                         name="phone"
                         label="Phone"
+                        placeholder="(nnn) nnn-nnnn "
                         value={phone}
                         onChange={this.handleChange}
                         className={classes.textField}
@@ -675,6 +664,9 @@ class NewMentor extends Component {
                         className={classes.textField}
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://www.linkedin.com/in/your-profile
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl required className={classes.formControl}>
@@ -687,6 +679,9 @@ class NewMentor extends Component {
                         className={classes.textField}
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://twitter.com/your_user
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl required className={classes.formControl}>
@@ -699,6 +694,9 @@ class NewMentor extends Component {
                         className={classes.textField}
                       />
                     </FormControl>
+                    <FormHelperText>
+                      e.g. https://www.facebook.com/your_profile
+                    </FormHelperText>
                   </div>
                   <div>
                     <FormControl className={classes.formControl}>

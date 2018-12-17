@@ -12,10 +12,10 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
-    margin: "95px 0",
+    margin: "70px 0",
     minHeight: "80vh",
     [theme.breakpoints.up("sm")]: {
-      margin: "120px 24px"
+      margin: "80px 24px"
     }
   },
   pageTitle: {
@@ -44,18 +44,22 @@ const styles = theme => ({
   },
   note: {
     color: theme.palette.secondary.dark
+  },
+  welcomeText: {
+    color: theme.palette.primary.dark
   }
 });
 
 class MentorsHome extends Component {
   render() {
     const { classes } = this.props;
-
+    const name = this.props.authUser ? this.props.authUser.userName : "";
     return (
       <div className={classes.root}>
         <div className={classes.pageTitle}>
-          <Typography variant="h6" gutterBottom>
-            Welcome to FLAD Mentorship
+
+          <Typography variant="h6" gutterBottom className={classes.welcomeText}>
+            {"Welcome to FLAD Mentorship " + name + "!"}
           </Typography>
         </div>
         <Grid container spacing={8}>

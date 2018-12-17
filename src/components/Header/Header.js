@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import LogOut from "../LogOut/LogOut";
 import logo from "../../images/logo_square.png";
 import AuthUserContext from "../AuthUserContext";
+import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
   root: {
@@ -35,11 +36,15 @@ const styles = theme => ({
   logo: {
     width: "48px",
     height: "48px"
+  },
+  welcomeText: {
+    color: "#fff"
   }
 });
 
 const NavAuthUser = props => {
-  const { classes, mobileOpen, toggle, rol } = props;
+  const { classes, mobileOpen, toggle, rol, userName } = props;
+
   return (
     <Fragment>
       <AppBar className={classes.root} positionsticky="true">
@@ -55,6 +60,9 @@ const NavAuthUser = props => {
           <Link to="/" className={classes.logoStyles}>
             <img src={logo} alt="Flad Mentorship" className={classes.logo} />
           </Link>
+          <Typography variant="caption" className={classes.welcomeText}>
+            {"Hi, " + userName}
+          </Typography>
           <LogOut />
           <SwipeableDrawer
             anchor="left"
@@ -89,7 +97,7 @@ const NavAuthUser = props => {
                 </div>
               ) : rol === "mentor" ? (
                 <div>
-               {/*  we will removing the comment once the reports are ready
+                  {/*  we will removing the comment once the reports are ready
                   <List>
                     <Button
                       tabIndex="-1"
@@ -182,6 +190,7 @@ class Header extends Component {
               mobileOpen={mobileOpen}
               toggle={this.handleDrawerToggle}
               rol={authUser.rol}
+              userName={authUser.userName}
             />
           ) : (
             <NavNoAuth classes={classes} />

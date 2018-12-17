@@ -42,7 +42,7 @@ const styles = theme => ({
   },
   textField: {
     [theme.breakpoints.up("xs")]: {
-      width: "auto"
+      width: 200
     },
     [theme.breakpoints.up("sm")]: {
       width: 400
@@ -67,23 +67,8 @@ const styles = theme => ({
   },
 
   picture: {
-    [theme.breakpoints.up("xs")]: {
-      width: 180,
-      height: 210
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: 280,
-      height: 330
-    },
-    [theme.breakpoints.up("md")]: {
-      width: 250,
-      height: 280
-    },
-
-    [theme.breakpoints.between("sm", "md")]: {
-      width: 200,
-      height: 240
-    }
+    width: 200,
+    height: 200
   }
 });
 
@@ -436,7 +421,7 @@ class EditMentor extends Component {
                     id="location"
                     name="location"
                     label=" City"
-                    placeholder="Physical location (e.g. New England)"
+                    placeholder="e.g. New Bedford"
                     value={location}
                     onBlur={this.checkForNull}
                     onChange={this.handleChange}
@@ -479,6 +464,7 @@ class EditMentor extends Component {
                     name="mail"
                     label="E-mail"
                     type="email"
+                    placeholder="e.g. your@email.com"
                     value={mail}
                     required
                     onChange={this.handleChange}
@@ -492,6 +478,7 @@ class EditMentor extends Component {
                     id="phone"
                     name="phone"
                     label="Phone"
+                    placeholder="(nnn) nnn-nnnn "
                     value={phone}
                     onChange={this.handleChange}
                     className={classes.textField}
@@ -509,6 +496,9 @@ class EditMentor extends Component {
                     className={classes.textField}
                   />
                 </FormControl>
+                <FormHelperText>
+                  e.g. https://www.linkedin.com/in/your-profile
+                </FormHelperText>
               </div>
               <div>
                 <FormControl required className={classes.formControl}>
@@ -521,6 +511,9 @@ class EditMentor extends Component {
                     className={classes.textField}
                   />
                 </FormControl>
+                <FormHelperText>
+                  e.g. https://twitter.com/your_user
+                </FormHelperText>
               </div>
               <div>
                 <FormControl required className={classes.formControl}>
@@ -533,6 +526,9 @@ class EditMentor extends Component {
                     className={classes.textField}
                   />
                 </FormControl>
+                <FormHelperText>
+                  e.g. https://www.facebook.com/your_profile
+                </FormHelperText>
               </div>
               <div>
                 <FormControl className={classes.formControl}>

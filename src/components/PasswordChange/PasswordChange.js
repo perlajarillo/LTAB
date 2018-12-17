@@ -134,6 +134,7 @@ class PasswordChange extends Component {
                   id="password"
                   name="password"
                   type="Password"
+                  placeholder="More than 6 characters"
                   value={password}
                   onChange={this.handleChange}
                 />
@@ -151,6 +152,7 @@ class PasswordChange extends Component {
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
+                  placeholder="More than 6 characters"
                   type="Password"
                   value={confirmPassword}
                   onChange={this.handleChange}
