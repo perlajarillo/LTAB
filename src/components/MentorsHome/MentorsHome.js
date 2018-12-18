@@ -7,8 +7,6 @@ import Grid from "@material-ui/core/Grid";
 import MentorsMessage from "./MentorsMessage";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
 
 const styles = theme => ({
   root: {
@@ -45,10 +43,13 @@ const styles = theme => ({
     }
   },
   note: {
-    color: theme.palette.secondary.dark
+    color: theme.palette.primary.dark
   },
   welcomeText: {
     color: theme.palette.primary.dark
+  },
+  tutorialLink: {
+    color: theme.palette.secondary.dark
   }
 });
 
@@ -70,9 +71,22 @@ class MentorsHome extends Component {
               alt="Let's talk about business"
               className={classes.principalLogo}
             />
-            <a href="http://ior.ad/FDW">
-              Read this tutorial if you need help using this site.
-            </a>
+            <Typography
+              variant="body1"
+              gutterBottom
+              className={classes.welcomeText}
+            >
+              {" "}
+              Read this{" "}
+              <a
+                href="http://ior.ad/FDW"
+                className={classes.tutorialLink}
+                target="blank"
+              >
+                tutorial
+              </a>{" "}
+              if you need help using this site.
+            </Typography>
           </Grid>
 
           <Grid item xs={12} sm={7} md={7} lg={7}>

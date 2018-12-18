@@ -123,6 +123,19 @@ const styles = theme => ({
     padding: "4px",
     fontSize: "1.3em",
     margin: "16px"
+  },
+  welcomeText: {
+    color: theme.palette.primary.dark,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.55rem"
+    }
+  },
+  tutorialLink: {
+    color: theme.palette.secondary.dark
+  },
+  tutorial: {
+    marginRight: 0,
+    marginLeft: "auto"
   }
 });
 
@@ -173,6 +186,18 @@ function SelectionPanel(props) {
             >
               All mentors
             </Button>
+          </div>
+          <div className={classes.tutorial}>
+            <Typography variant="caption" className={classes.welcomeText}>
+              Read this{" "}
+              <a
+                href="http://ior.ad/FGz"
+                className={classes.tutorialLink}
+                target="blank"
+              >
+                tutorial
+              </a>
+            </Typography>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
