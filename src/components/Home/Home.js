@@ -48,6 +48,7 @@ const styles = theme => ({
       padding: theme.smallSection.padding
     },
     [theme.breakpoints.up("md")]: {
+      padding: "1rem 1.5rem 3rem 1.5rem",
       flexFlow: "row nowrap",
       justifyContent: "space-between"
     }
@@ -66,7 +67,7 @@ const styles = theme => ({
     background: "url(" + backgroundImg + ")",
     backgroundPosition: "center 70%",
     backgroundRepeat: "no-repeat",
-    padding: "10% 0",
+    padding: "12% 0",
     marginBottom: "1rem",
     backgroundSize: "contain",
     width: "100vw",
