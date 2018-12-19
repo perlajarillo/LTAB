@@ -39,7 +39,7 @@ const styles = theme => ({
   },
   welcomeText: {
     marginLeft: 5,
-    color: "#fff"
+    color: "#fff",
     [theme.breakpoints.down("xs")]: {
       fontSize: "0.7rem"
     }
