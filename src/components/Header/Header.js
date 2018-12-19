@@ -38,6 +38,7 @@ const styles = theme => ({
     height: "48px"
   },
   welcomeText: {
+    marginLeft: 5,
     color: "#fff"
   }
 });
