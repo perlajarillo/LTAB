@@ -123,6 +123,24 @@ const styles = theme => ({
     padding: "4px",
     fontSize: "1.3em",
     margin: "16px"
+  },
+  welcomeText: {
+    color: theme.palette.primary.dark,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.75rem"
+    },
+    marginLeft: "auto",
+    marginRight: 0,
+    padding: 10
+  },
+  tutorialLink: {
+    color: theme.palette.secondary.dark
+  },
+  tutorial: {
+    display: "flex",
+    backgroundColor: "#e8f5e9",
+    marginLeft: "auto",
+    marginRight: 0
   }
 });
 
@@ -171,10 +189,11 @@ function SelectionPanel(props) {
               color="primary"
               onClick={setSelectedFilter}
             >
-              All mentors
+              All
             </Button>
           </div>
         </ExpansionPanelSummary>
+
         <ExpansionPanelDetails className={classes.details}>
           {selectedContent && selectedContent === "specialty" && (
             <FormControl component="fieldset" className={classes.formControl}>
@@ -220,6 +239,18 @@ function SelectionPanel(props) {
           )}
         </ExpansionPanelDetails>
       </ExpansionPanel>
+      <div className={classes.tutorial}>
+        <Typography variant="body2" className={classes.welcomeText}>
+          How to use this{" "}
+          <a
+            href="http://ior.ad/FGz"
+            className={classes.tutorialLink}
+            target="blank"
+          >
+            page
+          </a>
+        </Typography>
+      </div>
     </div>
   );
 }

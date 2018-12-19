@@ -104,6 +104,12 @@ const styles = theme => ({
     width: "7px",
     align: "center",
     whiteSpace: "nowrap"
+  },
+  welcomeText: {
+    color: theme.palette.primary.light
+  },
+  tutorialLink: {
+    color: theme.palette.secondary.dark
   }
 });
 
@@ -537,7 +543,20 @@ class Mentors extends React.Component {
           <Typography variant="h5" gutterBottom color="primary">
             Mentor's administration
           </Typography>
-
+          <div>
+            <Typography variant="caption" className={classes.welcomeText}>
+              {" "}
+              Read this{" "}
+              <a
+                href="http://ior.ad/FHS"
+                className={classes.tutorialLink}
+                target="blank"
+              >
+                tutorial
+              </a>{" "}
+              if you need help using this site.
+            </Typography>
+          </div>
           <MentorsList
             classes={classes}
             state={this.state}

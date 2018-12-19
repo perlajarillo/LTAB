@@ -215,6 +215,15 @@ function Footer(props) {
                 target="_blank"
               >
                 reference table.
+              </a>{" "}
+              Tutorials made with:{" "}
+              <a
+                href="https://www.iorad.com/"
+                title="Iorad"
+                className={classes.links}
+                target="_blank"
+              >
+                iorad
               </a>
             </Typography>
           </Grid>
