@@ -53,6 +53,10 @@ const styles = theme => ({
 
 const NavAuthUser = props => {
   const { classes, mobileOpen, toggle, rol, userName } = props;
+
+  let shortName;
+  shortName = userName.split(" ")[0];
+
   const home =
     rol === "admin"
       ? "/mentors"
@@ -76,7 +80,7 @@ const NavAuthUser = props => {
             <img src={logo} alt="Flad Mentorship" className={classes.logo} />
           </Link>
           <Typography variant="caption" className={classes.welcomeText}>
-            {"Hi, " + userName}
+            {"Hi, " + shortName}
           </Typography>
           <div>
             <Button
