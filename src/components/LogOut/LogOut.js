@@ -7,7 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 const styles = theme => ({
   textBtn: {
     [theme.breakpoints.down("xs")]: {
-      fontSize: "0.7rem"
+      fontSize: "0.9rem"
     }
   }
 });

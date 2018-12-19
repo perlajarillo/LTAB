@@ -43,7 +43,8 @@ const styles = theme => ({
     maxWidth: 410,
     [theme.breakpoints.up("xs")]: {
       maxWidth: 270,
-      marginLeft: theme.spacing.unit * 2
+      marginLeft: theme.spacing.unit * 2,
+      fontSize: "0.9rem"
     },
     [theme.breakpoints.up("sm")]: {
       maxWidth: 400,
