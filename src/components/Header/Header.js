@@ -38,13 +38,30 @@ const styles = theme => ({
     height: "48px"
   },
   welcomeText: {
-    marginLeft: 5,
-    color: "#fff"
+    marginLeft: 16,
+    color: "#fff",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.9rem"
+    }
+  },
+  textBtn: {
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.9rem"
+    }
   }
 });
 
 const NavAuthUser = props => {
   const { classes, mobileOpen, toggle, rol, userName } = props;
+  const home =
+    rol === "admin"
+      ? "/mentors"
+      : rol === "mentor"
+      ? "/mentorshome"
+      : "/availablementors";
+
+  let shortName;
+  shortName = userName.split(" ")[0];
 
   return (
     <Fragment>
@@ -62,9 +79,21 @@ const NavAuthUser = props => {
             <img src={logo} alt="Flad Mentorship" className={classes.logo} />
           </Link>
           <Typography variant="caption" className={classes.welcomeText}>
-            {"Hi, " + userName}
+            {"Hi, " + shortName}
           </Typography>
+          <div>
+            <Button
+              className={classes.textBtn}
+              tabIndex="-1"
+              color="inherit"
+              component={Link}
+              to={home}
+            >
+              Home
+            </Button>
+          </div>
           <LogOut />
+
           <SwipeableDrawer
             anchor="left"
             open={mobileOpen}
@@ -154,7 +183,24 @@ const NavNoAuth = props => {
             <img src={logo} alt="FLAD Mentorship" className={classes.logo} />
           </Link>
           <div>
-            <Button tabIndex="-1" color="inherit" component={Link} to="/login">
+            <Button
+              tabIndex="-1"
+              color="inherit"
+              component={Link}
+              to="/"
+              className={classes.textBtn}
+            >
+              Home
+            </Button>
+          </div>
+          <div>
+            <Button
+              tabIndex="-1"
+              color="inherit"
+              component={Link}
+              to="/login"
+              className={classes.textBtn}
+            >
               Log in
             </Button>
           </div>

@@ -2,8 +2,18 @@ import React from "react";
 import { auth } from "../../firebase";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core/styles";
 
-const LogOut = () => {
+const styles = theme => ({
+  textBtn: {
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.9rem"
+    }
+  }
+});
+const LogOut = props => {
+  const { classes } = props;
+
   return (
     <div>
       <Button
@@ -11,6 +21,7 @@ const LogOut = () => {
         color="inherit"
         onClick={auth.onLogOut}
         component={Link}
+        className={classes.textBtn}
         to="/"
       >
         Log out
@@ -18,4 +29,5 @@ const LogOut = () => {
     </div>
   );
 };
-export default LogOut;
+
+export default withStyles(styles)(LogOut);
