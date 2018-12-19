@@ -63,13 +63,6 @@ const NavAuthUser = props => {
   let shortName;
   shortName = userName.split(" ")[0];
 
-  const home =
-    rol === "admin"
-      ? "/mentors"
-      : rol === "mentor"
-      ? "/mentorshome"
-      : "/availablementors";
-
   return (
     <Fragment>
       <AppBar className={classes.root} positionsticky="true">
