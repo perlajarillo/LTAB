@@ -7,6 +7,7 @@ import logo from "../../images/logo.png";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import b_business from "../../images/logo_square_transparent.png";
+import quotes from "../../images/quotes.png";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
@@ -48,7 +49,7 @@ const styles = theme => ({
       padding: theme.smallSection.padding
     },
     [theme.breakpoints.up("md")]: {
-      padding: "1rem 1.5rem 3rem 1.5rem",
+      padding: "0 1.5rem 3rem 1.5rem",
       flexFlow: "row nowrap",
       justifyContent: "space-between"
     }
@@ -75,23 +76,62 @@ const styles = theme => ({
       width: "90%"
     }
   },
-  section: {
+  sectionMentor: {
     padding: theme.sectionPadding.padding,
     display: "flex",
-    alignItems: "center",
+    flexDirection: "column",
     justifyContent: "center",
-    flexFlow: "column wrap",
-    backgroundColor: "#f1f8e9"
+    alignItems: "center",
+    backgroundColor: "#f1f8e9",
+    [theme.breakpoints.up("md")]: {
+      flexDirection: "row",
+      justifyContent: "space-evenly"
+    }
   },
   sectionMentee: {
     padding: theme.sectionPadding.padding,
     display: "flex",
-    alignItems: "center",
+    flexDirection: "column-reverse",
     justifyContent: "center",
-    flexFlow: "column wrap",
-    backgroundColor: "#fafafa"
+    alignItems: "center",
+    backgroundColor: "#fafafa",
+    [theme.breakpoints.up("md")]: {
+      flexDirection: "row",
+      justifyContent: "space-evenly"
+    }
   },
-  mentorSection: {
+  createAccSec: {
+    display: "inherit",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+  createAccText: {
+    maxWidth: "80%",
+    justifyContent: "flex-start",
+    [theme.breakpoints.up("md")]: {
+      maxWidth: "40%"
+    }
+  },
+  quotesImg: {
+    height: "6em",
+    background: `url(${quotes})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    [theme.breakpoints.down("sm")]: {
+      backgroundSize: "contain"
+    }
+  },
+  divider: {
+    height: "3px",
+    width: "80vw",
+    margin: "1.5em 0",
+    backgroundColor: "#022c00",
+    [theme.breakpoints.up("md")]: {
+      height: "350px",
+      width: "3px"
+    }
+  },
+  mentorsCards: {
     padding: "1rem 0",
     display: "flex",
     flexFlow: "row wrap",
@@ -245,55 +285,72 @@ class Home extends Component {
             </div>
           </div>
         </div>
-        <div id="mentor" className={classes.section}>
-          <div>
+        <div id="mentor" className={classes.sectionMentor}>
+          <div className={classes.createAccText}>
+            <div className={classes.quotesImg} />
+            <Typography variant="h6" gutterBottom>
+              Mentors are experts with goodwill. They can advise others on how
+              to be a successful person. Connect with people of different
+              backgrounds, became a mentor!
+            </Typography>
+          </div>
+          <div className={classes.divider} />
+          <div className={classes.createAccSec}>
             <img src={logo} alt="" className={classes.logo} />
-          </div>
-          <div>
-            <Typography variant="h6" gutterBottom align="center">
-              Do you want to be a #LetsTalkAboutBusiness mentor?
-            </Typography>
-          </div>
-          <div>
-            <Button
-              variant="contained"
-              color="secondary"
-              size="large"
-              component={Link}
-              to="/newmentor"
-              className={classes.button}
-            >
-              Create a mentor account
-            </Button>
-            <Typography variant="body1" gutterBottom align="center">
-              Or please reach out to us through
-            </Typography>
-            <Typography variant="body1" gutterBottom align="center">
-              email{" "}
-              <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
-            </Typography>
+            <div>
+              <Typography variant="h6" gutterBottom align="center">
+                Do you want to be a #LetsTalkAboutBusiness mentor?
+              </Typography>
+            </div>
+            <div>
+              <Button
+                variant="contained"
+                color="secondary"
+                size="large"
+                component={Link}
+                to="/newmentor"
+                className={classes.button}
+              >
+                Create a mentor account
+              </Button>
+              <Typography variant="body1" gutterBottom align="center">
+                Or please reach out to us through
+              </Typography>
+              <Typography variant="body1" gutterBottom align="center">
+                email{" "}
+                <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
+              </Typography>
+            </div>
           </div>
         </div>
         <div id="mentee" className={classes.sectionMentee}>
-          <div>
+          <div className={classes.createAccSec}>
             <img src={b_business} alt="" className={classes.logo} />
+            <div>
+              <Typography variant="h6" gutterBottom align="center">
+                Are you looking for a mentor and your are not registered yet?
+              </Typography>
+            </div>
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                component={Link}
+                to="/newmentee"
+                className={classes.button}
+              >
+                Create a mentee account
+              </Button>
+            </div>
           </div>
-          <div>
-            <Typography variant="h6" gutterBottom align="center">
-              Are you looking for a mentor and your are not registered yet?
+          <div className={classes.divider} />
+          <div className={classes.createAccText}>
+            <div className={classes.quotesImg} />
+            <Typography variant="h6" gutterBottom>
+              As a mentee, you can have to your side a mentor whose experiences
+              can guide you to surpass you goals.
             </Typography>
-          </div>
-          <div>
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              component={Link}
-              to="/newmentee"
-              className={classes.button}
-            >
-              Create a mentee account
-            </Button>
           </div>
         </div>
         <div className={classes.sectionTitle}>
@@ -302,7 +359,7 @@ class Home extends Component {
               We are proud to introduce our Let's Talk about Business mentors
             </Typography>
           </div>
-          <div className={classes.mentorSection}>
+          <div className={classes.mentorsCards}>
             {mentorsImgs &&
               mentorsImgs.map(mentor => (
                 <Card className={classes.card} key={mentor.key}>
