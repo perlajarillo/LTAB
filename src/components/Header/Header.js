@@ -53,6 +53,12 @@ const styles = theme => ({
 
 const NavAuthUser = props => {
   const { classes, mobileOpen, toggle, rol, userName } = props;
+  const home =
+    rol === "admin"
+      ? "/mentors"
+      : rol === "mentor"
+      ? "/mentorshome"
+      : "/availablementors";
 
   let shortName;
   shortName = userName.split(" ")[0];
