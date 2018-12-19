@@ -38,8 +38,16 @@ const styles = theme => ({
     height: "48px"
   },
   welcomeText: {
-    marginLeft: 5,
-    color: "#fff"
+    marginLeft: 16,
+    color: "#fff",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.9rem"
+    }
+  },
+  textBtn: {
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.9rem"
+    }
   }
 });
 
@@ -183,7 +191,13 @@ const NavNoAuth = props => {
             </Button>
           </div>
           <div>
-            <Button tabIndex="-1" color="inherit" component={Link} to="/login">
+            <Button
+              tabIndex="-1"
+              color="inherit"
+              component={Link}
+              to="/login"
+              className={classes.textBtn}
+            >
               Log in
             </Button>
           </div>
