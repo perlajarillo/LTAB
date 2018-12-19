@@ -38,12 +38,26 @@ const styles = theme => ({
     height: "48px"
   },
   welcomeText: {
-    color: "#fff"
+    color: "#fff",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.7rem"
+    }
+  },
+  textBtn: {
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.7rem"
+    }
   }
 });
 
 const NavAuthUser = props => {
   const { classes, mobileOpen, toggle, rol, userName } = props;
+  const home =
+    rol === "admin"
+      ? "/mentors"
+      : rol === "mentor"
+      ? "/mentorshome"
+      : "/availablementors";
 
   return (
     <Fragment>
@@ -63,7 +77,19 @@ const NavAuthUser = props => {
           <Typography variant="caption" className={classes.welcomeText}>
             {"Hi, " + userName}
           </Typography>
+          <div>
+            <Button
+              className={classes.textBtn}
+              tabIndex="-1"
+              color="inherit"
+              component={Link}
+              to={home}
+            >
+              Home
+            </Button>
+          </div>
           <LogOut />
+
           <SwipeableDrawer
             anchor="left"
             open={mobileOpen}
@@ -152,6 +178,17 @@ const NavNoAuth = props => {
           <Link to="/" className={classes.logoStyles}>
             <img src={logo} alt="FLAD Mentorship" className={classes.logo} />
           </Link>
+          <div>
+            <Button
+              tabIndex="-1"
+              color="inherit"
+              component={Link}
+              to="/"
+              className={classes.textBtn}
+            >
+              Home
+            </Button>
+          </div>
           <div>
             <Button tabIndex="-1" color="inherit" component={Link} to="/login">
               Log in
