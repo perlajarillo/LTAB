@@ -43,10 +43,13 @@ const styles = theme => ({
     }
   },
   note: {
-    color: theme.palette.secondary.dark
+    color: theme.palette.primary.dark
   },
   welcomeText: {
     color: theme.palette.primary.dark
+  },
+  tutorialLink: {
+    color: theme.palette.secondary.dark
   }
 });
 
@@ -57,7 +60,6 @@ class MentorsHome extends Component {
     return (
       <div className={classes.root}>
         <div className={classes.pageTitle}>
-
           <Typography variant="h6" gutterBottom className={classes.welcomeText}>
             {"Welcome to FLAD Mentorship " + name + "!"}
           </Typography>
@@ -69,7 +71,24 @@ class MentorsHome extends Component {
               alt="Let's talk about business"
               className={classes.principalLogo}
             />
+            <Typography
+              variant="body1"
+              gutterBottom
+              className={classes.welcomeText}
+            >
+              {" "}
+              Read this{" "}
+              <a
+                href="http://ior.ad/FDW"
+                className={classes.tutorialLink}
+                target="blank"
+              >
+                tutorial
+              </a>{" "}
+              if you need help using this site.
+            </Typography>
           </Grid>
+
           <Grid item xs={12} sm={7} md={7} lg={7}>
             <Typography variant="h6" color="primary" gutterBottom>
               Thank you for being a mentor!

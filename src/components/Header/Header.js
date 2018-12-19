@@ -38,7 +38,8 @@ const styles = theme => ({
     height: "48px"
   },
   welcomeText: {
-    color: "#fff",
+    marginLeft: 5,
+    color: "#fff"
     [theme.breakpoints.down("xs")]: {
       fontSize: "0.7rem"
     }
