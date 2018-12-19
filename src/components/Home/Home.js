@@ -7,6 +7,7 @@ import logo from "../../images/logo.png";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import b_business from "../../images/logo_square_transparent.png";
+import quotes from "../../images/quotes.png";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
@@ -37,23 +38,100 @@ const styles = theme => ({
     padding: "6em 0",
     backgroundColor: "#fff"
   },
-  pageTitle: {
-    padding: theme.smallSection.padding,
-    maxWidth: "80%",
-    margin: "0 auto",
+  mainSection: {
+    padding: 0,
+    display: "flex",
+    flexFlow: "row wrap",
+    justifyContent: "center",
+    alignItems: "flex-start",
     [theme.breakpoints.up("sm")]: {
+      justifyContent: "center",
       padding: theme.smallSection.padding
+    },
+    [theme.breakpoints.up("md")]: {
+      padding: "0 1.5rem 3rem 1.5rem",
+      flexFlow: "row nowrap",
+      justifyContent: "space-between"
     }
   },
-  section: {
+  pageTitle: {
+    padding: "0 1.5em",
+    fontSize: "0.5em",
+    margin: "0 auto",
+    alignSelf: "center",
+    [theme.breakpoints.up("md")]: {
+      flexShrink: 2,
+      paddingTop: "2.1rem"
+    }
+  },
+  backImg: {
+    background: "url(" + backgroundImg + ")",
+    backgroundPosition: "center 70%",
+    backgroundRepeat: "no-repeat",
+    padding: "12% 0",
+    marginBottom: "1rem",
+    backgroundSize: "contain",
+    width: "100vw",
+    [theme.breakpoints.up("sm")]: {
+      width: "90%"
+    }
+  },
+  sectionMentor: {
     padding: theme.sectionPadding.padding,
     display: "flex",
-    alignItems: "center",
+    flexDirection: "column",
     justifyContent: "center",
-    flexFlow: "column wrap",
-    backgroundColor: "#f1f8e9"
+    alignItems: "center",
+    backgroundColor: "#f1f8e9",
+    [theme.breakpoints.up("md")]: {
+      flexDirection: "row",
+      justifyContent: "space-evenly"
+    }
   },
-  mentorSection: {
+  sectionMentee: {
+    padding: theme.sectionPadding.padding,
+    display: "flex",
+    flexDirection: "column-reverse",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fafafa",
+    [theme.breakpoints.up("md")]: {
+      flexDirection: "row",
+      justifyContent: "space-evenly"
+    }
+  },
+  createAccSec: {
+    display: "inherit",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+  createAccText: {
+    maxWidth: "80%",
+    justifyContent: "flex-start",
+    [theme.breakpoints.up("md")]: {
+      maxWidth: "40%"
+    }
+  },
+  quotesImg: {
+    height: "6em",
+    background: `url(${quotes})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    [theme.breakpoints.down("sm")]: {
+      backgroundSize: "contain"
+    }
+  },
+  divider: {
+    height: "3px",
+    width: "80vw",
+    margin: "1.5em 0",
+    backgroundColor: "#022c00",
+    [theme.breakpoints.up("md")]: {
+      height: "350px",
+      width: "3px"
+    }
+  },
+  mentorsCards: {
     padding: "1rem 0",
     display: "flex",
     flexFlow: "row wrap",
@@ -66,10 +144,24 @@ const styles = theme => ({
     flexGrow: 1,
     background: "#fff"
   },
-  sectSocial: {
-    padding: theme.sectionPadding.padding,
+  joinUsSec: {
+    padding: "1em",
     flexGrow: 1,
-    background: theme.palette.primary.dark
+    background: "#fafafa"
+  },
+  joinUs: {
+    display: "flex",
+    justifyContent: "center",
+    paddingTop: "1em"
+  },
+  joinUsLinks: {
+    textDecoration: "none",
+    scrollBehavior: "smooth",
+    color: theme.palette.secondary.dark,
+    borderBottom: "1px solid currentColor"
+  },
+  joinUsBtn: {
+    margin: theme.spacing.unit
   },
   iconsSection: {
     display: "flex",
@@ -79,21 +171,10 @@ const styles = theme => ({
   socialIcon: {
     margin: "1em"
   },
-  socialLinks: {
-    textDecoration: "none",
-    color: "#fff",
-    borderBottom: "1px solid currentColor"
-  },
   button: {
     padding: theme.spacing.unit * 2,
     color: "#fff",
     margin: "1em 0"
-  },
-  backImg: {
-    background: "url(" + backgroundImg + ")",
-    backgroundPosition: "center 70%",
-    padding: "13% 0",
-    backgroundSize: "contain"
   },
 
   logo: {
@@ -168,90 +249,108 @@ class Home extends Component {
 
     return (
       <main className={classes.wrapper}>
-        <div className={classes.backImg} />
-
-        <div className={classes.pageTitle}>
-          <Typography variant="h6" gutterBottom>
-            Mentorship is incredibly important because it provides participating
-            mentees with valuable insight to assist and guide them in creating,
-            growing, and strengthening their businesses, and achieve success.
-          </Typography>
-          <Typography variant="h6" gutterBottom>
-            It also provides mentors with insight into other business areas, and
-            involves them in a wide business network!
-          </Typography>
+        <div className={classes.mainSection}>
+          <div className={classes.backImg} />
+          <div className={classes.pageTitle}>
+            <Typography variant="subtitle1" gutterBottom>
+              Mentorship is incredibly important because it provides
+              participating mentees with valuable insight to assist and guide
+              them in creating, growing, and strengthening their businesses, and
+              achieve success.
+            </Typography>
+            <Typography variant="subtitle1" gutterBottom>
+              It also provides mentors with insight into other business areas,
+              and involves them in a wide business network!
+            </Typography>
+          </div>
         </div>
-
-        <div className={classes.section}>
-          <div>
+        <div className={classes.joinUsSec}>
+          <Typography variant="h5" align="center" style={{ color: "#000" }}>
+            Join us!
+          </Typography>
+          <div className={classes.joinUs}>
+            <div>
+              <Button size="small" className={classes.joinUsBtn}>
+                <a href="#mentor" className={classes.joinUsLinks}>
+                  As mentor
+                </a>
+              </Button>
+            </div>
+            <div>
+              <Button size="small" className={classes.joinUsBtn}>
+                <a href="#mentee" className={classes.joinUsLinks}>
+                  As mentee
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div id="mentor" className={classes.sectionMentor}>
+          <div className={classes.createAccText}>
+            <div className={classes.quotesImg} />
+            <Typography variant="h6" gutterBottom>
+              Mentors are experts with goodwill. They can advise others on how
+              to be a successful person. Connect with people of different
+              backgrounds, became a mentor!
+            </Typography>
+          </div>
+          <div className={classes.divider} />
+          <div className={classes.createAccSec}>
             <img src={logo} alt="" className={classes.logo} />
-          </div>
-          <div>
-            <Typography variant="h6" gutterBottom align="center">
-              Do you want to be a #LetsTalkAboutBusiness mentor?
-            </Typography>
-          </div>
-          <div>
-            <Button
-              variant="contained"
-              color="secondary"
-              size="large"
-              component={Link}
-              to="/newmentor"
-              className={classes.button}
-            >
-              Create a mentor account
-            </Button>
-            <Typography variant="body1" gutterBottom align="center">
-              Or please reach out to us through
-            </Typography>
-            <Typography variant="body1" gutterBottom align="center">
-              email{" "}
-              <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
-            </Typography>
+            <div>
+              <Typography variant="h6" gutterBottom align="center">
+                Do you want to be a #LetsTalkAboutBusiness mentor?
+              </Typography>
+            </div>
+            <div>
+              <Button
+                variant="contained"
+                color="secondary"
+                size="large"
+                component={Link}
+                to="/newmentor"
+                className={classes.button}
+              >
+                Create a mentor account
+              </Button>
+              <Typography variant="body1" gutterBottom align="center">
+                Or please reach out to us through
+              </Typography>
+              <Typography variant="body1" gutterBottom align="center">
+                email{" "}
+                <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
+              </Typography>
+            </div>
           </div>
         </div>
-        <div className={classes.sectSocial}>
-          <Typography variant="body1" align="center" style={{ color: "#fff" }}>
-            Visit our{" "}
-            <a
-              href="https://www.facebook.com/TalkBusinessFlad/"
-              target="blank"
-              className={classes.socialLinks}
-            >
-              Facebook page
-            </a>{" "}
-            and{" "}
-            <a
-              href="https://www.flad.pt/en/lets-talk-about-business/"
-              target="blank"
-              className={classes.socialLinks}
-            >
-              Web Site
-            </a>{" "}
-            to know more about the program
-          </Typography>
-        </div>
-        <div className={classes.section}>
-          <div>
+        <div id="mentee" className={classes.sectionMentee}>
+          <div className={classes.createAccSec}>
             <img src={b_business} alt="" className={classes.logo} />
+            <div>
+              <Typography variant="h6" gutterBottom align="center">
+                Are you looking for a mentor and your are not registered yet?
+              </Typography>
+            </div>
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                component={Link}
+                to="/newmentee"
+                className={classes.button}
+              >
+                Create a mentee account
+              </Button>
+            </div>
           </div>
-          <div>
-            <Typography variant="h6" gutterBottom align="center">
-              Are you looking for a mentor and your are not registered yet?
+          <div className={classes.divider} />
+          <div className={classes.createAccText}>
+            <div className={classes.quotesImg} />
+            <Typography variant="h6" gutterBottom>
+              As a mentee, you can have to your side a mentor whose experiences
+              can guide you to surpass you goals.
             </Typography>
-          </div>
-          <div>
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              component={Link}
-              to="/newmentee"
-              className={classes.button}
-            >
-              Create a mentee account
-            </Button>
           </div>
         </div>
         <div className={classes.sectionTitle}>
@@ -260,7 +359,7 @@ class Home extends Component {
               We are proud to introduce our Let's Talk about Business mentors
             </Typography>
           </div>
-          <div className={classes.mentorSection}>
+          <div className={classes.mentorsCards}>
             {mentorsImgs &&
               mentorsImgs.map(mentor => (
                 <Card className={classes.card} key={mentor.key}>
