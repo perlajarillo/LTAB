@@ -345,6 +345,7 @@ class NewMentor extends Component {
           auth
             .onCreateAccount(mail, password)
             .then(authUser => {
+              auth.onSendEmail();
               this.setState({
                 mail: mail,
                 password: password
