@@ -202,6 +202,7 @@ class NewMentee extends React.Component {
         auth
           .onCreateAccount(email, password)
           .then(authUser => {
+            auth.onSendEmail();
             this.setState({
               email: email,
               password: password
