@@ -3,6 +3,8 @@ import { auth } from "./firebase";
 export const onCreateAccount = (email, password) =>
   auth.createUserWithEmailAndPassword(email, password);
 
+export const onSendEmail = () => auth.currentUser.sendEmailVerification();
+
 export const onLogIn = (email, password) =>
   auth.signInWithEmailAndPassword(email, password);
 
