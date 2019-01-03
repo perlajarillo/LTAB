@@ -28,3 +28,4 @@ yarn-error.log*
 #firebase
 storage.rules
 database.rules.json
+firebase/serviceAccountKey.js
