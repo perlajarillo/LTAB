@@ -33,7 +33,10 @@ const styles = theme => ({
     minHeight: "80vh",
     [theme.breakpoints.up("sm")]: {
       margin: "90px 24px"
-    }
+    },
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex"
   },
   container: {
     display: "flex",
@@ -54,6 +57,7 @@ const styles = theme => ({
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
     [theme.breakpoints.between("sm", "md")]: {
+      width: 550,
       marginRight: "20%"
     }
   },
@@ -61,28 +65,10 @@ const styles = theme => ({
     margin: "24px 0",
     minWidth: 250,
     [theme.breakpoints.up("sm")]: {
-      width: 400
+      width: 550
     }
   },
 
-  textField: {
-    [theme.breakpoints.up("xs")]: {
-      width: 200
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: 400
-    },
-    [theme.breakpoints.up("md")]: {
-      width: 450
-    },
-
-    [theme.breakpoints.between("sm", "md")]: {
-      width: 250
-    },
-    [theme.breakpoints.only("lg")]: {
-      width: 400
-    }
-  },
   button: {
     marginTop: theme.spacing.unit * 2,
     marginRight: theme.spacing.unit * 2
@@ -116,7 +102,8 @@ const styles = theme => ({
       marginTop: "0px"
     },
     [theme.breakpoints.up("sm")]: {
-      marginTop: "5px"
+      marginTop: "5px",
+      width: 600
     },
     [theme.breakpoints.up("md")]: {
       marginTop: "20px"
@@ -276,21 +263,31 @@ class Mentee extends Component {
       : this.setState({ openSnackbarError: false });
   };
 
+  /**
+   * handleDeleteMentee - sets the actions when an intent to delete a mentee
+   * is happening
+   * @param {void} event the event object
+   * @return {void}
+   */
   handleDeleteMentee = () => {
     const { key } = this.state;
-    adminApp
-      .auth()
-      .deleteUser(key)
-      .then(() => {
-        //deleteMentee(key).then(this.setState({ openSnackbarDeleted: true }));
-        this.handleClose();
-      })
+    deleteMentee(key)
+      .then(this.setState({ openSnackbarDeleted: true, open: false }))
       .catch(error => {
-        console.log("Error deleting the user:", error);
-        this.handleClose();
+        this.setState({
+          openSnackbarError: false,
+          sectionError: "Error deleting the user:" + error,
+          open: false
+        });
       });
   };
 
+  /**
+   * handleClickDeleteMentee - sets the attribute open to true to display a
+   * dialog box
+   * @param {void} event the event object
+   * @return {void}
+   */
   handleClickDeleteMentee = () => {
     this.setState({ open: true });
   };
@@ -493,6 +490,11 @@ class Mentee extends Component {
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               Are you sure you want to delete this mentee?
+              <Typography variant="caption">
+                Please report to the app{" "}
+                <a href="mailto:perlai.jarillo@gmail.com">administrator</a>{" "}
+                after deleting.
+              </Typography>
             </DialogContentText>
           </DialogContent>
           <DialogActions>

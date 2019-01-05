@@ -192,7 +192,7 @@ class EnhancedTableHead extends React.Component {
             return (
               <CustomTableCell
                 key={row.id}
-                padding={row.disablePadding ? "none" : "none"}
+                padding={row.disablePadding ? "yes" : "none"}
                 sortDirection={orderBy === row.id ? order : false}
               >
                 <Tooltip
