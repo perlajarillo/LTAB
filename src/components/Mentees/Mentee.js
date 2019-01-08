@@ -12,7 +12,6 @@ import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentC
 import { Redirect } from "react-router-dom";
 import * as R from "ramda";
 import { editMentee, deleteMentee } from "../../firebase/operations";
-import { adminApp } from "../../firebase/firebase.js";
 import { validateString } from "../validity";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Dialog from "@material-ui/core/Dialog";
