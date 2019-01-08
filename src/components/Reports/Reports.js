@@ -3,9 +3,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import logos from "../../images/letstalk_logo_3.jpg";
 import { withStyles } from "@material-ui/core/styles";
-import { getMentors } from "../../firebase/operations";
+import { getMentors, getMentees } from "../../firebase/operations";
 import ReactToPrint from "react-to-print";
 import Typography from "@material-ui/core/Typography";
+import Card from "@material-ui/core/Card";
 
 const styles = theme => ({
   root: {
@@ -47,6 +48,21 @@ class ComponentToPrint extends React.Component {
         })
       );
   };
+  getAllMentees = () => {
+    getMentees()
+      .then(snapshot => {
+        this.setState({
+          mentees: snapshot.val(),
+          totalMentees: Object.keys(snapshot.val()).length
+        });
+      })
+      .catch(
+        this.setState({
+          mentees: "",
+          totalMentees: ""
+        })
+      );
+  };
 
   componentDidMount() {
     if (this.props.authUser) {
@@ -56,6 +72,7 @@ class ComponentToPrint extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
       this.getMentors();
+      this.getAllMentees();
     }
   }
   componentWillUnmount() {
@@ -63,13 +80,14 @@ class ComponentToPrint extends React.Component {
   }
   render() {
     const { classes } = this.props;
-    const { totalMentors } = this.state;
+    const { totalMentors, totalMentees } = this.state;
     return (
       <div>
         <img src={logos} alt="FLAD-Mentorship" className={classes.logos} />
         <Typography variant="h5"> Summary:</Typography>
 
         <p>Total of mentors: {totalMentors}</p>
+        <p>Total of mentees: {totalMentees}</p>
       </div>
     );
   }
@@ -85,11 +103,13 @@ class Reports extends Component {
           trigger={() => <a href="#">Print this report out!</a>}
           content={() => this.componentRef}
         />
-        <ComponentToPrint
-          ref={el => (this.componentRef = el)}
-          state={this.state}
-          classes={classes}
-        />
+        <Card className={classes.card}>
+          <ComponentToPrint
+            ref={el => (this.componentRef = el)}
+            state={this.state}
+            classes={classes}
+          />
+        </Card>
       </div>
     );
   }
