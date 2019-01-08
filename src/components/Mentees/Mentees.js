@@ -109,6 +109,13 @@ const styles = theme => ({
   },
   tutorialLink: {
     color: theme.palette.secondary.dark
+  },
+  titleText: {
+    color: theme.palette.primary.main,
+    marginLeft: "32px",
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: "8px"
+    }
   }
 });
 
@@ -192,7 +199,7 @@ class EnhancedTableHead extends React.Component {
             return (
               <CustomTableCell
                 key={row.id}
-                padding={row.disablePadding ? "yes" : "none"}
+                padding={row.disablePadding ? "default" : "none"}
                 sortDirection={orderBy === row.id ? order : false}
               >
                 <Tooltip
@@ -492,13 +499,12 @@ class Mentees extends React.Component {
     const { from } = this.props.location.state || {
       from: { pathname: "/nofound" }
     };
-    const name = this.props.authUser ? this.props.authUser.userName : "";
 
     return (
       <div className={classes.wrapper}>
         {!authUser.rol === "admin" && <Redirect to={from} />}
         <div className={classes.root}>
-          <Typography variant="h5" gutterBottom color="primary">
+          <Typography variant="h5" gutterBottom className={classes.titleText}>
             Mentees' administration
           </Typography>
           <MenteesList
