@@ -193,3 +193,16 @@ export function getUserName(uid, rol) {
     .child("name")
     .once("value");
 }
+
+export function getMentees() {
+  const mentees = db.ref("mentee");
+  return mentees.once("value");
+}
+
+export function deleteMentee(menteeKey) {
+  const menteeToDelete = db
+    .ref()
+    .child("mentee")
+    .child(menteeKey);
+  return menteeToDelete.remove();
+}
