@@ -21,7 +21,6 @@ import Radio from "@material-ui/core/Radio";
 import { getMentors } from "../../firebase/operations";
 import TextField from "@material-ui/core/TextField";
 import { Redirect } from "react-router-dom";
-import ReactToPrint from "react-to-print";
 
 const styles = theme => ({
   root: {
@@ -238,143 +237,131 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired
 };
-class MentorsList extends React.Component {
-  render() {
-    const {
-      state,
-      classes,
-      filterBySpecialty,
-      isSelected,
-      handleRequestSort,
-      handleChangePage,
-      handleChange,
-      handleChangeRowsPerPage,
-      getMentors
-    } = this.props;
-    const {
-      mentors,
+const MentorsList = ({
+  state,
+  classes,
+  isSelected,
+  handleRequestSort,
+  handleChangePage,
+  handleChangeRowsPerPage
+}) => {
+  const {
+    mentors,
 
-      uid,
-      order,
-      orderBy,
-      rowsPerPage,
-      page,
-      mentorKey
-    } = state;
-    const emptyRows = mentors
-      ? rowsPerPage - Math.min(rowsPerPage, mentors.length - page * rowsPerPage)
-      : 0;
+    uid,
+    order,
+    orderBy,
+    rowsPerPage,
+    page,
+    mentorKey
+  } = state;
+  const emptyRows = mentors
+    ? rowsPerPage - Math.min(rowsPerPage, mentors.length - page * rowsPerPage)
+    : 0;
 
-    return (
-      <div className={classes.root}>
-        {mentors ? (
-          <Paper className={classes.root}>
-            <div className={classes.tableWrapper}>
-              <Table className={classes.table} aria-labelledby="tableTitle">
-                <EnhancedTableHead
-                  mentorKey={mentorKey}
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
-                  rowCount={Object.keys(mentors).length}
-                />
-                <TableBody>
-                  {stableSort(
-                    Object.entries(mentors),
-                    getSorting(order, orderBy)
-                  )
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(n => {
-                      const itIsSelected = isSelected(n[0]);
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          aria-checked={itIsSelected}
-                          tabIndex={-1}
-                          key={n[0]}
-                          selected={itIsSelected}
-                          className={classes.row}
+  return (
+    <div className={classes.root}>
+      {mentors ? (
+        <Paper className={classes.root}>
+          <div className={classes.tableWrapper}>
+            <Table className={classes.table} aria-labelledby="tableTitle">
+              <EnhancedTableHead
+                mentorKey={mentorKey}
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={Object.keys(mentors).length}
+              />
+              <TableBody>
+                {stableSort(Object.entries(mentors), getSorting(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(n => {
+                    const itIsSelected = isSelected(n[0]);
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        aria-checked={itIsSelected}
+                        tabIndex={-1}
+                        key={n[0]}
+                        selected={itIsSelected}
+                        className={classes.row}
+                      >
+                        <CustomTableCell
+                          padding="checkbox"
+                          className={classes.personalizedCell}
                         >
-                          <CustomTableCell
-                            padding="checkbox"
-                            className={classes.personalizedCell}
-                          >
-                            <Radio
-                              component={Link}
-                              to={{
-                                pathname: "/Mentor",
-                                state: {
-                                  mentor: n[1],
-                                  key: n[0],
-                                  authUser: uid
-                                }
-                              }}
-                            />
-                          </CustomTableCell>
+                          <Radio
+                            component={Link}
+                            to={{
+                              pathname: "/Mentor",
+                              state: {
+                                mentor: n[1],
+                                key: n[0],
+                                authUser: uid
+                              }
+                            }}
+                          />
+                        </CustomTableCell>
 
-                          <CustomTableCell padding="none">
-                            {n[1].name}
-                          </CustomTableCell>
-                          <CustomTableCell padding="none">
-                            {n[1].specialty}
-                          </CustomTableCell>
-                          <CustomTableCell padding="none">
-                            {n[1].mail}
-                          </CustomTableCell>
-                          <CustomTableCell padding="none">
-                            {n[1].phone}
-                          </CustomTableCell>
-                          <CustomTableCell className={classes.personalizedCell}>
-                            {n[1].location}
-                          </CustomTableCell>
-                          <CustomTableCell padding="none">
-                            {n[1].linkedin}
-                          </CustomTableCell>
-                          <CustomTableCell padding="none">
-                            {n[1].twitter}
-                          </CustomTableCell>
-                          <CustomTableCell padding="none">
-                            {n[1].facebook}
-                          </CustomTableCell>
-                        </TableRow>
-                      );
-                    })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 49 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-            <TablePagination
-              component="div"
-              count={Object.keys(mentors).length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              backIconButtonProps={{
-                "aria-label": "Previous Page"
-              }}
-              nextIconButtonProps={{
-                "aria-label": "Next Page"
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
-          </Paper>
-        ) : (
-          <div className={classes.root}>
-            <Typography variant="h5">
-              {" "}
-              You don't have any mentors yet.
-            </Typography>
+                        <CustomTableCell padding="none">
+                          {n[1].name}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {n[1].specialty}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {n[1].mail}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {n[1].phone}
+                        </CustomTableCell>
+                        <CustomTableCell className={classes.personalizedCell}>
+                          {n[1].location}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {n[1].linkedin}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {n[1].twitter}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {n[1].facebook}
+                        </CustomTableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 49 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
-        )}
-      </div>
-    );
-  }
-}
+          <TablePagination
+            component="div"
+            count={Object.keys(mentors).length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            backIconButtonProps={{
+              "aria-label": "Previous Page"
+            }}
+            nextIconButtonProps={{
+              "aria-label": "Next Page"
+            }}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </Paper>
+      ) : (
+        <div className={classes.root}>
+          <Typography variant="h5"> You don't have any mentors yet.</Typography>
+        </div>
+      )}
+    </div>
+  );
+};
 
 class Mentors extends React.Component {
   constructor(props) {
@@ -493,7 +480,6 @@ class Mentors extends React.Component {
     const { from } = this.props.location.state || {
       from: { pathname: "/nofound" }
     };
-    //const name = this.props.authUser ? this.props.authUser.userName : "";
     const { uid } = this.state;
     return (
       <div className={classes.wrapper}>
@@ -533,21 +519,6 @@ class Mentors extends React.Component {
               }}
             >
               <AddIcon /> Add new mentor
-            </Button>
-            <Button
-              size="small"
-              variant="extendedFab"
-              color="default"
-              aria-label="PDF"
-              className={classes.button}
-            >
-              <ReactToPrint
-                trigger={() => <a href="#">Print this out!</a>}
-                content={() => this.componentRef}
-                /*                 pageStyle={
-                  "@page { size: Legal; margin: 0mm; scale: 75; layout: Portrait; } @media print { body { -webkit-print-color-adjust: exact; } }"
-                } */
-              />
             </Button>
 
             <div className={classes.searchBar}>
@@ -594,7 +565,6 @@ class Mentors extends React.Component {
             handleChangePage={this.handleChangePage}
             handleChangeRowsPerPage={this.handleChangeRowsPerPage}
             getMentors={this.getMentors}
-            ref={el => (this.componentRef = el)}
           />
         </div>
       </div>
