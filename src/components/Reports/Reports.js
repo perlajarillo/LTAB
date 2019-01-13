@@ -14,6 +14,14 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import PrintIcon from "@material-ui/icons/Print";
 import Button from "@material-ui/core/Button";
+import { sortBy, compose, toLower, prop } from "ramda";
+
+const sortByName = sortBy(
+  compose(
+    toLower,
+    prop("name")
+  )
+);
 
 const styles = theme => ({
   root: {
@@ -44,41 +52,17 @@ const styles = theme => ({
     width: "85%",
     overflowX: "auto"
   },
-  linkStyle: {
-    margin: "0.5em",
-    textDecoration: "none"
-  },
   menteesSection: {
     pageBreakBefore: "always",
     marginTop: theme.spacing.unit * 6
+  },
+  totalInList: {
+    display: "flex"
+  },
+  personalizedCell: {
+    maxWidth: 150
   }
 });
-
-function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0][1], b[0][1]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-
-function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getSorting(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => desc(a, b, orderBy)
-    : (a, b) => -desc(a, b, orderBy);
-}
 
 const mentorsRows = [
   {
@@ -90,7 +74,7 @@ const mentorsRows = [
   {
     id: "specialty",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "Specialty"
   },
   {
@@ -104,6 +88,12 @@ const mentorsRows = [
     numeric: false,
     disablePadding: false,
     label: "Phone"
+  },
+  {
+    id: "available",
+    numeric: false,
+    disablePadding: true,
+    label: "Available"
   }
 ];
 
@@ -146,40 +136,161 @@ const CustomTableCell = withStyles(theme => ({
   }
 }))(TableCell);
 
-class EnhancedTableHead extends React.Component {
+class ToPrint extends React.Component {
   render() {
-    const { rows } = this.props;
-
+    const { classes, state } = this.props;
+    const { totalMentors, totalMentees, mentors, mentees } = state;
     return (
-      <TableHead>
-        <TableRow>
-          {rows.map(row => {
-            return (
-              <CustomTableCell
-                key={row.id}
-                padding={row.disablePadding ? "default" : "none"}
-              >
-                {row.label}
-              </CustomTableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
+      <div>
+        <div className={classes.heading}>
+          <img src={logos} alt="FLAD-Mentorship" className={classes.logos} />
+          <hr />
+        </div>
+        <Typography variant="h6" className={classes.text} gutterBottom>
+          Report of mentors and mentees participating in FLAD-Mentorship
+          Program:
+        </Typography>
+        <Typography variant="body2" gutterBottom className={classes.text}>
+          Date: {new Date().toLocaleString()}
+        </Typography>
+        <div className={classes.totalInList}>
+          <Typography variant="body1" gutterBottom className={classes.text}>
+            Total of mentors: {totalMentors}
+          </Typography>
+          <Typography variant="body1" gutterBottom className={classes.text}>
+            Total of mentees: {totalMentees}
+          </Typography>
+        </div>
+        <Typography variant="h6" className={classes.text}>
+          List of mentors:
+        </Typography>
+        <div className={classes.tableContainer}>
+          <Table className={classes.table} aria-labelledby="tableTitle">
+            <TableHead>
+              <TableRow>
+                {mentorsRows.map(row => {
+                  return (
+                    <CustomTableCell
+                      key={row.id}
+                      padding={row.disablePadding ? "default" : "none"}
+                    >
+                      {row.label}
+                    </CustomTableCell>
+                  );
+                }, this)}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {mentors ? (
+                mentors.map(mentor => {
+                  return (
+                    <TableRow
+                      tabIndex={-1}
+                      key={mentor.name}
+                      className={classes.row}
+                    >
+                      <CustomTableCell
+                        padding="checkbox"
+                        className={classes.personalizedCell}
+                      >
+                        {mentor.name}
+                      </CustomTableCell>
+                      <CustomTableCell padding="none">
+                        {mentor.specialty}
+                      </CustomTableCell>
+                      <CustomTableCell padding="none">
+                        {mentor.mail}
+                      </CustomTableCell>
+                      <CustomTableCell padding="none">
+                        {mentor.phone}
+                      </CustomTableCell>
+                      <CustomTableCell>{mentor.available}</CustomTableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow tabIndex={-1} className={classes.row}>
+                  <CustomTableCell colSpan={5}>
+                    Loading information...
+                  </CustomTableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <div className={classes.menteesSection}>
+          {" "}
+          <Typography variant="h6" className={classes.text}>
+            {" "}
+            List of mentees:
+          </Typography>
+          <div className={classes.tableContainer}>
+            <Table className={classes.table} aria-labelledby="tableTitle">
+              <TableHead>
+                <TableRow>
+                  {menteesRows.map(row => {
+                    return (
+                      <CustomTableCell
+                        key={row.id}
+                        padding={row.disablePadding ? "default" : "none"}
+                      >
+                        {row.label}
+                      </CustomTableCell>
+                    );
+                  }, this)}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {mentees ? (
+                  mentees.map(mentee => {
+                    return (
+                      <TableRow
+                        tabIndex={-1}
+                        key={mentee.name}
+                        className={classes.row}
+                      >
+                        <CustomTableCell
+                          padding="checkbox"
+                          className={classes.personalizedCell}
+                        >
+                          {mentee.name}
+                        </CustomTableCell>
+                        <CustomTableCell padding="default">
+                          {mentee.email}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {mentee.location}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {mentee.descendent}
+                        </CustomTableCell>
+                      </TableRow>
+                    );
+                  })
+                ) : (
+                  <TableRow tabIndex={-1} className={classes.row}>
+                    <CustomTableCell colSpan={4}>
+                      Loading information...
+                    </CustomTableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </div>
     );
   }
 }
 
-EnhancedTableHead.propTypes = {
-  rowCount: PropTypes.number.isRequired,
-  rows: PropTypes.array.isRequired
-};
-
-class ComponentToPrint extends React.Component {
+class Reports extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mentors: {},
+      mentors: [],
+      mentees: [],
       totalMentors: "",
+      totalMentees: "",
       order: "asc",
       orderBy: "name",
       orderM: "asc",
@@ -190,9 +301,22 @@ class ComponentToPrint extends React.Component {
   getMentors = () => {
     getMentors()
       .then(snapshot => {
+        const data = snapshot.val();
+        const totalMentors = Object.keys(snapshot.val()).length;
+        const mentorsData = Object.keys(data).map(mentorKey => {
+          const mentorsInfo = {
+            name: data[mentorKey].name,
+            specialty: data[mentorKey].specialty,
+            mail: this.verifyEmptyStrings(data[mentorKey].mail),
+            phone: this.verifyEmptyStrings(data[mentorKey].phone),
+            available: data[mentorKey].available ? "Yes" : "No"
+          };
+          return mentorsInfo;
+        });
+
         this.setState({
-          mentors: snapshot.val(),
-          totalMentors: Object.keys(snapshot.val()).length
+          mentors: sortByName(mentorsData),
+          totalMentors: totalMentors
         });
       })
       .catch(
@@ -202,12 +326,25 @@ class ComponentToPrint extends React.Component {
         })
       );
   };
+
   getAllMentees = () => {
     getMentees()
       .then(snapshot => {
+        const data = snapshot.val();
+        const totalMentees = Object.keys(snapshot.val()).length;
+        const menteesData = Object.keys(data).map(menteeKey => {
+          const menteesInfo = {
+            name: data[menteeKey].name,
+            email: data[menteeKey].email,
+            location: data[menteeKey].location,
+            descendent: data[menteeKey].descendent
+          };
+          return menteesInfo;
+        });
+
         this.setState({
-          mentees: snapshot.val(),
-          totalMentees: Object.keys(snapshot.val()).length
+          mentees: sortByName(menteesData),
+          totalMentees: totalMentees
         });
       })
       .catch(
@@ -218,189 +355,53 @@ class ComponentToPrint extends React.Component {
       );
   };
 
+  verifyEmptyStrings = string => {
+    if (string === "") string = "-";
+    return string;
+  };
+
+  getData = () => {
+    this.getMentors();
+    this.getAllMentees();
+  };
   componentDidMount() {
     if (this.props.authUser) {
-      this.unregisterObserver = this.getMentors();
+      this.unregisterObserver = this.getData();
     }
   }
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
-      this.getMentors();
-      this.getAllMentees();
+      this.getData();
     }
   }
   componentWillUnmount() {
     this.unregisterObserver = null;
   }
-  render() {
-    const { classes } = this.props;
-    const {
-      totalMentors,
-      totalMentees,
-      mentors,
-      mentees,
-      order,
-      orderBy,
-      orderM,
-      orderByM
-    } = this.state;
-    return (
-      <div>
-        <div className={classes.heading}>
-          <img src={logos} alt="FLAD-Mentorship" className={classes.logos} />
-          <hr />
-        </div>
-        <Typography variant="h6" className={classes.text} gutterBottom>
-          {" "}
-          Report of mentors and mentees participating in FLAD-Mentorship
-          Program:
-        </Typography>
-        \
-        <Typography variant="body2" gutterBottom className={classes.text}>
-          {" "}
-          Date: {new Date().toLocaleString()}
-        </Typography>
-        <Typography variant="body1" gutterBottom className={classes.text}>
-          {" "}
-          Total of mentors: {totalMentors} Total of mentees: {totalMentees}
-        </Typography>
-        <br />
-        <Typography variant="h6" className={classes.text}>
-          {" "}
-          List of mentors:
-        </Typography>
-        {mentors ? (
-          <div className={classes.tableContainer}>
-            <Table className={classes.table} aria-labelledby="tableTitle">
-              <EnhancedTableHead
-                rowCount={Object.keys(mentors).length}
-                rows={mentorsRows}
-              />
-              <TableBody>
-                {stableSort(
-                  Object.entries(mentors),
-                  getSorting(order, orderBy)
-                ).map(n => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={n[0]}
-                      className={classes.row}
-                    >
-                      <CustomTableCell
-                        padding="checkbox"
-                        className={classes.personalizedCell}
-                      >
-                        {n[1].name}
-                      </CustomTableCell>
-                      <CustomTableCell padding="none">
-                        {n[1].specialty}
-                      </CustomTableCell>
-                      <CustomTableCell padding="none">
-                        {n[1].mail}
-                      </CustomTableCell>
-                      <CustomTableCell padding="none">
-                        {n[1].phone}
-                      </CustomTableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
-        ) : (
-          <div className={classes.root}>
-            <Typography variant="body1"> Loading content...</Typography>
-          </div>
-        )}
-        <br />
-        <div className={classes.menteesSection}>
-          {" "}
-          <Typography variant="h6" className={classes.text}>
-            {" "}
-            List of mentees:
-          </Typography>
-          {mentees ? (
-            <div className={classes.tableContainer}>
-              <Table className={classes.table} aria-labelledby="tableTitle">
-                <EnhancedTableHead
-                  rowCount={Object.keys(mentees).length}
-                  rows={menteesRows}
-                />
-                <TableBody>
-                  {stableSort(
-                    Object.entries(mentees),
-                    getSorting(orderM, orderByM)
-                  ).map(n => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={n[0]}
-                        className={classes.row}
-                      >
-                        <CustomTableCell
-                          padding="checkbox"
-                          className={classes.personalizedCell}
-                        >
-                          {n[1].name}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].email}
-                        </CustomTableCell>
-                        <CustomTableCell className={classes.personalizedCell}>
-                          {n[1].location}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].descendent}
-                        </CustomTableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </div>
-          ) : (
-            <div className={classes.root}>
-              <Typography variant="h5"> Loading information.</Typography>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-}
 
-class Reports extends Component {
   render() {
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
-        <Button
-          size="small"
-          variant="extendedFab"
-          color="default"
-          aria-label="Add"
-          className={classes.button}
-        >
-          <PrintIcon />
-          <ReactToPrint
-            trigger={() => (
-              <a href="#" className={classes.linkStyle}>
-                Print
-              </a>
-            )}
-            content={() => this.componentRef}
-          />
-        </Button>
+        <ReactToPrint
+          trigger={() => (
+            <Button
+              size="small"
+              variant="extendedFab"
+              color="default"
+              className={classes.button}
+            >
+              <PrintIcon />
+              Print{" "}
+            </Button>
+          )}
+          content={() => this.componentRef}
+        />
+
         <br />
         <br />
         <Card className={classes.card}>
-          <ComponentToPrint
+          <ToPrint
             ref={el => (this.componentRef = el)}
             state={this.state}
             classes={classes}
