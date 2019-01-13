@@ -128,7 +128,8 @@ class Mentee extends Component {
       descendentError: "",
       returnMentee: false,
       open: false,
-      openSnackbarDeleted: false
+      openSnackbarDeleted: false,
+      menteeNeeds: ""
     };
   }
 
@@ -156,7 +157,8 @@ class Mentee extends Component {
       location: mentee.location,
       descendent: mentee.descendent,
       email: mentee.email,
-      key: key
+      key: key,
+      menteeNeeds: mentee.menteeNeeds
     });
   };
 
@@ -218,7 +220,10 @@ class Mentee extends Component {
    * @returns {Object} the Firebase payload
    */
   getFirebasePayload() {
-    return R.pick(["name", "location", "descendent", "email"], this.state);
+    return R.pick(
+      ["name", "location", "descendent", "email", "menteeNeeds"],
+      this.state
+    );
   }
 
   /**
@@ -309,7 +314,8 @@ class Mentee extends Component {
       descendentError,
       open,
       key,
-      openSnackbarDeleted
+      openSnackbarDeleted,
+      menteeNeeds
     } = this.state;
 
     return (
@@ -391,7 +397,27 @@ class Mentee extends Component {
                     </FormHelperText>
                   </FormControl>
                 </div>
+                <div>
+                  <Typography variant="body1" gutterBottom>
+                    Please describe what kind of tutoring is the mentee looking
+                    for
+                  </Typography>
 
+                  <br />
+                  <FormControl required className={classes.formControl}>
+                    <TextField
+                      id="menteeNeeds"
+                      name="menteeNeeds"
+                      multiline
+                      rows="5"
+                      label="max. 200 characters"
+                      value={menteeNeeds}
+                      onChange={this.handleChange}
+                      className={classes.textField}
+                      inputProps={{ maxLength: 200 }}
+                    />
+                  </FormControl>
+                </div>
                 <div className={classes.buttons}>
                   <Button
                     variant="contained"

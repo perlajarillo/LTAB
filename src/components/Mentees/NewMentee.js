@@ -98,7 +98,8 @@ class NewMentee extends React.Component {
       repeatPasswordError: "",
       descendentError: "",
       locationError: "",
-      location: ""
+      location: "",
+      menteeNeeds: ""
     };
   }
 
@@ -145,7 +146,10 @@ class NewMentee extends React.Component {
    * @returns {Object} the Firebase payload
    */
   getFirebasePayload() {
-    return R.pick(["name", "email", "descendent", "location"], this.state);
+    return R.pick(
+      ["name", "email", "descendent", "location", "menteeNeeds"],
+      this.state
+    );
   }
 
   /**
@@ -256,7 +260,8 @@ class NewMentee extends React.Component {
       passwordError,
       repeatPasswordError,
       descendentError,
-      locationError
+      locationError,
+      menteeNeeds
     } = this.state;
 
     return (
@@ -266,7 +271,7 @@ class NewMentee extends React.Component {
             <CardContent>
               <div className={classes.cardTitle}>
                 <Typography variant="h6" color="primary">
-                  Register to look for a mentor.{" "}
+                  Fill this form to become a mentee{" "}
                 </Typography>
                 <img
                   src={b_business}
@@ -386,6 +391,26 @@ class NewMentee extends React.Component {
                   <FormHelperText error={true}>
                     {descendentError}
                   </FormHelperText>
+                </FormControl>
+              </div>
+              <div>
+                <Typography variant="body1" gutterBottom>
+                  Please describe what kind of tutoring are you looking for
+                </Typography>
+
+                <br />
+                <FormControl required className={classes.formControl}>
+                  <TextField
+                    id="menteeNeeds"
+                    name="menteeNeeds"
+                    multiline
+                    rows="5"
+                    label="max. 200 characters"
+                    value={menteeNeeds}
+                    onChange={this.handleChange}
+                    className={classes.textField}
+                    inputProps={{ maxLength: 200 }}
+                  />
                 </FormControl>
               </div>
               <div>
