@@ -15,6 +15,7 @@ import { getMentee, editMentee } from "../../firebase/operations";
 import { auth } from "../../firebase";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { validateString } from "../validity";
+import listsData from "../Mentors/Literals/listsData";
 
 const styles = theme => ({
   formControl: {
@@ -35,6 +36,8 @@ const styles = theme => ({
   }
 });
 
+const { specialties } = listsData;
+
 class EditMentee extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -49,7 +52,8 @@ class EditMentee extends React.Component {
       descendentError: "",
       locationError: "",
       location: "",
-      menteeNeeds: ""
+      menteeNeeds: "",
+      field: ""
     };
   }
 
@@ -86,7 +90,7 @@ class EditMentee extends React.Component {
    */
   getFirebasePayload() {
     return R.pick(
-      ["name", "email", "descendent", "location", "menteeNeeds"],
+      ["name", "email", "descendent", "location", "menteeNeeds", "field"],
       this.state
     );
   }
@@ -148,7 +152,8 @@ class EditMentee extends React.Component {
           email: mentee.val().email,
           descendent: mentee.val().descendent,
           location: mentee.val().location,
-          menteeNeeds: mentee.val().menteeNeeds
+          menteeNeeds: mentee.val().menteeNeeds,
+          field: mentee.val().field
         });
       })
       .catch();
@@ -200,7 +205,8 @@ class EditMentee extends React.Component {
       descendentError,
       locationError,
       openSnackbarSaved,
-      menteeNeeds
+      menteeNeeds,
+      field
     } = this.state;
 
     return (
@@ -214,7 +220,6 @@ class EditMentee extends React.Component {
                 label="Name:"
                 placeholder="Your name"
                 value={name}
-                className={classes.textField}
                 margin="normal"
                 onChange={this.handleChange}
                 onBlur={this.checkForNull}
@@ -231,7 +236,6 @@ class EditMentee extends React.Component {
                 label="Location:"
                 placeholder="city, state and country"
                 value={location}
-                className={classes.textField}
                 margin="normal"
                 onChange={this.handleChange}
                 onBlur={this.checkForNull}
@@ -265,6 +269,32 @@ class EditMentee extends React.Component {
               <FormHelperText error={true}>{descendentError}</FormHelperText>
             </FormControl>
           </div>
+          <br />
+          <div>
+            <FormHelperText>What is your field of interest? </FormHelperText>
+            <FormControl required className={classes.formControl}>
+              <Select
+                value={field}
+                label="Field"
+                onChange={this.handleChange}
+                onBlur={this.checkForNull}
+                name="field"
+                id="field"
+                displayEmpty
+                className={classes.textField}
+              >
+                <MenuItem value="" disabled>
+                  Select the field
+                </MenuItem>
+                {specialties.map(specialty => (
+                  <MenuItem key={specialty} value={specialty}>
+                    {specialty}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <br />
           <div>
             <Typography variant="body1" gutterBottom>
               Please describe what kind of tutoring are you looking for
@@ -280,11 +310,11 @@ class EditMentee extends React.Component {
                 label="max. 200 characters"
                 value={menteeNeeds}
                 onChange={this.handleChange}
-                className={classes.textField}
                 inputProps={{ maxLength: 200 }}
               />
             </FormControl>
           </div>
+          <br />
           <div>
             <Button variant="contained" type="submit" color="primary" fullWidth>
               Save changes

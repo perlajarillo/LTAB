@@ -23,6 +23,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import listsData from "../Mentors/Literals/listsData";
 
 const styles = theme => ({
   root: {
@@ -114,6 +115,8 @@ const styles = theme => ({
   }
 });
 
+const { specialties } = listsData;
+
 class Mentee extends Component {
   constructor(props) {
     super(props);
@@ -129,7 +132,8 @@ class Mentee extends Component {
       returnMentee: false,
       open: false,
       openSnackbarDeleted: false,
-      menteeNeeds: ""
+      menteeNeeds: "",
+      field: ""
     };
   }
 
@@ -158,7 +162,8 @@ class Mentee extends Component {
       descendent: mentee.descendent,
       email: mentee.email,
       key: key,
-      menteeNeeds: mentee.menteeNeeds
+      menteeNeeds: mentee.menteeNeeds,
+      field: mentee.field
     });
   };
 
@@ -221,7 +226,7 @@ class Mentee extends Component {
    */
   getFirebasePayload() {
     return R.pick(
-      ["name", "location", "descendent", "email", "menteeNeeds"],
+      ["name", "location", "descendent", "email", "menteeNeeds", "field"],
       this.state
     );
   }
@@ -315,7 +320,8 @@ class Mentee extends Component {
       open,
       key,
       openSnackbarDeleted,
-      menteeNeeds
+      menteeNeeds,
+      field
     } = this.state;
 
     return (
@@ -395,6 +401,33 @@ class Mentee extends Component {
                     <FormHelperText error={true}>
                       {descendentError}
                     </FormHelperText>
+                  </FormControl>
+                </div>
+                <br />
+                <div>
+                  <FormHelperText>
+                    What is the mentee's field of interest?{" "}
+                  </FormHelperText>
+                  <FormControl required className={classes.formControl}>
+                    <Select
+                      value={field}
+                      label="Field"
+                      onChange={this.handleChange}
+                      onBlur={this.checkForNull}
+                      name="field"
+                      id="field"
+                      displayEmpty
+                      className={classes.textField}
+                    >
+                      <MenuItem value="" disabled>
+                        Select the field
+                      </MenuItem>
+                      {specialties.map(specialty => (
+                        <MenuItem key={specialty} value={specialty}>
+                          {specialty}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
                 </div>
                 <div>
