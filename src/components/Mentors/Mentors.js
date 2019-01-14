@@ -237,17 +237,13 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired
 };
-
 const MentorsList = ({
   state,
   classes,
-  filterBySpecialty,
   isSelected,
   handleRequestSort,
   handleChangePage,
-  handleChange,
-  handleChangeRowsPerPage,
-  getMentors
+  handleChangeRowsPerPage
 }) => {
   const {
     mentors,
@@ -265,56 +261,6 @@ const MentorsList = ({
 
   return (
     <div className={classes.root}>
-      <div className={classes.titleRow}>
-        <Button
-          size="small"
-          variant="extendedFab"
-          color="primary"
-          aria-label="Add"
-          className={classes.button}
-          component={Link}
-          to={{
-            pathname: "/Mentor",
-            state: {
-              authUser: uid
-            }
-          }}
-        >
-          <AddIcon /> Add new mentor
-        </Button>
-        <div className={classes.searchBar}>
-          {" "}
-          <TextField
-            id="specialty"
-            name="specialty"
-            label="Filter by specialty"
-            placeholder="e.g. Accountant"
-            className={classes.textField}
-            onChange={handleChange}
-            margin="normal"
-          />
-          <Button
-            size="small"
-            variant="extendedFab"
-            color="secondary"
-            aria-label="Add"
-            className={classes.button}
-            onClick={filterBySpecialty}
-          >
-            <SearchIcon /> Search
-          </Button>
-          <Button
-            size="small"
-            variant="extendedFab"
-            color="default"
-            aria-label="Add"
-            className={classes.button}
-            onClick={getMentors}
-          >
-            Show all mentors
-          </Button>
-        </div>
-      </div>
       {mentors ? (
         <Paper className={classes.root}>
           <div className={classes.tableWrapper}>
@@ -534,8 +480,7 @@ class Mentors extends React.Component {
     const { from } = this.props.location.state || {
       from: { pathname: "/nofound" }
     };
-    const name = this.props.authUser ? this.props.authUser.userName : "";
-
+    const { uid } = this.state;
     return (
       <div className={classes.wrapper}>
         {!authUser.rol === "admin" && <Redirect to={from} />}
@@ -556,6 +501,58 @@ class Mentors extends React.Component {
               </a>{" "}
               if you need help using this site.
             </Typography>
+          </div>
+
+          <div className={classes.titleRow}>
+            <Button
+              size="small"
+              variant="extendedFab"
+              color="primary"
+              aria-label="Add"
+              className={classes.button}
+              component={Link}
+              to={{
+                pathname: "/Mentor",
+                state: {
+                  authUser: uid
+                }
+              }}
+            >
+              <AddIcon /> Add new mentor
+            </Button>
+
+            <div className={classes.searchBar}>
+              {" "}
+              <TextField
+                id="specialty"
+                name="specialty"
+                label="Filter by specialty"
+                placeholder="e.g. Accountant"
+                className={classes.textField}
+                onChange={this.handleChange}
+                margin="normal"
+              />
+              <Button
+                size="small"
+                variant="extendedFab"
+                color="secondary"
+                aria-label="Add"
+                className={classes.button}
+                onClick={this.filterBySpecialty}
+              >
+                <SearchIcon /> Search
+              </Button>
+              <Button
+                size="small"
+                variant="extendedFab"
+                color="default"
+                aria-label="Add"
+                className={classes.button}
+                onClick={this.getMentors}
+              >
+                Show all mentors
+              </Button>
+            </div>
           </div>
           <MentorsList
             classes={classes}
