@@ -127,11 +127,20 @@ const styles = theme => ({
   welcomeText: {
     color: theme.palette.primary.dark,
     [theme.breakpoints.down("xs")]: {
-      fontSize: "0.75rem"
+      fontSize: "0.55rem"
     },
     marginLeft: "auto",
     marginRight: 0,
     padding: 10
+  },
+  messageText: {
+    color: theme.palette.primary.dark,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.55rem"
+    },
+    marginLeft: "auto",
+    marginRight: 0,
+    padding: 5
   },
   tutorialLink: {
     color: theme.palette.secondary.dark
@@ -240,6 +249,10 @@ function SelectionPanel(props) {
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <div className={classes.tutorial}>
+        <Typography variant="caption" className={classes.messageText}>
+          If you didn't find a mentor today don't give up, our network of
+          mentors is growing every day
+        </Typography>
         <Typography variant="body2" className={classes.welcomeText}>
           How to use this{" "}
           <a

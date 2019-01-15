@@ -23,6 +23,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import listsData from "../Mentors/Literals/listsData";
 
 const styles = theme => ({
   root: {
@@ -114,6 +115,8 @@ const styles = theme => ({
   }
 });
 
+const { specialties } = listsData;
+
 class Mentee extends Component {
   constructor(props) {
     super(props);
@@ -128,7 +131,9 @@ class Mentee extends Component {
       descendentError: "",
       returnMentee: false,
       open: false,
-      openSnackbarDeleted: false
+      openSnackbarDeleted: false,
+      menteeNeeds: "",
+      field: ""
     };
   }
 
@@ -156,7 +161,9 @@ class Mentee extends Component {
       location: mentee.location,
       descendent: mentee.descendent,
       email: mentee.email,
-      key: key
+      key: key,
+      menteeNeeds: mentee.menteeNeeds,
+      field: mentee.field
     });
   };
 
@@ -218,7 +225,10 @@ class Mentee extends Component {
    * @returns {Object} the Firebase payload
    */
   getFirebasePayload() {
-    return R.pick(["name", "location", "descendent", "email"], this.state);
+    return R.pick(
+      ["name", "location", "descendent", "email", "menteeNeeds", "field"],
+      this.state
+    );
   }
 
   /**
@@ -309,7 +319,9 @@ class Mentee extends Component {
       descendentError,
       open,
       key,
-      openSnackbarDeleted
+      openSnackbarDeleted,
+      menteeNeeds,
+      field
     } = this.state;
 
     return (
@@ -391,7 +403,54 @@ class Mentee extends Component {
                     </FormHelperText>
                   </FormControl>
                 </div>
+                <br />
+                <div>
+                  <FormHelperText>
+                    What is the mentee's field of interest?{" "}
+                  </FormHelperText>
+                  <FormControl required className={classes.formControl}>
+                    <Select
+                      value={field}
+                      label="Field"
+                      onChange={this.handleChange}
+                      onBlur={this.checkForNull}
+                      name="field"
+                      id="field"
+                      displayEmpty
+                      className={classes.textField}
+                    >
+                      <MenuItem value="" disabled>
+                        Select the field
+                      </MenuItem>
+                      {specialties.map(specialty => (
+                        <MenuItem key={specialty} value={specialty}>
+                          {specialty}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div>
+                  <Typography variant="body1" gutterBottom>
+                    Please describe what kind of tutoring is the mentee looking
+                    for
+                  </Typography>
 
+                  <br />
+                  <FormControl required className={classes.formControl}>
+                    <TextField
+                      id="menteeNeeds"
+                      name="menteeNeeds"
+                      multiline
+                      rows="5"
+                      label="max. 200 characters"
+                      value={menteeNeeds}
+                      onChange={this.handleChange}
+                      className={classes.textField}
+                      inputProps={{ maxLength: 200 }}
+                    />
+                  </FormControl>
+                </div>
                 <div className={classes.buttons}>
                   <Button
                     variant="contained"

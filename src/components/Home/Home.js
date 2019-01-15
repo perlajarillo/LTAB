@@ -291,7 +291,7 @@ class Home extends Component {
             <Typography variant="h6" gutterBottom>
               Mentors are experts with goodwill. They can advise others on how
               to be a successful person. Connect with people of different
-              backgrounds, became a mentor!
+              backgrounds, become a mentor!
             </Typography>
           </div>
           <div className={classes.divider} />
@@ -328,7 +328,7 @@ class Home extends Component {
             <img src={b_business} alt="" className={classes.logo} />
             <div>
               <Typography variant="h6" gutterBottom align="center">
-                Are you looking for a mentor and your are not registered yet?
+                Are you looking for a mentor and you are not registered yet?
               </Typography>
             </div>
             <div>
@@ -349,7 +349,7 @@ class Home extends Component {
             <div className={classes.quotesImg} />
             <Typography variant="h6" gutterBottom>
               As a mentee, you can have to your side a mentor whose experiences
-              can guide you to surpass you goals.
+              can guide you to surpass your goals.
             </Typography>
           </div>
         </div>
