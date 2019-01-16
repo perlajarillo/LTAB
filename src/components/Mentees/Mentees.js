@@ -267,7 +267,7 @@ const MenteesList = ({
         </Paper>
       ) : (
         <div className={classes.root}>
-          <Typography variant="h5"> You don't have any mentees yet.</Typography>
+          <Typography variant="h5"> Loading data...</Typography>
         </div>
       )}
     </div>
