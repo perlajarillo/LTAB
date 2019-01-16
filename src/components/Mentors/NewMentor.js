@@ -33,15 +33,6 @@ const styles = theme => ({
       margin: "90px 24px"
     }
   },
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-    marginTop: theme.spacing.unit * 1
-  },
-  dpMargin: {
-    marginTop: theme.spacing.unit * 4,
-    marginRight: theme.spacing.unit * 3
-  },
   sectionMargin: {
     [theme.breakpoints.up("xs")]: {
       marginTop: theme.spacing.unit * 0
@@ -57,16 +48,7 @@ const styles = theme => ({
       marginTop: theme.spacing.unit * 2
     }
   },
-  slider: {
-    maxWidth: 400,
-    margin: "24px 0"
-  },
-  selectEmpty: {
-    marginTop: theme.spacing.unit * 2,
-    [theme.breakpoints.between("sm", "md")]: {
-      marginRight: "20%"
-    }
-  },
+
   formControl: {
     margin: "20px 0",
     [theme.breakpoints.up("xs")]: {
@@ -107,21 +89,6 @@ const styles = theme => ({
   },
   buttons: {
     marginTop: theme.spacing.unit * 6
-  },
-  paperPadding: {
-    padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 2
-  },
-  notesLegendStyle: {
-    marginRight: "40%",
-    width: "60%",
-    [theme.breakpoints.down("md")]: {
-      marginRight: "0%",
-      width: "100%"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      marginRight: "10%"
-    }
   },
   picture: {
     width: 200,
