@@ -8,19 +8,17 @@ import SearchIcon from "@material-ui/icons/Search";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
-import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 import Radio from "@material-ui/core/Radio";
 import { getMentors } from "../../firebase/operations";
 import TextField from "@material-ui/core/TextField";
 import { Redirect } from "react-router-dom";
+import EnhancedTableHead from "../Tables/EnhancedTabledHead";
+import { stableSort, getSorting, arrayToObject } from "../Tables/functions";
 
 const styles = theme => ({
   root: {
@@ -34,24 +32,7 @@ const styles = theme => ({
     margin: "100px 0",
     minHeight: "80vh"
   },
-  sectionStyles: {
-    marginTop: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginTop: "60%"
-    },
-    [theme.breakpoints.up("md")]: {
-      marginTop: "0%"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      marginTop: "0%",
-      marginLeft: "10%"
-    }
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
-  },
+
   button: {
     marginLeft: 20,
     marginTop: 20,
@@ -66,11 +47,7 @@ const styles = theme => ({
   textField: {
     width: 400
   },
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-    marginTop: theme.spacing.unit * 3
-  },
+
   row: {
     "&:nth-of-type(odd)": {
       backgroundColor: theme.palette.background.default
@@ -113,31 +90,6 @@ const styles = theme => ({
   }
 });
 
-function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0][1], b[0][1]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => desc(a, b, orderBy)
-    : (a, b) => -desc(a, b, orderBy);
-}
 const rows = [
   {
     id: "name",
@@ -148,7 +100,7 @@ const rows = [
   {
     id: "specialty",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "Specialty"
   },
   {
@@ -170,13 +122,11 @@ const rows = [
     label: "Location "
   },
   {
-    id: "linkedin",
+    id: "available",
     numeric: false,
     disablePadding: false,
-    label: " LinkedIn"
-  },
-  { id: "twitter", numeric: false, disablePadding: false, label: "Twitter" },
-  { id: "facebook", numeric: false, disablePadding: false, label: "Facebook" }
+    label: "Available"
+  }
 ];
 
 const CustomTableCell = withStyles(theme => ({
@@ -190,53 +140,6 @@ const CustomTableCell = withStyles(theme => ({
   }
 }))(TableCell);
 
-class EnhancedTableHead extends React.Component {
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  render() {
-    const { order, orderBy } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          <CustomTableCell padding="checkbox" />
-          {rows.map(row => {
-            return (
-              <CustomTableCell
-                key={row.id}
-                padding={row.disablePadding ? "none" : "none"}
-                sortDirection={orderBy === row.id ? order : false}
-              >
-                <Tooltip
-                  title="Sort"
-                  placement={row.numeric ? "bottom-end" : "bottom-start"}
-                  enterDelay={300}
-                >
-                  <TableSortLabel
-                    active={orderBy === row.id}
-                    direction={order}
-                    onClick={this.createSortHandler(row.id)}
-                  >
-                    {row.label}
-                  </TableSortLabel>
-                </Tooltip>
-              </CustomTableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-EnhancedTableHead.propTypes = {
-  onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.string.isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired
-};
 const MentorsList = ({
   state,
   classes,
@@ -271,6 +174,8 @@ const MentorsList = ({
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
                 rowCount={Object.keys(mentors).length}
+                rows={rows}
+                CustomTableCell={CustomTableCell}
               />
               <TableBody>
                 {stableSort(Object.entries(mentors), getSorting(order, orderBy))
@@ -304,10 +209,10 @@ const MentorsList = ({
                           />
                         </CustomTableCell>
 
-                        <CustomTableCell padding="none">
+                        <CustomTableCell padding="default">
                           {n[1].name}
                         </CustomTableCell>
-                        <CustomTableCell padding="none">
+                        <CustomTableCell padding="default">
                           {n[1].specialty}
                         </CustomTableCell>
                         <CustomTableCell padding="none">
@@ -316,17 +221,11 @@ const MentorsList = ({
                         <CustomTableCell padding="none">
                           {n[1].phone}
                         </CustomTableCell>
-                        <CustomTableCell className={classes.personalizedCell}>
-                          {n[1].location}
+                        <CustomTableCell padding="none">
+                          {n[1].location + ", " + n[1].stateCode}
                         </CustomTableCell>
                         <CustomTableCell padding="none">
-                          {n[1].linkedin}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].twitter}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].facebook}
+                          {n[1].available ? "Yes" : "No"}
                         </CustomTableCell>
                       </TableRow>
                     );
@@ -356,7 +255,7 @@ const MentorsList = ({
         </Paper>
       ) : (
         <div className={classes.root}>
-          <Typography variant="h5"> You don't have any mentors yet.</Typography>
+          <Typography variant="h5"> Loading data... </Typography>
         </div>
       )}
     </div>
@@ -422,16 +321,10 @@ class Mentors extends React.Component {
 
   isSelected = key => this.state.mentorKey === key;
 
-  arrayToObject = array =>
-    array.reduce((obj, item) => {
-      obj[item[0]] = item[1];
-      return obj;
-    }, {});
-
   filterBySpecialty = () => {
     const specialty = this.state.specialty;
     if (specialty.trim().length > 0) {
-      const mentorsBySpecialty = this.arrayToObject(
+      const mentorsBySpecialty = arrayToObject(
         Object.entries(this.state.mentorsMirror).filter(mentor =>
           mentor[1].specialty.toLowerCase().includes(specialty.toLowerCase())
         )
