@@ -32,7 +32,9 @@ const styles = theme => ({
     margin: "100px 0",
     minHeight: "80vh"
   },
-
+  title: {
+    margin: "10px 32px"
+  },
   button: {
     marginLeft: 20,
     marginTop: 20,
@@ -70,7 +72,7 @@ const styles = theme => ({
     }
   },
   searchBar: {
-    marginRight: 0,
+    marginRight: 20,
     display: "flex",
     flexWrap: "wrap",
     [theme.breakpoints.up("sm")]: {
@@ -377,7 +379,7 @@ class Mentors extends React.Component {
     return (
       <div className={classes.wrapper}>
         {!authUser.rol === "admin" && <Redirect to={from} />}
-        <div className={classes.root}>
+        <div className={classes.title}>
           <Typography variant="h5" gutterBottom color="primary">
             Mentor's administration
           </Typography>
@@ -395,71 +397,70 @@ class Mentors extends React.Component {
               if you need help using this site.
             </Typography>
           </div>
+        </div>
+        <div className={classes.titleRow}>
+          <Button
+            size="small"
+            variant="extendedFab"
+            color="primary"
+            aria-label="Add"
+            className={classes.button}
+            component={Link}
+            to={{
+              pathname: "/Mentor",
+              state: {
+                authUser: uid
+              }
+            }}
+          >
+            <AddIcon /> Add new mentor
+          </Button>
 
-          <div className={classes.titleRow}>
+          <div className={classes.searchBar}>
+            {" "}
+            <TextField
+              id="specialty"
+              name="specialty"
+              label="Filter by specialty"
+              placeholder="e.g. Accountant"
+              className={classes.textField}
+              onChange={this.handleChange}
+              margin="normal"
+            />
             <Button
               size="small"
               variant="extendedFab"
-              color="primary"
-              aria-label="Add"
+              color="default"
+              aria-label="Search"
               className={classes.button}
-              component={Link}
-              to={{
-                pathname: "/Mentor",
-                state: {
-                  authUser: uid
-                }
-              }}
+              onClick={this.filterBySpecialty}
             >
-              <AddIcon /> Add new mentor
+              <SearchIcon /> Search
             </Button>
-
-            <div className={classes.searchBar}>
-              {" "}
-              <TextField
-                id="specialty"
-                name="specialty"
-                label="Filter by specialty"
-                placeholder="e.g. Accountant"
-                className={classes.textField}
-                onChange={this.handleChange}
-                margin="normal"
-              />
-              <Button
-                size="small"
-                variant="extendedFab"
-                color="secondary"
-                aria-label="Add"
-                className={classes.button}
-                onClick={this.filterBySpecialty}
-              >
-                <SearchIcon /> Search
-              </Button>
-              <Button
-                size="small"
-                variant="extendedFab"
-                color="default"
-                aria-label="Add"
-                className={classes.button}
-                onClick={this.getMentors}
-              >
-                Show all mentors
-              </Button>
-            </div>
+            <Button
+              size="small"
+              variant="extendedFab"
+              color="default"
+              aria-label="Show all mentors"
+              className={classes.button}
+              onClick={this.getMentors}
+            >
+              Show all mentors
+            </Button>
           </div>
-          <MentorsList
-            classes={classes}
-            state={this.state}
-            filterBySpecialty={this.filterBySpecialty}
-            isSelected={this.isSelected}
-            handleClick={this.handleClick}
-            handleRequestSort={this.handleRequestSort}
-            handleChange={this.handleChange}
-            handleChangePage={this.handleChangePage}
-            handleChangeRowsPerPage={this.handleChangeRowsPerPage}
-            getMentors={this.getMentors}
-          />
         </div>
+        <MentorsList
+          classes={classes}
+          state={this.state}
+          filterBySpecialty={this.filterBySpecialty}
+          isSelected={this.isSelected}
+          handleClick={this.handleClick}
+          handleRequestSort={this.handleRequestSort}
+          handleChange={this.handleChange}
+          handleChangePage={this.handleChangePage}
+          handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+          getMentors={this.getMentors}
+        />
       </div>
     );
   }

@@ -163,7 +163,7 @@ const MenteesList = ({
           <Button
             size="small"
             variant="extendedFab"
-            color="secondary"
+            color="default"
             aria-label="Add"
             className={classes.button}
             onClick={filterByLocation}

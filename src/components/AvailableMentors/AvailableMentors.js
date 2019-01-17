@@ -68,12 +68,13 @@ const sanitizeStateStrings = compose(
 const styles = theme => ({
   wrapper: {
     display: "flex",
+    justifyContent: "center",
     flexWrap: "wrap",
-    marginTop: "160px",
+    marginTop: "200px",
     minHeight: "70vh"
   },
   card: {
-    maxWidth: 345,
+    maxWidth: 335,
     minWidth: 300,
     flexGrow: 1,
     margin: theme.spacing.unit
@@ -128,28 +129,19 @@ const styles = theme => ({
     color: theme.palette.primary.dark,
     [theme.breakpoints.down("xs")]: {
       fontSize: "0.55rem"
-    },
-    marginLeft: "auto",
-    marginRight: 0,
-    padding: 10
-  },
-  messageText: {
-    color: theme.palette.primary.dark,
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "0.55rem"
-    },
-    marginLeft: "auto",
-    marginRight: 0,
-    padding: 5
+    }
   },
   tutorialLink: {
     color: theme.palette.secondary.dark
   },
   tutorial: {
     display: "flex",
+    justifyContent: "space-between",
     backgroundColor: "#e8f5e9",
-    marginLeft: "auto",
-    marginRight: 0
+    padding: "10px 32px",
+    [theme.breakpoints.down("xs")]: {
+      flexDirection: "column"
+    }
   }
 });
 
@@ -249,9 +241,9 @@ function SelectionPanel(props) {
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <div className={classes.tutorial}>
-        <Typography variant="caption" className={classes.messageText}>
+        <Typography variant="body2" className={classes.welcomeText}>
           If you didn't find a mentor today don't give up, our network of
-          mentors is growing every day
+          mentors is growing every day!
         </Typography>
         <Typography variant="body2" className={classes.welcomeText}>
           How to use this{" "}

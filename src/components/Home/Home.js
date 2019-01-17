@@ -13,6 +13,8 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
 import { db } from "../../firebase";
 import { map, compose } from "ramda";
+import img1 from "../../images/haley-phelps-433522-unsplash.jpg";
+import img2 from "../../images/brooke-cagle-609874-unsplash.jpg";
 
 const SPACE = " ";
 
@@ -109,14 +111,16 @@ const styles = theme => ({
     maxWidth: "80%",
     justifyContent: "flex-start",
     [theme.breakpoints.up("md")]: {
-      maxWidth: "40%"
+      maxWidth: "40%",
+      padding: "1em"
     }
   },
   quotesImg: {
-    height: "6em",
+    height: "4em",
     background: `url(${quotes})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
     [theme.breakpoints.down("sm")]: {
       backgroundSize: "contain"
     }
@@ -126,8 +130,9 @@ const styles = theme => ({
     width: "80vw",
     margin: "1.5em 0",
     backgroundColor: "#022c00",
+    opacity: 0.8,
     [theme.breakpoints.up("md")]: {
-      height: "350px",
+      height: "500px",
       width: "3px"
     }
   },
@@ -176,7 +181,25 @@ const styles = theme => ({
     color: "#fff",
     margin: "1em 0"
   },
-
+  gallery: {
+    display: "flex"
+  },
+  galeryImg: {
+    width: "550px",
+    height: "350px",
+    [theme.breakpoints.down("lg")]: {
+      width: "350px",
+      height: "200px"
+    },
+    [theme.breakpoints.down("md")]: {
+      width: "600px",
+      height: "350px"
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "250px",
+      height: "150px"
+    }
+  },
   logo: {
     width: "250px"
   },
@@ -293,6 +316,7 @@ class Home extends Component {
               to be a successful person. Connect with people of different
               backgrounds, become a mentor!
             </Typography>
+            <img src={img1} alt="" className={classes.galeryImg} />
           </div>
           <div className={classes.divider} />
           <div className={classes.createAccSec}>
@@ -323,6 +347,12 @@ class Home extends Component {
             </div>
           </div>
         </div>
+        {/* <div className={classes.gallery}>
+          <img src={img1} alt="" className={classes.galeryImg} />
+          <img src={img2} alt="" className={classes.galeryImg} />
+          <img src={img3} alt="" className={classes.galeryImg} />
+          <img src={img4} alt="" className={classes.galeryImg} />
+        </div> */}
         <div id="mentee" className={classes.sectionMentee}>
           <div className={classes.createAccSec}>
             <img src={b_business} alt="" className={classes.logo} />
@@ -351,6 +381,7 @@ class Home extends Component {
               As a mentee, you can have to your side a mentor whose experiences
               can guide you to surpass your goals.
             </Typography>
+            <img src={img2} alt="" className={classes.galeryImg} />
           </div>
         </div>
         <div className={classes.sectionTitle}>
