@@ -115,7 +115,7 @@ const menteesRows = [
   {
     id: "mail",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "e-mail"
   },
   {
