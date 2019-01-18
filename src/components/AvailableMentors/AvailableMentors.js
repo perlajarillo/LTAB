@@ -101,7 +101,8 @@ const styles = theme => ({
     maxHeight: "350px"
   },
   socialIcon: {
-    width: "32px"
+    width: "42px",
+    paddingRight: "14px"
   },
   formControl: {
     width: "100%",
@@ -142,6 +143,9 @@ const styles = theme => ({
     [theme.breakpoints.down("xs")]: {
       flexDirection: "column"
     }
+  },
+  dialogCard: {
+    margin: "0 12px"
   }
 });
 
@@ -582,48 +586,40 @@ class AvailableMentors extends Component {
               </DialogContent>
               <DialogActions>
                 {mentorDetail.fb && (
-                  <Button onClick={this.handleClose} color="primary">
-                    <a href={mentorDetail.fb} target="blank">
-                      <img
-                        src={fbLogo}
-                        className={classes.socialIcon}
-                        alt="facebook"
-                      />
-                    </a>
-                  </Button>
+                  <a href={mentorDetail.fb} target="blank">
+                    <img
+                      src={fbLogo}
+                      className={classes.socialIcon}
+                      alt="facebook"
+                    />
+                  </a>
                 )}
                 {mentorDetail.tw && (
-                  <Button onClick={this.handleClose} color="primary">
-                    <a href={mentorDetail.tw} target="blank">
-                      <img
-                        src={twLogo}
-                        className={classes.socialIcon}
-                        alt="twitter"
-                      />
-                    </a>
-                  </Button>
+                  <a href={mentorDetail.tw} target="blank">
+                    <img
+                      src={twLogo}
+                      className={classes.socialIcon}
+                      alt="twitter"
+                    />
+                  </a>
                 )}
                 {mentorDetail.lk && (
-                  <Button onClick={this.handleClose} color="primary">
-                    <a href={mentorDetail.lk} target="blank">
-                      <img
-                        src={inLogo}
-                        className={classes.socialIcon}
-                        alt="linkedin"
-                      />
-                    </a>
-                  </Button>
+                  <a href={mentorDetail.lk} target="blank">
+                    <img
+                      src={inLogo}
+                      className={classes.socialIcon}
+                      alt="linkedin"
+                    />
+                  </a>
                 )}
                 {mentorDetail.mail && (
-                  <Button onClick={this.handleClose} color="primary">
-                    <a href={`mailto:${mentorDetail.mail}`}>
-                      <img
-                        src={emailLogo}
-                        className={classes.socialIcon}
-                        alt="linkedin"
-                      />
-                    </a>
-                  </Button>
+                  <a href={`mailto:${mentorDetail.mail}`}>
+                    <img
+                      src={emailLogo}
+                      className={classes.socialIcon}
+                      alt="linkedin"
+                    />
+                  </a>
                 )}
               </DialogActions>
             </Dialog>
