@@ -84,7 +84,7 @@ const styles = theme => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f1f8e9",
+    backgroundColor: "#fff",
     [theme.breakpoints.up("md")]: {
       flexDirection: "row",
       justifyContent: "space-evenly"
@@ -96,7 +96,7 @@ const styles = theme => ({
     flexDirection: "column-reverse",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fafafa",
+    backgroundColor: "#f1f8e9",
     [theme.breakpoints.up("md")]: {
       flexDirection: "row",
       justifyContent: "space-evenly"
@@ -126,14 +126,18 @@ const styles = theme => ({
     }
   },
   divider: {
-    height: "3px",
+    height: "1px",
     width: "80vw",
     margin: "1.5em 0",
     backgroundColor: "#022c00",
     opacity: 0.8,
     [theme.breakpoints.up("md")]: {
       height: "500px",
-      width: "3px"
+      width: "1px"
+    },
+    [theme.breakpoints.up("lg")]: {
+      height: "600px",
+      width: "1px"
     }
   },
   mentorsCards: {
@@ -152,7 +156,7 @@ const styles = theme => ({
   joinUsSec: {
     padding: "1em",
     flexGrow: 1,
-    background: "#fafafa"
+    background: "#f1f8e9"
   },
   joinUs: {
     display: "flex",
@@ -181,24 +185,8 @@ const styles = theme => ({
     color: "#fff",
     margin: "1em 0"
   },
-  gallery: {
-    display: "flex"
-  },
   galeryImg: {
-    width: "550px",
-    height: "350px",
-    [theme.breakpoints.down("lg")]: {
-      width: "350px",
-      height: "200px"
-    },
-    [theme.breakpoints.down("md")]: {
-      width: "600px",
-      height: "350px"
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: "250px",
-      height: "150px"
-    }
+    width: "100%"
   },
   logo: {
     width: "250px"
