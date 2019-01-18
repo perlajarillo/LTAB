@@ -38,21 +38,8 @@ const styles = theme => ({
     justifyContent: "center",
     display: "flex"
   },
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-    marginTop: theme.spacing.unit * 2
-  },
-  dpMargin: {
-    marginTop: theme.spacing.unit * 6,
-    marginRight: theme.spacing.unit * 3
-  },
   sectionMargin: {
     marginTop: theme.spacing.unit * 6
-  },
-  slider: {
-    maxWidth: 400,
-    margin: "24px 0"
   },
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
@@ -75,25 +62,6 @@ const styles = theme => ({
   },
   buttons: {
     marginTop: theme.spacing.unit * 6
-  },
-  paperPadding: {
-    padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 2
-  },
-  notesLegendStyle: {
-    marginRight: "40%",
-    width: "60%",
-    [theme.breakpoints.down("md")]: {
-      marginRight: "0%",
-      width: "100%"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      marginRight: "10%"
-    }
-  },
-  picture: {
-    width: 200,
-    height: 200
   },
   card: {
     paddingBottom: "1%",

@@ -29,6 +29,7 @@ import twLogo from "../../images/twitter.png";
 import inLogo from "../../images/linkedin.png";
 import emailLogo from "../../images/email.png";
 import phoneLogo from "../../images/phone-receiver.png";
+import Progress from "../Progress/Progress";
 
 const SPACE = " ";
 
@@ -68,12 +69,13 @@ const sanitizeStateStrings = compose(
 const styles = theme => ({
   wrapper: {
     display: "flex",
+    justifyContent: "center",
     flexWrap: "wrap",
-    marginTop: "160px",
+    marginTop: "200px",
     minHeight: "70vh"
   },
   card: {
-    maxWidth: 345,
+    maxWidth: 335,
     minWidth: 300,
     flexGrow: 1,
     margin: theme.spacing.unit
@@ -100,7 +102,8 @@ const styles = theme => ({
     maxHeight: "350px"
   },
   socialIcon: {
-    width: "32px"
+    width: "42px",
+    paddingRight: "14px"
   },
   formControl: {
     width: "100%",
@@ -128,28 +131,22 @@ const styles = theme => ({
     color: theme.palette.primary.dark,
     [theme.breakpoints.down("xs")]: {
       fontSize: "0.55rem"
-    },
-    marginLeft: "auto",
-    marginRight: 0,
-    padding: 10
-  },
-  messageText: {
-    color: theme.palette.primary.dark,
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "0.55rem"
-    },
-    marginLeft: "auto",
-    marginRight: 0,
-    padding: 5
+    }
   },
   tutorialLink: {
     color: theme.palette.secondary.dark
   },
   tutorial: {
     display: "flex",
+    justifyContent: "space-between",
     backgroundColor: "#e8f5e9",
-    marginLeft: "auto",
-    marginRight: 0
+    padding: "10px 32px",
+    [theme.breakpoints.down("xs")]: {
+      flexDirection: "column"
+    }
+  },
+  dialogCard: {
+    margin: "0 12px"
   }
 });
 
@@ -249,9 +246,9 @@ function SelectionPanel(props) {
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <div className={classes.tutorial}>
-        <Typography variant="caption" className={classes.messageText}>
+        <Typography variant="body2" className={classes.welcomeText}>
           If you didn't find a mentor today don't give up, our network of
-          mentors is growing every day
+          mentors is growing every day!
         </Typography>
         <Typography variant="body2" className={classes.welcomeText}>
           How to use this{" "}
@@ -288,7 +285,8 @@ class AvailableMentors extends Component {
       filteredMentors: null,
       selectedContent: "specialty",
       allMentorsKeys: null,
-      expanded: false
+      expanded: false,
+      loading: true
     };
   }
 
@@ -359,7 +357,8 @@ class AvailableMentors extends Component {
           mentors: mentorsData,
           filterApplied: false,
           specialties: sanitizeStrings(specialties).sort(),
-          states: sanitizeStateStrings(states).sort()
+          states: sanitizeStateStrings(states).sort(),
+          loading: false
         });
     });
   };
@@ -466,11 +465,14 @@ class AvailableMentors extends Component {
       filteredMentors,
       states,
       selectedContent,
-      expanded
+      expanded,
+      loading
     } = this.state;
     const mentorsToShow = filteredMentors ? filteredMentors : mentors;
 
-    return (
+    return loading ? (
+      <Progress />
+    ) : (
       <div>
         <div className={classes.wrapper}>
           <SelectionPanel
@@ -590,48 +592,40 @@ class AvailableMentors extends Component {
               </DialogContent>
               <DialogActions>
                 {mentorDetail.fb && (
-                  <Button onClick={this.handleClose} color="primary">
-                    <a href={mentorDetail.fb} target="blank">
-                      <img
-                        src={fbLogo}
-                        className={classes.socialIcon}
-                        alt="facebook"
-                      />
-                    </a>
-                  </Button>
+                  <a href={mentorDetail.fb} target="blank">
+                    <img
+                      src={fbLogo}
+                      className={classes.socialIcon}
+                      alt="facebook"
+                    />
+                  </a>
                 )}
                 {mentorDetail.tw && (
-                  <Button onClick={this.handleClose} color="primary">
-                    <a href={mentorDetail.tw} target="blank">
-                      <img
-                        src={twLogo}
-                        className={classes.socialIcon}
-                        alt="twitter"
-                      />
-                    </a>
-                  </Button>
+                  <a href={mentorDetail.tw} target="blank">
+                    <img
+                      src={twLogo}
+                      className={classes.socialIcon}
+                      alt="twitter"
+                    />
+                  </a>
                 )}
                 {mentorDetail.lk && (
-                  <Button onClick={this.handleClose} color="primary">
-                    <a href={mentorDetail.lk} target="blank">
-                      <img
-                        src={inLogo}
-                        className={classes.socialIcon}
-                        alt="linkedin"
-                      />
-                    </a>
-                  </Button>
+                  <a href={mentorDetail.lk} target="blank">
+                    <img
+                      src={inLogo}
+                      className={classes.socialIcon}
+                      alt="linkedin"
+                    />
+                  </a>
                 )}
                 {mentorDetail.mail && (
-                  <Button onClick={this.handleClose} color="primary">
-                    <a href={`mailto:${mentorDetail.mail}`}>
-                      <img
-                        src={emailLogo}
-                        className={classes.socialIcon}
-                        alt="linkedin"
-                      />
-                    </a>
-                  </Button>
+                  <a href={`mailto:${mentorDetail.mail}`}>
+                    <img
+                      src={emailLogo}
+                      className={classes.socialIcon}
+                      alt="linkedin"
+                    />
+                  </a>
                 )}
               </DialogActions>
             </Dialog>
