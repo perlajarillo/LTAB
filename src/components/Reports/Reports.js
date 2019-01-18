@@ -56,6 +56,14 @@ const styles = theme => ({
     pageBreakBefore: "always",
     marginTop: theme.spacing.unit * 6
   },
+  row: {
+    pageBreakAfter: "auto",
+    pageBreakInside: "auto"
+  },
+  table: {
+    pageBreakInside: "auto"
+  },
+  columnTitles: { display: "table-row-group" },
   totalInList: {
     display: "flex"
   },
@@ -107,7 +115,7 @@ const menteesRows = [
   {
     id: "mail",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "e-mail"
   },
   {
@@ -165,8 +173,8 @@ class ToPrint extends React.Component {
           List of mentors:
         </Typography>
         <div className={classes.tableContainer}>
-          <Table className={classes.table} aria-labelledby="tableTitle">
-            <TableHead>
+          <Table aria-labelledby="tableTitle">
+            <TableHead className={classes.columnTitles}>
               <TableRow>
                 {mentorsRows.map(row => {
                   return (
@@ -226,7 +234,7 @@ class ToPrint extends React.Component {
           </Typography>
           <div className={classes.tableContainer}>
             <Table className={classes.table} aria-labelledby="tableTitle">
-              <TableHead>
+              <TableHead className={classes.columnTitles}>
                 <TableRow>
                   {menteesRows.map(row => {
                     return (
@@ -244,11 +252,7 @@ class ToPrint extends React.Component {
                 {mentees ? (
                   mentees.map(mentee => {
                     return (
-                      <TableRow
-                        tabIndex={-1}
-                        key={mentee.name}
-                        className={classes.row}
-                      >
+                      <TableRow tabIndex={-1} key={mentee.name}>
                         <CustomTableCell
                           padding="checkbox"
                           className={classes.personalizedCell}
