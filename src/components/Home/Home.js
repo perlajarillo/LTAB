@@ -222,7 +222,8 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mentorsImgs: []
+      mentorsImgs: [],
+      loading: true
     };
   }
 
@@ -258,7 +259,8 @@ class Home extends Component {
         });
 
         this.setState({
-          mentorsImgs: mentorsData
+          mentorsImgs: mentorsData,
+          loading: false
         });
       })
       .catch(error => {
@@ -268,7 +270,7 @@ class Home extends Component {
 
   render() {
     const { classes } = this.props;
-    const { mentorsImgs } = this.state;
+    const { mentorsImgs, loading } = this.state;
 
     return (
       <main className={classes.wrapper}>
@@ -347,12 +349,6 @@ class Home extends Component {
             </div>
           </div>
         </div>
-        {/* <div className={classes.gallery}>
-          <img src={img1} alt="" className={classes.galeryImg} />
-          <img src={img2} alt="" className={classes.galeryImg} />
-          <img src={img3} alt="" className={classes.galeryImg} />
-          <img src={img4} alt="" className={classes.galeryImg} />
-        </div> */}
         <div id="mentee" className={classes.sectionMentee}>
           <div className={classes.createAccSec}>
             <img src={b_business} alt="" className={classes.logo} />

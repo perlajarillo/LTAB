@@ -15,6 +15,7 @@ import TableRow from "@material-ui/core/TableRow";
 import PrintIcon from "@material-ui/icons/Print";
 import Button from "@material-ui/core/Button";
 import { sortBy, compose, toLower, prop } from "ramda";
+import Progress from "../Progress/Progress";
 
 const sortByName = sortBy(
   compose(
@@ -294,7 +295,8 @@ class Reports extends Component {
       order: "asc",
       orderBy: "name",
       orderM: "asc",
-      orderByM: "name"
+      orderByM: "name",
+      loading: true
     };
   }
 
@@ -316,7 +318,8 @@ class Reports extends Component {
 
         this.setState({
           mentors: sortByName(mentorsData),
-          totalMentors: totalMentors
+          totalMentors: totalMentors,
+          loading: false
         });
       })
       .catch(
@@ -380,8 +383,11 @@ class Reports extends Component {
 
   render() {
     const { classes } = this.props;
+    const { loading } = this.state;
 
-    return (
+    return loading ? (
+      <Progress />
+    ) : (
       <div className={classes.root}>
         <ReactToPrint
           trigger={() => (

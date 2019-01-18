@@ -19,6 +19,7 @@ import TextField from "@material-ui/core/TextField";
 import { Redirect } from "react-router-dom";
 import EnhancedTableHead from "../Tables/EnhancedTabledHead";
 import { stableSort, getSorting, arrayToObject } from "../Tables/functions";
+import Progress from "../Progress/Progress";
 
 const styles = theme => ({
   root: {
@@ -280,7 +281,8 @@ class Mentors extends React.Component {
       rowsPerPage: 25,
       mentorData: {},
       filterApplied: false,
-      specialty: ""
+      specialty: "",
+      loading: true
     };
   }
   handleRequestSort = (event, property) => {
@@ -344,7 +346,8 @@ class Mentors extends React.Component {
         this.setState({
           mentors: snapshot.val(),
           mentorsMirror: snapshot.val(),
-          filterApplied: false
+          filterApplied: false,
+          loading: false
         });
       })
       .catch(
@@ -375,8 +378,10 @@ class Mentors extends React.Component {
     const { from } = this.props.location.state || {
       from: { pathname: "/nofound" }
     };
-    const { uid } = this.state;
-    return (
+    const { uid, loading } = this.state;
+    return loading ? (
+      <Progress />
+    ) : (
       <div className={classes.wrapper}>
         {!authUser.rol === "admin" && <Redirect to={from} />}
         <div className={classes.title}>

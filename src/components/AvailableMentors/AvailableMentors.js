@@ -29,6 +29,7 @@ import twLogo from "../../images/twitter.png";
 import inLogo from "../../images/linkedin.png";
 import emailLogo from "../../images/email.png";
 import phoneLogo from "../../images/phone-receiver.png";
+import Progress from "../Progress/Progress";
 
 const SPACE = " ";
 
@@ -284,7 +285,8 @@ class AvailableMentors extends Component {
       filteredMentors: null,
       selectedContent: "specialty",
       allMentorsKeys: null,
-      expanded: false
+      expanded: false,
+      loading: true
     };
   }
 
@@ -355,7 +357,8 @@ class AvailableMentors extends Component {
           mentors: mentorsData,
           filterApplied: false,
           specialties: sanitizeStrings(specialties).sort(),
-          states: sanitizeStateStrings(states).sort()
+          states: sanitizeStateStrings(states).sort(),
+          loading: false
         });
     });
   };
@@ -462,11 +465,14 @@ class AvailableMentors extends Component {
       filteredMentors,
       states,
       selectedContent,
-      expanded
+      expanded,
+      loading
     } = this.state;
     const mentorsToShow = filteredMentors ? filteredMentors : mentors;
 
-    return (
+    return loading ? (
+      <Progress />
+    ) : (
       <div>
         <div className={classes.wrapper}>
           <SelectionPanel

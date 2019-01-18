@@ -18,6 +18,7 @@ import TextField from "@material-ui/core/TextField";
 import { Redirect } from "react-router-dom";
 import EnhancedTableHead from "../Tables/EnhancedTabledHead";
 import { stableSort, getSorting, arrayToObject } from "../Tables/functions";
+import Progress from "../Progress/Progress";
 
 const styles = theme => ({
   root: {
@@ -290,7 +291,8 @@ class Mentees extends React.Component {
       rowsPerPage: 25,
       menteeData: {},
       filterApplied: false,
-      specialty: ""
+      specialty: "",
+      loading: true
     };
   }
   handleRequestSort = (event, property) => {
@@ -354,7 +356,8 @@ class Mentees extends React.Component {
         this.setState({
           mentees: snapshot.val(),
           menteesMirror: snapshot.val(),
-          filterApplied: false
+          filterApplied: false,
+          loading: false
         });
       })
       .catch(
@@ -382,11 +385,14 @@ class Mentees extends React.Component {
 
   render() {
     const { classes, authUser } = this.props;
+    const { loading } = this.state;
     const { from } = this.props.location.state || {
       from: { pathname: "/nofound" }
     };
 
-    return (
+    return loading ? (
+      <Progress />
+    ) : (
       <div className={classes.wrapper}>
         {!authUser.rol === "admin" && <Redirect to={from} />}
         <div className={classes.root}>
