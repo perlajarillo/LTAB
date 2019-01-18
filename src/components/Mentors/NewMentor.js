@@ -33,15 +33,6 @@ const styles = theme => ({
       margin: "90px 24px"
     }
   },
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-    marginTop: theme.spacing.unit * 1
-  },
-  dpMargin: {
-    marginTop: theme.spacing.unit * 4,
-    marginRight: theme.spacing.unit * 3
-  },
   sectionMargin: {
     [theme.breakpoints.up("xs")]: {
       marginTop: theme.spacing.unit * 0
@@ -57,16 +48,7 @@ const styles = theme => ({
       marginTop: theme.spacing.unit * 2
     }
   },
-  slider: {
-    maxWidth: 400,
-    margin: "24px 0"
-  },
-  selectEmpty: {
-    marginTop: theme.spacing.unit * 2,
-    [theme.breakpoints.between("sm", "md")]: {
-      marginRight: "20%"
-    }
-  },
+
   formControl: {
     margin: "20px 0",
     [theme.breakpoints.up("xs")]: {
@@ -107,21 +89,6 @@ const styles = theme => ({
   },
   buttons: {
     marginTop: theme.spacing.unit * 6
-  },
-  paperPadding: {
-    padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 2
-  },
-  notesLegendStyle: {
-    marginRight: "40%",
-    width: "60%",
-    [theme.breakpoints.down("md")]: {
-      marginRight: "0%",
-      width: "100%"
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      marginRight: "10%"
-    }
   },
   picture: {
     width: 200,
@@ -283,14 +250,17 @@ class NewMentor extends Component {
       chkDisclaimer: !this.state.chkDisclaimer
     });
   };
+
   /**
-   * handlePicture - returns the data to send to Firebase
-   * @returns {Object} the Firebase payload
+   * handlePicture - Creates a Blob objects and send it as an argument to
+   * createObjectURL method, then sets the values of pictureName and pictureBlob
+   * in the state if the size of the file is equal or les than 8MB
+   * @returns void
    */
   handlePicture = event => {
     const currentFile = new Blob(event.target.files, { type: "image/png" });
     const size = event.target.files[0].size / 1024 / 1024;
-    size <= 5
+    size <= 8
       ? this.setState({
           picture: window.URL.createObjectURL(currentFile),
           pictureName: event.target.files[0].name,
@@ -298,9 +268,9 @@ class NewMentor extends Component {
           imageError: ""
         })
       : this.setState({
-          sectionError: "The size of the image must be inferior to 5 MB.",
+          sectionError: "The size of the image must be inferior to 8 MB.",
           imageError:
-            "The size of the image must be inferior to 5 MB. This image will not be save, choose another.",
+            "The size of the image must be inferior to 8 MB. This image will not be save, choose another.",
           openSnackbarError: true
         });
   };
@@ -432,7 +402,8 @@ class NewMentor extends Component {
       repeatPasswordError,
       imageError,
       stateCode,
-      stateCodeError
+      stateCodeError,
+      pictureName
     } = this.state;
 
     return (
@@ -469,7 +440,15 @@ class NewMentor extends Component {
                       accept=".jpg, .jpeg, .png"
                       onChange={this.handlePicture}
                     />
-                    <FormHelperText error={true}>{imageError}</FormHelperText>
+                    {imageError ? (
+                      <FormHelperText error={true}>{imageError}</FormHelperText>
+                    ) : (
+                      (pictureName === "NA" || pictureName === PhotoIcon) && (
+                        <FormHelperText>
+                          Please upload an image inferior to 8MB.
+                        </FormHelperText>
+                      )
+                    )}
                   </div>
                   <div>
                     <FormControl required className={classes.formControl}>

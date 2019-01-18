@@ -3,7 +3,6 @@ import withAuthorization from "../WithAuthorization";
 
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -14,7 +13,7 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import Radio from "@material-ui/core/Radio";
-import { getMentors } from "../../firebase/operations";
+import { getMentees } from "../../firebase/operations";
 import TextField from "@material-ui/core/TextField";
 import { Redirect } from "react-router-dom";
 import EnhancedTableHead from "../Tables/EnhancedTabledHead";
@@ -33,9 +32,7 @@ const styles = theme => ({
     margin: "100px 0",
     minHeight: "80vh"
   },
-  title: {
-    margin: "10px 32px"
-  },
+
   button: {
     marginLeft: 20,
     marginTop: 20,
@@ -73,7 +70,7 @@ const styles = theme => ({
     }
   },
   searchBar: {
-    marginRight: 20,
+    marginRight: 0,
     display: "flex",
     flexWrap: "wrap",
     [theme.breakpoints.up("sm")]: {
@@ -85,11 +82,13 @@ const styles = theme => ({
     align: "center",
     whiteSpace: "nowrap"
   },
-  welcomeText: {
-    color: theme.palette.primary.light
-  },
-  tutorialLink: {
-    color: theme.palette.secondary.dark
+
+  titleText: {
+    color: theme.palette.primary.main,
+    marginLeft: "32px",
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: "8px"
+    }
   }
 });
 
@@ -100,12 +99,7 @@ const rows = [
     disablePadding: true,
     label: "Name"
   },
-  {
-    id: "specialty",
-    numeric: false,
-    disablePadding: true,
-    label: "Specialty"
-  },
+
   {
     id: "mail",
     numeric: false,
@@ -113,28 +107,22 @@ const rows = [
     label: "e-mail"
   },
   {
-    id: "phone",
-    numeric: false,
-    disablePadding: false,
-    label: "Phone"
-  },
-  {
     id: "location",
-    numeric: true,
-    disablePadding: false,
-    label: "Location "
-  },
-  {
-    id: "available",
     numeric: false,
     disablePadding: false,
-    label: "Available"
+    label: "Location"
+  },
+  {
+    id: "descendent",
+    numeric: false,
+    disablePadding: false,
+    label: "Descendent"
   }
 ];
 
 const CustomTableCell = withStyles(theme => ({
   head: {
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: "#c62828",
     color: theme.palette.common.white
   },
   body: {
@@ -143,45 +131,73 @@ const CustomTableCell = withStyles(theme => ({
   }
 }))(TableCell);
 
-const MentorsList = ({
+const MenteesList = ({
   state,
   classes,
+  filterByLocation,
   isSelected,
   handleRequestSort,
   handleChangePage,
-  handleChangeRowsPerPage
+  handleChange,
+  handleChangeRowsPerPage,
+  getAllMentees
 }) => {
-  const {
-    mentors,
-
-    uid,
-    order,
-    orderBy,
-    rowsPerPage,
-    page,
-    mentorKey
-  } = state;
-  const emptyRows = mentors
-    ? rowsPerPage - Math.min(rowsPerPage, mentors.length - page * rowsPerPage)
+  const { mentees, uid, order, orderBy, rowsPerPage, page, menteeKey } = state;
+  const emptyRows = mentees
+    ? rowsPerPage - Math.min(rowsPerPage, mentees.length - page * rowsPerPage)
     : 0;
 
   return (
     <div className={classes.root}>
-      {mentors ? (
+      <div className={classes.titleRow}>
+        <div className={classes.searchBar}>
+          {" "}
+          <TextField
+            id="location"
+            name="location"
+            label="Filter by location"
+            placeholder="e.g. New England"
+            className={classes.textField}
+            onChange={handleChange}
+            margin="normal"
+          />
+          <Button
+            size="small"
+            variant="extendedFab"
+            color="default"
+            aria-label="Add"
+            className={classes.button}
+            onClick={filterByLocation}
+          >
+            <SearchIcon /> Search
+          </Button>
+          <Button
+            size="small"
+            variant="extendedFab"
+            color="default"
+            aria-label="Add"
+            className={classes.button}
+            onClick={getAllMentees}
+          >
+            Show all mentees
+          </Button>
+        </div>
+      </div>
+      {mentees ? (
         <Paper className={classes.root}>
           <div className={classes.tableWrapper}>
             <Table className={classes.table} aria-labelledby="tableTitle">
               <EnhancedTableHead
-                mentorKey={mentorKey}
+                menteeKey={menteeKey}
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
-                rowCount={Object.keys(mentors).length}
+                rowCount={Object.keys(mentees).length}
                 rows={rows}
                 CustomTableCell={CustomTableCell}
               />
               <TableBody>
-                {stableSort(Object.entries(mentors), getSorting(order, orderBy))
+                {stableSort(Object.entries(mentees), getSorting(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map(n => {
                     const itIsSelected = isSelected(n[0]);
@@ -202,9 +218,9 @@ const MentorsList = ({
                           <Radio
                             component={Link}
                             to={{
-                              pathname: "/Mentor",
+                              pathname: "/Mentee",
                               state: {
-                                mentor: n[1],
+                                mentee: n[1],
                                 key: n[0],
                                 authUser: uid
                               }
@@ -212,23 +228,17 @@ const MentorsList = ({
                           />
                         </CustomTableCell>
 
-                        <CustomTableCell padding="default">
+                        <CustomTableCell padding="none">
                           {n[1].name}
                         </CustomTableCell>
-                        <CustomTableCell padding="default">
-                          {n[1].specialty}
+                        <CustomTableCell padding="none">
+                          {n[1].email}
+                        </CustomTableCell>
+                        <CustomTableCell className={classes.personalizedCell}>
+                          {n[1].location}
                         </CustomTableCell>
                         <CustomTableCell padding="none">
-                          {n[1].mail}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].phone}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].location + ", " + n[1].stateCode}
-                        </CustomTableCell>
-                        <CustomTableCell padding="none">
-                          {n[1].available ? "Yes" : "No"}
+                          {n[1].descendent}
                         </CustomTableCell>
                       </TableRow>
                     );
@@ -243,7 +253,7 @@ const MentorsList = ({
           </div>
           <TablePagination
             component="div"
-            count={Object.keys(mentors).length}
+            count={Object.keys(mentees).length}
             rowsPerPage={rowsPerPage}
             page={page}
             backIconButtonProps={{
@@ -258,28 +268,28 @@ const MentorsList = ({
         </Paper>
       ) : (
         <div className={classes.root}>
-          <Typography variant="h5"> Loading data... </Typography>
+          <Typography variant="h5"> Loading data...</Typography>
         </div>
       )}
     </div>
   );
 };
 
-class Mentors extends React.Component {
+class Mentees extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      mentors: [],
+      mentees: [],
       uid: "",
       open: false,
-      mentorKey: "",
+      menteeKey: "",
       order: "desc",
       orderBy: "name",
       selected: [],
       page: 0,
       rowsPerPage: 25,
-      mentorData: {},
+      menteeData: {},
       filterApplied: false,
       specialty: "",
       loading: true
@@ -296,10 +306,10 @@ class Mentors extends React.Component {
     this.setState({ order, orderBy });
   };
 
-  handleClick = (event, key, mentorData) => {
-    this.state.mentorKey === key
-      ? this.setState({ mentorKey: "", mentorData: {} })
-      : this.setState({ mentorKey: key, mentorData: mentorData });
+  handleClick = (event, key, menteeData) => {
+    this.state.menteeKey === key
+      ? this.setState({ menteeKey: "", menteeData: {} })
+      : this.setState({ menteeKey: key, menteeData: menteeData });
   };
 
   handleChangePage = (event, page) => {
@@ -323,37 +333,37 @@ class Mentors extends React.Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
-  isSelected = key => this.state.mentorKey === key;
+  isSelected = key => this.state.menteeKey === key;
 
-  filterBySpecialty = () => {
-    const specialty = this.state.specialty;
-    if (specialty.trim().length > 0) {
-      const mentorsBySpecialty = arrayToObject(
-        Object.entries(this.state.mentorsMirror).filter(mentor =>
-          mentor[1].specialty.toLowerCase().includes(specialty.toLowerCase())
+  filterByLocation = () => {
+    const location = this.state.location;
+    if (location.trim().length > 0) {
+      const menteesByLocation = arrayToObject(
+        Object.entries(this.state.menteesMirror).filter(mentee =>
+          mentee[1].location.toLowerCase().includes(location.toLowerCase())
         )
       );
       this.setState({
-        mentors: mentorsBySpecialty,
+        mentees: menteesByLocation,
         filterApplied: true
       });
     }
   };
 
-  getMentors = () => {
-    getMentors()
+  getAllMentees = () => {
+    getMentees()
       .then(snapshot => {
         this.setState({
-          mentors: snapshot.val(),
-          mentorsMirror: snapshot.val(),
+          mentees: snapshot.val(),
+          menteesMirror: snapshot.val(),
           filterApplied: false,
           loading: false
         });
       })
       .catch(
         this.setState({
-          mentors: "",
-          mentorsMirror: "",
+          mentees: "",
+          menteesMirror: "",
           filterApplied: false
         })
       );
@@ -361,12 +371,12 @@ class Mentors extends React.Component {
 
   componentDidMount() {
     if (this.props.authUser) {
-      this.unregisterObserver = this.getMentors();
+      this.unregisterObserver = this.getAllMentees();
     }
   }
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
-      this.getMentors();
+      this.getAllMentees();
     }
   }
   componentWillUnmount() {
@@ -375,102 +385,38 @@ class Mentors extends React.Component {
 
   render() {
     const { classes, authUser } = this.props;
+    const { loading } = this.state;
     const { from } = this.props.location.state || {
       from: { pathname: "/nofound" }
     };
-    const { uid, loading } = this.state;
+
     return loading ? (
       <Progress />
     ) : (
       <div className={classes.wrapper}>
         {!authUser.rol === "admin" && <Redirect to={from} />}
-        <div className={classes.title}>
-          <Typography variant="h5" gutterBottom color="primary">
-            Mentor's administration
+        <div className={classes.root}>
+          <Typography variant="h5" gutterBottom className={classes.titleText}>
+            Mentees' administration
           </Typography>
-          <div>
-            <Typography variant="caption" className={classes.welcomeText}>
-              {" "}
-              Read this{" "}
-              <a
-                href="http://ior.ad/FHS"
-                className={classes.tutorialLink}
-                target="blank"
-              >
-                tutorial
-              </a>{" "}
-              if you need help using this site.
-            </Typography>
-          </div>
+          <MenteesList
+            classes={classes}
+            state={this.state}
+            filterByLocation={this.filterByLocation}
+            isSelected={this.isSelected}
+            handleClick={this.handleClick}
+            handleRequestSort={this.handleRequestSort}
+            handleChange={this.handleChange}
+            handleChangePage={this.handleChangePage}
+            handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+            getAllMentees={this.getAllMentees}
+          />
         </div>
-        <div className={classes.titleRow}>
-          <Button
-            size="small"
-            variant="extendedFab"
-            color="primary"
-            aria-label="Add"
-            className={classes.button}
-            component={Link}
-            to={{
-              pathname: "/Mentor",
-              state: {
-                authUser: uid
-              }
-            }}
-          >
-            <AddIcon /> Add new mentor
-          </Button>
-
-          <div className={classes.searchBar}>
-            {" "}
-            <TextField
-              id="specialty"
-              name="specialty"
-              label="Filter by specialty"
-              placeholder="e.g. Accountant"
-              className={classes.textField}
-              onChange={this.handleChange}
-              margin="normal"
-            />
-            <Button
-              size="small"
-              variant="extendedFab"
-              color="default"
-              aria-label="Search"
-              className={classes.button}
-              onClick={this.filterBySpecialty}
-            >
-              <SearchIcon /> Search
-            </Button>
-            <Button
-              size="small"
-              variant="extendedFab"
-              color="default"
-              aria-label="Show all mentors"
-              className={classes.button}
-              onClick={this.getMentors}
-            >
-              Show all mentors
-            </Button>
-          </div>
-        </div>
-        <MentorsList
-          classes={classes}
-          state={this.state}
-          filterBySpecialty={this.filterBySpecialty}
-          isSelected={this.isSelected}
-          handleClick={this.handleClick}
-          handleRequestSort={this.handleRequestSort}
-          handleChange={this.handleChange}
-          handleChangePage={this.handleChangePage}
-          handleChangeRowsPerPage={this.handleChangeRowsPerPage}
-          getMentors={this.getMentors}
-        />
       </div>
     );
   }
 }
-const StyledMentors = withStyles(styles)(Mentors);
-const authMentors = authUser => Boolean(authUser);
+const StyledMentees = withStyles(styles)(Mentees);
+const authMentees = authUser => Boolean(authUser);
 
-export default withAuthorization(authMentors)(StyledMentors);
+export default withAuthorization(authMentees)(StyledMentees);

@@ -13,6 +13,8 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
 import { db } from "../../firebase";
 import { map, compose } from "ramda";
+import img1 from "../../images/haley-phelps-433522-unsplash.jpg";
+import img2 from "../../images/brooke-cagle-609874-unsplash.jpg";
 
 const SPACE = " ";
 
@@ -82,7 +84,7 @@ const styles = theme => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f1f8e9",
+    backgroundColor: "#fff",
     [theme.breakpoints.up("md")]: {
       flexDirection: "row",
       justifyContent: "space-evenly"
@@ -94,7 +96,7 @@ const styles = theme => ({
     flexDirection: "column-reverse",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fafafa",
+    backgroundColor: "#f1f8e9",
     [theme.breakpoints.up("md")]: {
       flexDirection: "row",
       justifyContent: "space-evenly"
@@ -109,26 +111,33 @@ const styles = theme => ({
     maxWidth: "80%",
     justifyContent: "flex-start",
     [theme.breakpoints.up("md")]: {
-      maxWidth: "40%"
+      maxWidth: "40%",
+      padding: "1em"
     }
   },
   quotesImg: {
-    height: "6em",
+    height: "4em",
     background: `url(${quotes})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
     [theme.breakpoints.down("sm")]: {
       backgroundSize: "contain"
     }
   },
   divider: {
-    height: "3px",
+    height: "1px",
     width: "80vw",
     margin: "1.5em 0",
     backgroundColor: "#022c00",
+    opacity: 0.8,
     [theme.breakpoints.up("md")]: {
-      height: "350px",
-      width: "3px"
+      height: "500px",
+      width: "1px"
+    },
+    [theme.breakpoints.up("lg")]: {
+      height: "600px",
+      width: "1px"
     }
   },
   mentorsCards: {
@@ -147,7 +156,7 @@ const styles = theme => ({
   joinUsSec: {
     padding: "1em",
     flexGrow: 1,
-    background: "#fafafa"
+    background: "#f1f8e9"
   },
   joinUs: {
     display: "flex",
@@ -176,7 +185,9 @@ const styles = theme => ({
     color: "#fff",
     margin: "1em 0"
   },
-
+  galeryImg: {
+    width: "100%"
+  },
   logo: {
     width: "250px"
   },
@@ -199,7 +210,8 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mentorsImgs: []
+      mentorsImgs: [],
+      loading: true
     };
   }
 
@@ -235,7 +247,8 @@ class Home extends Component {
         });
 
         this.setState({
-          mentorsImgs: mentorsData
+          mentorsImgs: mentorsData,
+          loading: false
         });
       })
       .catch(error => {
@@ -245,7 +258,7 @@ class Home extends Component {
 
   render() {
     const { classes } = this.props;
-    const { mentorsImgs } = this.state;
+    const { mentorsImgs, loading } = this.state;
 
     return (
       <main className={classes.wrapper}>
@@ -291,8 +304,9 @@ class Home extends Component {
             <Typography variant="h6" gutterBottom>
               Mentors are experts with goodwill. They can advise others on how
               to be a successful person. Connect with people of different
-              backgrounds, became a mentor!
+              backgrounds, become a mentor!
             </Typography>
+            <img src={img1} alt="" className={classes.galeryImg} />
           </div>
           <div className={classes.divider} />
           <div className={classes.createAccSec}>
@@ -328,7 +342,7 @@ class Home extends Component {
             <img src={b_business} alt="" className={classes.logo} />
             <div>
               <Typography variant="h6" gutterBottom align="center">
-                Are you looking for a mentor and your are not registered yet?
+                Are you looking for a mentor and you are not registered yet?
               </Typography>
             </div>
             <div>
@@ -349,8 +363,9 @@ class Home extends Component {
             <div className={classes.quotesImg} />
             <Typography variant="h6" gutterBottom>
               As a mentee, you can have to your side a mentor whose experiences
-              can guide you to surpass you goals.
+              can guide you to surpass your goals.
             </Typography>
+            <img src={img2} alt="" className={classes.galeryImg} />
           </div>
         </div>
         <div className={classes.sectionTitle}>

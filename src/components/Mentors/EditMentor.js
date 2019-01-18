@@ -169,22 +169,24 @@ class EditMentor extends Component {
   };
 
   /**
-   * handlePicture - returns the data to send to Firebase
-   * @returns {Object} the Firebase payload
+   * handlePicture - Creates a Blob objects and send it as an argument to
+   * createObjectURL method, then sets the values of pictureName and pictureBlob
+   * in the state if the size of the file is equal or les than 8MB
+   * @returns void
    */
   handlePicture = event => {
     const currentFile = new Blob(event.target.files, { type: "image/png" });
     const size = event.target.files[0].size / 1024 / 1024;
-    size <= 5
+    size <= 8
       ? this.setState({
           pictureName: window.URL.createObjectURL(currentFile),
           pictureBlob: currentFile,
           imageError: ""
         })
       : this.setState({
-          sectionError: "The size of the image must be inferior to 5 MB.",
+          sectionError: "The size of the image must be inferior to 8 MB.",
           imageError:
-            "The size of the image must be inferior to 5 MB. This image will not be save, choose another.",
+            "The size of the image must be inferior to 8 MB. This image will not be save, choose another.",
           openSnackbarError: true
         });
   };
@@ -343,7 +345,6 @@ class EditMentor extends Component {
                   alt="mentor photography"
                   className={classes.picture}
                 />
-
                 <input
                   type="file"
                   id="picture"
@@ -351,7 +352,15 @@ class EditMentor extends Component {
                   accept=".jpg, .jpeg, .png"
                   onChange={this.handlePicture}
                 />
-                <FormHelperText error={true}>{imageError}</FormHelperText>
+                {imageError ? (
+                  <FormHelperText error={true}>{imageError}</FormHelperText>
+                ) : (
+                  (pictureName === "NA" || pictureName === PhotoIcon) && (
+                    <FormHelperText>
+                      Please upload an image inferior to 8MB.
+                    </FormHelperText>
+                  )
+                )}{" "}
               </div>
               <div>
                 <FormControl required className={classes.formControl}>
