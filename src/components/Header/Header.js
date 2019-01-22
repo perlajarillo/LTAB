@@ -137,18 +137,16 @@ const NavAuthUser = props => {
                 </div>
               ) : rol === "mentor" ? (
                 <div>
-                  {/*  we will removing the comment once the reports are ready
                   <List>
                     <Button
                       tabIndex="-1"
                       color="inherit"
                       component={Link}
-
-                      to="/"
+                      to="/mentorsreport"
                     >
                       Reports
                     </Button>
-                  </List> */}
+                  </List>
                 </div>
               ) : (
                 <List>
