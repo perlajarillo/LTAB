@@ -35,30 +35,22 @@ const styles = theme => ({
       margin: "90px 24px"
     }
   },
-  chipContainer: {
-    paddingLeft: theme.spacing.unit * 3,
-    display: "flex",
-    flexWrap: "wrap"
+  wrapper: {
+    padding: theme.spacing.unit * 3
   },
   sectionMargin: {
-    marginTop: theme.spacing.unit * 6,
-    paddingLeft: theme.spacing.unit * 2
+    [theme.breakpoints.up("sm")]: {
+      marginTop: theme.spacing.unit * 3
+    }
   },
   formControl: {
-    display: "block",
-    paddingLeft: theme.spacing.unit * 3,
     margin: "24px 0",
-    [theme.breakpoints.down("xs")]: {
-      width: 100
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: 750
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "85%"
     },
     [theme.breakpoints.up("md")]: {
-      width: 700
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      width: 450
+      width: "60%"
     }
   },
 
@@ -67,8 +59,7 @@ const styles = theme => ({
     marginRight: theme.spacing.unit * 2
   },
   buttons: {
-    marginTop: theme.spacing.unit * 6,
-    paddingLeft: theme.spacing.unit * 6
+    marginTop: theme.spacing.unit * 6
   },
 
   card: {
@@ -97,9 +88,12 @@ const styles = theme => ({
     margin: theme.spacing.unit / 4
   },
   picture: {
-    paddingLeft: theme.spacing.unit * 3,
+    margin: "1rem 0",
     width: 200,
-    height: 200
+    height: 200,
+    [theme.breakpoints.up("sm")]: {
+      margin: 0
+    }
   }
 });
 
@@ -135,87 +129,74 @@ class ToPrint extends Component {
       activitiesDescError
     } = state;
     return (
-      <form onSubmit={handleSubmit}>
-        <div className={classes.sectionMargin}>
-          <Typography variant="h6" color="primary">
-            Mentor's report of activities
-          </Typography>
-          <br />
-        </div>
+      <form onSubmit={handleSubmit} className={classes.wrapper}>
+        <Typography variant="h6" color="primary">
+          Mentor's report of activities
+        </Typography>
+        <br />
         <Grid container>
-          <Grid item xs={12} sm={7} md={2} lg={2}>
-            <div>
-              <img
-                src={pictureName}
-                alt="mentor photography"
-                className={classes.picture}
-              />
-            </div>
+          <Grid item xs={12} sm={7} md={8} lg={8}>
+            <img
+              src={pictureName}
+              alt="mentor photography"
+              className={classes.picture}
+            />
           </Grid>
-          <Grid item xs={12} sm={5} md={5} lg={5}>
-            <div>
-              <Typography variant="h6">{name}</Typography>
-              <Typography>{specialty}</Typography>
-              <Typography>
-                {location} , {stateCode}
-              </Typography>
-            </div>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Typography variant="h6">{name}</Typography>
+            <Typography>{specialty}</Typography>
+            <Typography>
+              {location} , {stateCode}
+            </Typography>
           </Grid>
         </Grid>
-        <div>
-          <Typography variant="body2" className={classes.sectionMargin}>
-            Describe the activities you completed as a mentor in the FLAD
-            Mentorship program.
-          </Typography>
-          <FormControl required className={classes.formControl}>
-            <TextField
-              id="activitiesDesc"
-              name="activitiesDesc"
-              multiline
-              rows="8"
-              fullWidth
-              value={activitiesDesc}
-              onChange={handleChange}
-              placeholder="Your report here"
-              required
-              onBlur={checkForNull}
-              variant="outlined"
-              autoFocus
-            />
-          </FormControl>
-          <FormHelperText error={true}>{activitiesDescError}</FormHelperText>
-        </div>
-
-        <div className={classes.chipContainer}>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="select-multiple-chip">
-              Mentees helped
-            </InputLabel>
-            <Select
-              multiple
-              value={selectedMentees}
-              name="selectedMentees"
-              onChange={handleChange}
-              input={<Input id="select-multiple-chip" />}
-              renderValue={selected => (
-                <div className={classes.chips}>
-                  {selected.map(value => (
-                    <Chip key={value} label={value} className={classes.chip} />
-                  ))}
-                </div>
-              )}
-              MenuProps={MenuProps}
-            >
-              {mentees &&
-                mentees.map(mentee => (
-                  <MenuItem key={mentee} value={mentee}>
-                    <Checkbox checked={selectedMentees.indexOf(mentee) > -1} />
-                    <ListItemText primary={mentee} />
-                  </MenuItem>
+        <Typography variant="body2" className={classes.sectionMargin}>
+          Describe the activities you completed as a mentor in the FLAD
+          Mentorship program.
+        </Typography>
+        <FormControl required className={classes.formControl}>
+          <TextField
+            id="activitiesDesc"
+            name="activitiesDesc"
+            multiline
+            rows="8"
+            fullWidth
+            value={activitiesDesc}
+            onChange={handleChange}
+            placeholder="Your report here"
+            required
+            onBlur={checkForNull}
+            variant="outlined"
+            autoFocus
+          />
+        </FormControl>
+        <FormHelperText error={true}>{activitiesDescError}</FormHelperText>
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="select-multiple-chip">Mentees helped</InputLabel>
+          <Select
+            multiple
+            value={selectedMentees}
+            name="selectedMentees"
+            onChange={handleChange}
+            input={<Input id="select-multiple-chip" />}
+            renderValue={selected => (
+              <div className={classes.chips}>
+                {selected.map(value => (
+                  <Chip key={value} label={value} className={classes.chip} />
                 ))}
-            </Select>{" "}
-          </FormControl>
-        </div>
+              </div>
+            )}
+            MenuProps={MenuProps}
+          >
+            {mentees &&
+              mentees.map(mentee => (
+                <MenuItem key={mentee} value={mentee}>
+                  <Checkbox checked={selectedMentees.indexOf(mentee) > -1} />
+                  <ListItemText primary={mentee} />
+                </MenuItem>
+              ))}
+          </Select>{" "}
+        </FormControl>
       </form>
     );
   }
