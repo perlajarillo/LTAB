@@ -23,7 +23,6 @@ import { getMentees, getMentor, writeReport } from "../../firebase/operations";
 import { auth } from "../../firebase";
 import ReactToPrint from "react-to-print";
 import * as R from "ramda";
-import { validateString } from "../validity";
 
 const styles = theme => ({
   root: {
@@ -232,12 +231,14 @@ class MentorsReport extends Component {
    * @returns {void}
    */
   checkForNull = event => {
-    const name = event.target.name;
-    const formControl = name + "Error";
     const value = event.target.value;
-    this.setState({
-      [formControl]: validateString(name, value)
-    });
+    value === ""
+      ? this.setState({
+          activitiesDescError: "Please describe the activities."
+        })
+      : this.setState({
+          activitiesDescError: ""
+        });
   };
 
   /**
