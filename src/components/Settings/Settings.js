@@ -45,6 +45,7 @@ class Settings extends React.Component {
   render() {
     const { classes } = this.props;
     const { rol } = this.props.authUser;
+    const { uid } = this.props.authUser.authUser;
     return (
       <main className={classes.wrapper}>
         <section className={classes.sectionStyles}>
@@ -103,7 +104,7 @@ class Settings extends React.Component {
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <CancelAccount rol={rol} />
+              <CancelAccount rol={rol} uid={uid} />
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <br />
