@@ -151,6 +151,11 @@ const styles = theme => ({
   },
   dialogCard: {
     margin: "0 12px"
+  },
+  btnText: {
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "0.7em"
+    }
   }
 });
 
@@ -178,6 +183,7 @@ function SelectionPanel(props) {
               size="small"
               color="primary"
               onClick={setSelectedFilter}
+              className={classes.btnText}
             >
               Specialty
             </Button>
@@ -188,6 +194,7 @@ function SelectionPanel(props) {
               size="small"
               color="primary"
               onClick={setSelectedFilter}
+              className={classes.btnText}
             >
               State
             </Button>
@@ -198,6 +205,7 @@ function SelectionPanel(props) {
               size="small"
               color="primary"
               onClick={setSelectedFilter}
+              className={classes.btnText}
             >
               Suggested
             </Button>
@@ -208,6 +216,7 @@ function SelectionPanel(props) {
               size="small"
               color="primary"
               onClick={setSelectedFilter}
+              className={classes.btnText}
             >
               All
             </Button>
@@ -259,7 +268,7 @@ function SelectionPanel(props) {
           )}
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      <div className={classes.tutorial}>
+      <div className={classes.tutorial} style={{ display: expanded && "none" }}>
         <Typography variant="body2" className={classes.welcomeText}>
           If you didn't find a mentor today don't give up, our network of
           mentors is growing every day!
