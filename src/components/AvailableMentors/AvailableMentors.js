@@ -80,6 +80,10 @@ const styles = theme => ({
     flexGrow: 1,
     margin: theme.spacing.unit
   },
+  noSuggestions: {
+    flexGrow: 1,
+    margin: theme.spacing.unit
+  },
   bigAvatar: {
     margin: 10,
     width: 100,
@@ -147,6 +151,11 @@ const styles = theme => ({
   },
   dialogCard: {
     margin: "0 12px"
+  },
+  btnText: {
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "0.7em"
+    }
   }
 });
 
@@ -174,6 +183,7 @@ function SelectionPanel(props) {
               size="small"
               color="primary"
               onClick={setSelectedFilter}
+              className={classes.btnText}
             >
               Specialty
             </Button>
@@ -184,8 +194,20 @@ function SelectionPanel(props) {
               size="small"
               color="primary"
               onClick={setSelectedFilter}
+              className={classes.btnText}
             >
               State
+            </Button>
+          </div>
+          <div className={classes.column}>
+            <Button
+              data-id="suggested"
+              size="small"
+              color="primary"
+              onClick={setSelectedFilter}
+              className={classes.btnText}
+            >
+              Suggested
             </Button>
           </div>
           <div className={classes.column}>
@@ -194,6 +216,7 @@ function SelectionPanel(props) {
               size="small"
               color="primary"
               onClick={setSelectedFilter}
+              className={classes.btnText}
             >
               All
             </Button>
@@ -245,7 +268,7 @@ function SelectionPanel(props) {
           )}
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      <div className={classes.tutorial}>
+      <div className={classes.tutorial} style={{ display: expanded && "none" }}>
         <Typography variant="body2" className={classes.welcomeText}>
           If you didn't find a mentor today don't give up, our network of
           mentors is growing every day!
@@ -286,19 +309,24 @@ class AvailableMentors extends Component {
       selectedContent: "specialty",
       allMentorsKeys: null,
       expanded: false,
-      loading: true
+      loading: true,
+      menteeField: ""
     };
   }
 
+  getData = () => {
+    this.getMentors();
+    this.getMentee();
+  };
   componentDidMount() {
     if (this.props.authUser) {
-      this.unregisterObserver = this.getMentors();
+      this.unregisterObserver = this.getData();
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
-      this.getMentors();
+      this.getData();
     }
   }
 
@@ -306,6 +334,13 @@ class AvailableMentors extends Component {
     this.unregisterObserver = null;
     this.imgObserver = null;
   }
+
+  getMentee = () => {
+    const { uid } = this.props.authUser.authUser;
+    db.getMentee(uid).then(snapshot => {
+      this.setState({ menteeField: snapshot.val().field });
+    });
+  };
 
   getMentors = () => {
     db.getMentors().then(snapshot => {
@@ -384,9 +419,16 @@ class AvailableMentors extends Component {
 
   setSelectedFilter = event => {
     event.preventDefault();
+    const { mentors, menteeField } = this.state;
     const selectedFilter = event.currentTarget.dataset.id;
-
-    selectedFilter === "all"
+    selectedFilter === "suggested"
+      ? this.setState({
+          filteredMentors: this.filterOnSpecialty(menteeField, mentors),
+          selectedContent: selectedFilter,
+          selectedSpecialty: this.state.menteeField,
+          expanded: false
+        })
+      : selectedFilter === "all"
       ? this.setState({
           selectedState: "",
           selectedSpecialty: "",
@@ -489,62 +531,88 @@ class AvailableMentors extends Component {
             handleSelectedState={this.handleSelectedState}
             expanded={expanded}
           />
-          {mentorsToShow.map(mentor => (
-            <Card className={classes.card} key={mentor.key}>
-              <CardActionArea
-                onClick={this.handleClickOpen("paper", mentor.key)}
-              >
-                <CardHeader
-                  avatar={
-                    <Avatar
-                      alt={mentor.name}
-                      src={mentor.pictureName}
-                      className={classes.bigAvatar}
-                    />
-                  }
-                  title={mentor.name}
-                  subheader={mentor.mentorLocation}
-                />
-                <CardContent>
-                  {mentor.mentorState && (
-                    <blockquote className={classes.quote}>
-                      {mentor.mentorState}
-                    </blockquote>
-                  )}
-                  <Typography variant="body2">{mentor.specialty}</Typography>
-                  {mentor.mail && (
-                    <Typography gutterBottom variant="body2">
-                      {mentor.mail}
-                    </Typography>
-                  )}
-                  <br />
-                  {mentor.available ? (
-                    <hr style={{ border: "1px solid green" }} />
-                  ) : (
-                    <hr style={{ border: "1px solid red" }} />
-                  )}
-                  {mentor.available ? (
-                    <Typography component="p" style={{ color: "green" }}>
-                      available
-                    </Typography>
-                  ) : (
-                    <Typography component="p" style={{ color: "red" }}>
-                      not available
-                    </Typography>
-                  )}
-                </CardContent>
-              </CardActionArea>
-              <CardActions>
-                <Button
-                  size="small"
-                  color="primary"
+          {mentorsToShow.length === 0 ? (
+            <div className={classes.noSuggestions}>
+              <Typography variant="h6" gutterBottom color="primary">
+                Sorry, we do not have suggestions for you yet!
+              </Typography>
+              <br />
+              <br />
+              <Typography variant="body1" gutterBottom>
+                Please try again later. Our network of mentors is growing every
+                day.{" "}
+              </Typography>
+              <br />
+              <Typography variant="body1" gutterBottom>
+                We use your field of interest to make a match with the mentors,
+                if you haven't specify one click <a href="/settings">here</a> to
+                change your preferences in edit profile.{" "}
+              </Typography>
+              <br />
+              <Typography variant="body2" gutterBottom>
+                If you have suggestions or need some help finding a mentor
+                please send an email to{" "}
+                <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
+              </Typography>
+            </div>
+          ) : (
+            mentorsToShow.map(mentor => (
+              <Card className={classes.card} key={mentor.key}>
+                <CardActionArea
                   onClick={this.handleClickOpen("paper", mentor.key)}
                 >
-                  Learn More
-                </Button>
-              </CardActions>
-            </Card>
-          ))}
+                  <CardHeader
+                    avatar={
+                      <Avatar
+                        alt={mentor.name}
+                        src={mentor.pictureName}
+                        className={classes.bigAvatar}
+                      />
+                    }
+                    title={mentor.name}
+                    subheader={mentor.mentorLocation}
+                  />
+                  <CardContent>
+                    {mentor.mentorState && (
+                      <blockquote className={classes.quote}>
+                        {mentor.mentorState}
+                      </blockquote>
+                    )}
+                    <Typography variant="body2">{mentor.specialty}</Typography>
+                    {mentor.mail && (
+                      <Typography gutterBottom variant="body2">
+                        {mentor.mail}
+                      </Typography>
+                    )}
+                    <br />
+                    {mentor.available ? (
+                      <hr style={{ border: "1px solid green" }} />
+                    ) : (
+                      <hr style={{ border: "1px solid red" }} />
+                    )}
+                    {mentor.available ? (
+                      <Typography component="p" style={{ color: "green" }}>
+                        available
+                      </Typography>
+                    ) : (
+                      <Typography component="p" style={{ color: "red" }}>
+                        not available
+                      </Typography>
+                    )}
+                  </CardContent>
+                </CardActionArea>
+                <CardActions>
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={this.handleClickOpen("paper", mentor.key)}
+                  >
+                    Learn More
+                  </Button>
+                </CardActions>
+              </Card>
+            ))
+          )}
         </div>
 
         {mentorDetail && (
