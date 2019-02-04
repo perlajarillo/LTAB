@@ -20,18 +20,40 @@ The file package.json contains the complete list of dependencies for this projec
 
 In order to try this app you may create a new project in the Firebase Console. You can create a free account (here) [https://console.firebase.google.com/]
 
-### 3. Set the environment variables
+### 3. Enable Email/Password as authentication method in your Firebase project
 
-Once you have created your project in Firebase, create manually the file .env.production with the keys generated to connect to your database as follow:
+This step is important in order to be able to create accounts in your Firebase project and try the functionality available for the different roles of the program: mentor, mentee and coordinator.
 
-REACT_APP_API_KEY = "your-api-key"
-REACT_APP_AUTH_DOMAIN = "your-auth-domain"
-REACT_APP_DATABASE_URL = "your-database-url"
-REACT_APP_PROJECT_ID = "your-project-id"
-REACT_APP_STORAGE_BUCKET = "your-storage-bucket"
-REACT_APP_MESSAGING_SENDER_ID = "your-messaging-sender-id"
+To enable Email/Password as authentication method in your Firebase project:
 
-### 4. `npm start`
+- Go to the [Firebase console](https://console.firebase.google.com/), open the Auth section.
+- On the Sign in method tab, enable the Email/password sign-in method and click Save.
+
+### 4. Create a folder for images
+
+Next you will need to create a folder to storage the pictures of the mentors participating in FLAD-Mentorship program.
+
+- Go to the [Firebase console](https://console.firebase.google.com/), open the Storage section.
+- On the Files tab, click in the icon "create folder".
+- Name your new folder **images**
+
+### 5. Set the environment variables
+
+Once you have created your project in Firebase, create manually the file .env.production in the root of your project. Type the keys generated to connect to your database as follow:
+
+`REACT_APP_API_KEY = "your-api-key"`
+
+`REACT_APP_AUTH_DOMAIN = "your-auth-domain"`
+
+`REACT_APP_DATABASE_URL = "your-database-url"`
+
+`REACT_APP_PROJECT_ID = "your-project-id"`
+
+`REACT_APP_STORAGE_BUCKET = "your-storage-bucket"`
+
+`REACT_APP_MESSAGING_SENDER_ID = "your-messaging-sender-id"`
+
+### 6. Run `npm start`
 
 This command runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -39,15 +61,10 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### 5. `npm run build`
+### 7. Run `npm run build`
 
-Builds the app for production to the `build` folder.<br>
+This command builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 ## Contributors
 
