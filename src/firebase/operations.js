@@ -206,3 +206,12 @@ export function deleteMentee(menteeKey) {
     .child(menteeKey);
   return menteeToDelete.remove();
 }
+
+export function writeReport(data, mentorsKey) {
+  return db
+    .ref()
+    .child("mentors")
+    .child(mentorsKey)
+    .child("report")
+    .set(data);
+}

@@ -22,6 +22,8 @@ import LogIn from "./Login/LogIn";
 import Reports from "./Reports";
 import Mentees from "./Mentees";
 import Mentee from "./Mentees/Mentee";
+import MentorsReport from "./MentorsReport";
+import FAQ from "./FAQ/FAQ";
 
 const App = () => (
   <div className="App">
@@ -45,6 +47,8 @@ const App = () => (
         <Route path="/reports" component={Reports} />
         <Route path="/mentees" component={Mentees} />
         <Route path="/mentee" component={Mentee} />
+        <Route path="/mentorsreport" component={MentorsReport} />
+        <Route path="/faq" component={FAQ} />
       </Switch>
       <Footer />
     </MuiThemeProvider>

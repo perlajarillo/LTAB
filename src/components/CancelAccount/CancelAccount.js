@@ -61,24 +61,20 @@ class CancelAccount extends Component {
   };
 
   handleSubmit = event => {
-    deleteUser(auth.currentUserUid(), this.props.rol)
+    auth
+      .onDeleteUser()
       .then(() => {
-        auth
-          .onDeleteUser()
-          .then(() => {
-            this.setState({
-              msg: "We are sorry you are leaving."
-            });
-          })
-          .catch(error => {
-            this.setState({
-              msg: error.message
-            });
+        deleteUser(this.props.uid, this.props.rol).catch(error => {
+          this.setState({
+            msg: error.message,
+            open: false
           });
+        });
       })
       .catch(error => {
         this.setState({
-          msg: error.message
+          msg: error.message,
+          open: false
         });
       });
   };
