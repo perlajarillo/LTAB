@@ -18,7 +18,7 @@ The file package.json contains the complete list of dependencies for this projec
 
 ### 2. Create a project in Firebase
 
-In order to try this app you may create a new project in the Firebase Console. You can create a free account (here) [https://console.firebase.google.com/]
+In order to try this app you may create a new project in the Firebase Console. You can create a free account [here](https://console.firebase.google.com/)
 
 ### 3. Enable Email/Password as authentication method in your Firebase project
 
@@ -39,7 +39,7 @@ Next you will need to create a folder to storage the pictures of the mentors par
 
 ### 5. Set the environment variables
 
-Once you have created your project in Firebase, create manually the file .env.production in the root of your project. Type the keys generated to connect to your database as follow:
+Once you have created your project in Firebase, create manually the files `.env.production` and `.env.dev` in the root of your project. Type, in both files, the keys generated to connect to your database as follow:
 
 `REACT_APP_API_KEY = "your-api-key"`
 
@@ -52,6 +52,8 @@ Once you have created your project in Firebase, create manually the file .env.pr
 `REACT_APP_STORAGE_BUCKET = "your-storage-bucket"`
 
 `REACT_APP_MESSAGING_SENDER_ID = "your-messaging-sender-id"`
+
+This files have been included in `.gitignore` file to avoid publishing private information.
 
 ### 6. Run `npm start`
 
