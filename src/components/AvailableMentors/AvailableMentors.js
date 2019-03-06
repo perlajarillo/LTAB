@@ -30,7 +30,7 @@ import inLogo from "../../images/linkedin.png";
 import emailLogo from "../../images/email.png";
 import phoneLogo from "../../images/phone-receiver.png";
 import Progress from "../Progress/Progress";
-
+import WelcomeDialog from "./WelcomeDialog";
 const SPACE = " ";
 
 const splitOnSpace = x => x.split(SPACE);
@@ -135,6 +135,12 @@ const styles = theme => ({
     color: theme.palette.primary.dark,
     [theme.breakpoints.down("xs")]: {
       fontSize: "0.55rem"
+    }
+  },
+  dialogText: {
+    fontSize: "0.90rem",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.70rem"
     }
   },
   tutorialLink: {
@@ -310,7 +316,8 @@ class AvailableMentors extends Component {
       allMentorsKeys: null,
       expanded: false,
       loading: true,
-      menteeField: ""
+      menteeField: "",
+      openDialog: true
     };
   }
 
@@ -417,6 +424,10 @@ class AvailableMentors extends Component {
     this.setState({ open: false });
   };
 
+  handleWelcomeClose = () => {
+    this.setState({ openDialog: false });
+  };
+
   setSelectedFilter = event => {
     event.preventDefault();
     const { mentors, menteeField } = this.state;
@@ -508,7 +519,8 @@ class AvailableMentors extends Component {
       states,
       selectedContent,
       expanded,
-      loading
+      loading,
+      openDialog
     } = this.state;
     const mentorsToShow = filteredMentors ? filteredMentors : mentors;
 
@@ -516,6 +528,12 @@ class AvailableMentors extends Component {
       <Progress />
     ) : (
       <div>
+        <WelcomeDialog
+          openDialog={openDialog}
+          handleClose={this.handleWelcomeClose}
+          tutorialLink={classes.tutorialLink}
+          welcomeText={classes.dialogText}
+        />
         <div className={classes.wrapper}>
           <SelectionPanel
             classes={classes}
