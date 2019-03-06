@@ -9,18 +9,6 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 
-const styles = theme => ({
-  welcomeText: {
-    color: theme.palette.primary.dark,
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "0.55rem"
-    }
-  },
-  tutorialLink: {
-    color: theme.palette.secondary.dark
-  }
-});
-
 const DialogTitle = withStyles(theme => ({
   root: {
     borderBottom: `1px solid ${theme.palette.divider}`,
