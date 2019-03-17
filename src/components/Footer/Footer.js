@@ -18,6 +18,10 @@ const styles = theme => ({
   textColor: {
     color: theme.palette.primary.contrastText
   },
+  mLeft: {
+    marginLeft: "0.7em",
+    color: theme.palette.primary.contrastText
+  },
   credits: {
     color: "#bdbdbd",
     fontSize: "0.55rem"
@@ -55,12 +59,27 @@ function Footer(props) {
         <Grid container spacing={8}>
           <Grid item xs={12} sm={3} md={3} lg={3}>
             <Typography
-              variant="caption"
+              variant="overline"
               align="center"
               className={classes.textColor}
             >
-              2018 FLAD Mentorship
+              © 2018 FLAD Mentorship
             </Typography>
+            <div className={classes.linksSection}>
+              <Typography
+                variant="caption"
+                align="center"
+                className={classes.linksText}
+              >
+                <a
+                  className={classes.links}
+                  href="https://www.linkedin.com/in/carmen-zita-monereo-72285710b/"
+                  target="blank"
+                >
+                  Coordinator: Carmen Monereo
+                </a>
+              </Typography>
+            </div>
           </Grid>
           <Grid item xs={12} sm={7} md={7} lg={7}>
             <Typography
@@ -130,7 +149,7 @@ function Footer(props) {
               variant="caption"
               align="left"
               gutterBottom
-              className={classes.textColor}
+              className={classes.mLeft}
             >
               Developed by
               <a
