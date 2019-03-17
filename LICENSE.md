@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2019 Perla Jarillo, Faviola Vieyra
+Copyright (c) 2019 Perla Jarillo, Faviola Vieyra.
 Coordinator of Flad-Mentorship program: Carmen Monereo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
