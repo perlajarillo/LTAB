@@ -1,6 +1,6 @@
 const programData = {
   program: {
-    name: "Let's talk about business",
+    name: "Let's Talk About Business",
     alias: "LTAB",
     sponsor: "Luso-American Development foundation",
     year: "2018",
