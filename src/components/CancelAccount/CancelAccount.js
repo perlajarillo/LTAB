@@ -15,6 +15,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { deleteUser } from "../../firebase/operations";
 import { auth } from "../../firebase";
 import red from "@material-ui/core/colors/red";
+import programData from "../Literals/Literals";
+
+const { program } = programData;
 
 const styles = theme => ({
   button: {
@@ -88,7 +91,7 @@ class CancelAccount extends Component {
         <Typography variant="body1" color="secondary">
           WARNING: This operation can NOT be undone. If you delete your account
           you will not be able to access to the information about our mentors
-          anymore and use other tools provided by FLAD Mentorship app.
+          anymore and use other tools provided by {program.name} app.
         </Typography>
         <br />
         <Button
