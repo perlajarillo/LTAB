@@ -31,7 +31,9 @@ import emailLogo from "../../images/email.png";
 import phoneLogo from "../../images/phone-receiver.png";
 import Progress from "../Progress/Progress";
 import WelcomeDialog from "./WelcomeDialog";
+import programData from "../Literals/Literals";
 const SPACE = " ";
+const { contact } = programData;
 
 const splitOnSpace = x => x.split(SPACE);
 const joinWithSpace = x => x.join(SPACE);
@@ -570,7 +572,7 @@ class AvailableMentors extends Component {
               <Typography variant="body2" gutterBottom>
                 If you have suggestions or need some help finding a mentor
                 please send an email to{" "}
-                <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
+                <a href={"mailto:" + contact.email}>{contact.email}</a>
               </Typography>
             </div>
           ) : (

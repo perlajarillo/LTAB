@@ -3,6 +3,9 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Paper, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
+import programData from "../Literals/Literals";
+
+const { program, contact } = programData;
 
 const styles = theme => ({
   root: {
@@ -63,7 +66,7 @@ function Footer(props) {
               align="center"
               className={classes.textColor}
             >
-              © 2018 FLAD Mentorship
+              © {program.year} {program.name}
             </Typography>
             <div className={classes.linksSection}>
               <Typography
@@ -73,10 +76,10 @@ function Footer(props) {
               >
                 <a
                   className={classes.links}
-                  href="https://www.linkedin.com/in/carmen-zita-monereo-72285710b/"
+                  href={program.coordinator_LinkedIn}
                   target="blank"
                 >
-                  Coordinator: Carmen Monereo
+                  Founder of mentorship program: {program.coordinator}
                 </a>
               </Typography>
             </div>
@@ -97,20 +100,20 @@ function Footer(props) {
               >
                 <a
                   className={classes.links}
-                  href="https://www.facebook.com/TalkBusinessFlad/"
+                  href={contact.facebook}
                   target="blank"
                 >
                   Facebook
                 </a>
                 <a
                   className={classes.links}
-                  href="https://www.flad.pt/en/lets-talk-about-business/"
+                  href={contact.sponsor_page}
                   target="blank"
                 >
-                  Flad Mentorship
+                  Sponsor: Flad Mentorship
                 </a>
-                <a className={classes.links} href="mailto:talkbusiness@flad.pt">
-                  e-mail: talkbusiness@flad.pt
+                <a className={classes.links} href={"mailto:" + contact.email}>
+                  e-mail: {contact.email}
                 </a>
               </Typography>
             </div>
@@ -151,7 +154,7 @@ function Footer(props) {
               gutterBottom
               className={classes.mLeft}
             >
-              Developed by
+              Web app developed by
               <a
                 className={classes.links}
                 href="https://www.linkedin.com/in/perla-jarillo-98290436/"

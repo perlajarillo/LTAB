@@ -32,6 +32,9 @@ import CardContent from "@material-ui/core/CardContent";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import listsData from "./Literals/listsData";
+import programData from "../Literals/Literals";
+
+const { program } = programData;
 
 const styles = theme => ({
   root: {
@@ -645,7 +648,7 @@ class NewMentor extends Component {
                   <div>
                     <br />
                     <Typography variant="body2" color="primary">
-                      A message to share with FLAD Mentorship community
+                      A message to share with {program.name} community
                     </Typography>
                     <FormControl required className={classes.formControl}>
                       <TextField

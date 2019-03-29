@@ -2,6 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import programData from "../Literals/Literals";
+
+const { program } = programData;
 
 const styles = theme => ({
   root: {
@@ -26,8 +29,8 @@ function TermsAndConditions(props) {
       </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
-        This website is operated by FLAD Mentorship. Throughout the site, the
-        terms “we”, “us” and “our” refer to FLAD Mentorship. We offer this
+        This website is operated by {program.name}. Throughout the site, the
+        terms “we”, “us” and “our” refer to {program.name}. We offer this
         website, including all information and services available from this site
         to you, the user, conditioned upon your acceptance of all terms,
         conditions, policies and notices stated here.
@@ -335,7 +338,7 @@ function TermsAndConditions(props) {
       </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
-        You agree to indemnify, defend and hold harmless FLAD Mentorship and our
+        You agree to indemnify, defend and hold harmless {program.name} and our
         parent, subsidiaries, affiliates, partners, officers, directors, agents,
         contractors, licensors, service providers, subcontractors, suppliers,
         interns and employees, harmless from any claim or demand, including
