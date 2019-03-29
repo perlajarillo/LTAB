@@ -16,6 +16,9 @@ import PrintIcon from "@material-ui/icons/Print";
 import Button from "@material-ui/core/Button";
 import { sortBy, compose, toLower, prop } from "ramda";
 import Progress from "../Progress/Progress";
+import programData from "../Literals/Literals";
+
+const { program } = programData;
 
 const sortByName = sortBy(
   compose(
@@ -152,12 +155,11 @@ class ToPrint extends React.Component {
     return (
       <div>
         <div className={classes.heading}>
-          <img src={logos} alt="FLAD-Mentorship" className={classes.logos} />
+          <img src={logos} alt={program.name} className={classes.logos} />
           <hr />
         </div>
         <Typography variant="h6" className={classes.text} gutterBottom>
-          Report of mentors and mentees participating in FLAD-Mentorship
-          Program:
+          Report of mentors and mentees participating in {program.name} Program:
         </Typography>
         <Typography variant="body2" gutterBottom className={classes.text}>
           Date: {new Date().toLocaleString()}

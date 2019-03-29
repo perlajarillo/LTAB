@@ -23,6 +23,8 @@ import { getMentees, getMentor, writeReport } from "../../firebase/operations";
 import { auth } from "../../firebase";
 import ReactToPrint from "react-to-print";
 import * as R from "ramda";
+import programData from "../Literals/Literals";
+const { program } = programData;
 
 const styles = theme => ({
   root: {
@@ -150,8 +152,8 @@ class ToPrint extends Component {
           </Grid>
         </Grid>
         <Typography variant="body2" className={classes.sectionMargin}>
-          Describe the activities you completed as a mentor in the FLAD
-          Mentorship program.
+          Describe the activities you completed as a mentor in the{" "}
+          {program.name} program.
         </Typography>
         <FormControl required className={classes.formControl}>
           <TextField
