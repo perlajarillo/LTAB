@@ -7,6 +7,9 @@ import Grid from "@material-ui/core/Grid";
 import MentorsMessage from "./MentorsMessage";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import programData from "../Literals/Literals";
+
+const { program } = programData;
 
 const styles = theme => ({
   root: {
@@ -61,14 +64,14 @@ class MentorsHome extends Component {
       <div className={classes.root}>
         <div className={classes.pageTitle}>
           <Typography variant="h6" gutterBottom className={classes.welcomeText}>
-            {"Welcome to FLAD Mentorship " + name + "!"}
+            Welcome to {program.name} {name}!
           </Typography>
         </div>
         <Grid container spacing={8}>
           <Grid item xs={12} sm={4} md={4} lg={4}>
             <img
               src={logo_original}
-              alt="Let's talk about business"
+              alt={program.name}
               className={classes.principalLogo}
             />
             <Typography
