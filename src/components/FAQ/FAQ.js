@@ -6,6 +6,9 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Divider from "@material-ui/core/Divider";
+import programData from "../Literals/Literals";
+
+const { program, contact } = programData;
 
 function TabContainer(props) {
   return (
@@ -83,14 +86,14 @@ class Faq extends Component {
                 How can I participate as a mentee?
               </Typography>
               <Typography variant="body2" gutterBottom>
-                You need to create an account in FLAD-Mentorship App. If you
+                You need to create an account in {program.name} App. If you
                 haven't, click{" "}
                 <a href="https://flad-mentorship.firebaseapp.com/newmentee">
                   here
                 </a>{" "}
                 and fill the information asked. Once you have your account
                 created, you will be able to find and contact mentors who are
-                participating in FLAD-Mentorship program!
+                participating in {program.name} program!
               </Typography>
               <Divider />
             </div>
@@ -103,7 +106,7 @@ class Faq extends Component {
                 I am a mentee with an account, what is next?
               </Typography>
               <Typography variant="body2" gutterBottom>
-                As a mentee of FLAD-Mentorship program you have access to our
+                As a mentee of {program.name} program you have access to our
                 network of experts. Visit this{" "}
                 <a href="http://localhost:3000/availablementors">link</a> to see
                 the available mentors. Read the descriptions and feel free to
@@ -128,7 +131,7 @@ class Faq extends Component {
               <Typography variant="body2" gutterBottom className={classes.a}>
                 If you have suggestions or need some help finding a mentor
                 please send an email to{" "}
-                <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
+                <a href={"mailto:" + contact.email}>{contact.email}</a>
               </Typography>
               <Divider />
             </div>
@@ -153,8 +156,8 @@ class Faq extends Component {
               <Typography variant="body2" gutterBottom className={classes.a}>
                 If you completed all the process described above, and you
                 haven't find a mentor, please send an email to{" "}
-                <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>{" "}
-                and describe the kind of expertise you are interested in.
+                <a href={"mailto" + contact.email}>{contact.email}</a> and
+                describe the kind of expertise you are interested in.
               </Typography>
               <Typography variant="body2" gutterBottom className={classes.a}>
                 <b>
@@ -177,7 +180,7 @@ class Faq extends Component {
                 How can I participate as a mentor?
               </Typography>
               <Typography variant="body2" gutterBottom>
-                To participate as a mentor in FLAD-Mentorship program you may
+                To participate as a mentor in {program.name} program you may
                 create an account by filling this{" "}
                 <a href="https://flad-mentorship.firebaseapp.com/newmentor">
                   form

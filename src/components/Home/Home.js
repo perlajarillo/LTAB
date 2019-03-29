@@ -15,6 +15,10 @@ import { db } from "../../firebase";
 import { map, compose } from "ramda";
 import img1 from "../../images/haley-phelps-433522-unsplash.jpg";
 import img2 from "../../images/brooke-cagle-609874-unsplash.jpg";
+import programData from "../Literals/Literals";
+
+const { contact } = programData;
+const { email } = contact;
 
 const SPACE = " ";
 
@@ -331,8 +335,7 @@ class Home extends Component {
                 Or please reach out to us through
               </Typography>
               <Typography variant="body1" gutterBottom align="center">
-                email{" "}
-                <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
+                email <a href={"mailto:" + email}>{email}</a>
               </Typography>
             </div>
           </div>
