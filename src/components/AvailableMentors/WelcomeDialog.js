@@ -8,6 +8,9 @@ import MuiDialogActions from "@material-ui/core/DialogActions";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
+import programData from "../Literals/Literals";
+
+const { contact } = programData;
 
 const DialogTitle = withStyles(theme => ({
   root: {
@@ -89,7 +92,7 @@ class WelcomeDialog extends React.Component {
             <Typography gutterBottom className={dialogText}>
               4. If you have suggestions or need some help finding a mentor
               please send an email to{" "}
-              <a href="mailto:talkbusiness@flad.pt">talkbusiness@flad.pt</a>
+              <a href={"mailto:" + contact.email}>{contact.email}</a>
             </Typography>
           </DialogContent>
           <DialogActions>

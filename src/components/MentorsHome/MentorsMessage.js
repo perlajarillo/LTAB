@@ -9,6 +9,9 @@ import { setState, getMentorState } from "../../firebase/operations";
 import { auth } from "../../firebase";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
+import programData from "../Literals/Literals";
+
+const { program } = programData;
 
 const styles = theme => ({
   root: {
@@ -147,7 +150,7 @@ class MentorsHome extends Component {
       <div className={classes.root}>
         <div className={classes.pageTitle}>
           <Typography variant="h6" gutterBottom>
-            Your message to FLAD Mentorship community
+            Your message to {program.name} community
           </Typography>
         </div>
         <Typography variant="body1">

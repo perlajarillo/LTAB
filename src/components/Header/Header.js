@@ -13,6 +13,9 @@ import LogOut from "../LogOut/LogOut";
 import logo from "../../images/logo_square.png";
 import AuthUserContext from "../AuthUserContext";
 import Typography from "@material-ui/core/Typography";
+import programData from "../Literals/Literals";
+
+const { program } = programData;
 
 const styles = theme => ({
   root: {
@@ -76,7 +79,7 @@ const NavAuthUser = props => {
             <MenuIcon />
           </IconButton>
           <Link to="/" className={classes.logoStyles}>
-            <img src={logo} alt="Flad Mentorship" className={classes.logo} />
+            <img src={logo} alt={program.name} className={classes.logo} />
           </Link>
           <Typography variant="caption" className={classes.welcomeText}>
             {"Hi, " + shortName}
@@ -199,7 +202,7 @@ const NavNoAuth = props => {
             <MenuIcon style={{ color: "#25560e" }} />
           </IconButton>
           <Link to="/" className={classes.logoStyles}>
-            <img src={logo} alt="FLAD Mentorship" className={classes.logo} />
+            <img src={logo} alt={program.name} className={classes.logo} />
           </Link>
           <div>
             <Button
