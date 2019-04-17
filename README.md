@@ -1,10 +1,10 @@
-# FLAD-Mentorship app
+# Let's Talk About Business app (before FLAD-Mentorship)
 
-FLAD Mentorship helps to link people to participate as a mentor or a mentee in the program [Let's talk about business](https://www.flad.pt/en/lets-talk-about-business/) from the Luso-American Development Foundation.
+This app helps to link people to participate as a mentor or a mentee in the program [Let's talk about business](https://www.flad.pt/en/lets-talk-about-business/) in coordination to the Flad-Mentorship program, sponsored by the Luso-American Development Foundation.
 
 ## Development Notes
 
-FLAD-Mentorship app was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). The project uses the Firebase Realtime Database and Storage as a backend, so it requires no server-side code or SQL queries.
+Let's Talk About Business app was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). The project uses the Firebase Realtime Database and Storage.
 
 ## To build the application
 
@@ -31,7 +31,7 @@ To enable Email/Password as authentication method in your Firebase project:
 
 ### 4. Create a folder for images
 
-Next you will need to create a folder to storage the pictures of the mentors participating in FLAD-Mentorship program.
+Next you will need to create a folder to storage the pictures of the mentors participating in Let's Talk About Business program.
 
 - Go to the [Firebase console](https://console.firebase.google.com/), open the Storage section.
 - On the Files tab, click in the icon "create folder".
@@ -75,13 +75,13 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 ## Contributor Guidelines
 
-If you're looking for a place to start contributing code, check out this list of [issues](https://github.com/perlajarillo/flad-mentorship/labels/help%20wanted) that are ready for someone to pick up and start on. The process to contribute in this repository is:
+If you're looking for a place to start contributing code, check out this list of [issues](https://github.com/perlajarillo/LTAB/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) that are ready for someone to pick up and start on. The process to contribute in this repository is:
 
 1. Comment on the issue that you're going to be working on it. This will help us to avoid work duplication.
 2. Fork the repository.
 3. Start coding.
 4. Make a PR when you are ready.
-5. A member of FLAD-Mentorship app will review your contribution and ask for any necessary changes and/or approve and merge.
+5. A member of Let's Talk About Business app will review your contribution and ask for any necessary changes and/or approve and merge.
 
 ## Learn More
 
