@@ -1,6 +1,6 @@
 # Let's Talk About Business app (before FLAD-Mentorship)
 
-This app helps to link people to participate as a mentor or a mentee in the program [Let's talk about business](https://www.flad.pt/en/lets-talk-about-business/) in coordination to the Flad-Mentorship program, sponsored by the Luso-American Development Foundation.
+This app helps to link people to participate as a mentor or a mentee in the program [Let's talk about business](https://www.flad.pt/en/lets-talk-about-business/) in coordination with the Flad-Mentorship program, sponsored by the Luso-American Development Foundation.
 
 ## Development Notes
 
@@ -31,7 +31,7 @@ To enable Email/Password as authentication method in your Firebase project:
 
 ### 4. Create a folder for images
 
-Next you will need to create a folder to storage the pictures of the mentors participating in Let's Talk About Business program.
+Next you will need to create a folder to store the pictures of the mentors participating in Let's Talk About Business program.
 
 - Go to the [Firebase console](https://console.firebase.google.com/), open the Storage section.
 - On the Files tab, click in the icon "create folder".
