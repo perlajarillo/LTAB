@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2019 Perla Jarillo, Faviola Vieyra
+Copyright (c) 2019 Perla Jarillo, Fabiola Vieyra
 Coordinator of Let's Talk About Business program: Carmen Monereo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
