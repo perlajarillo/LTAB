@@ -3,7 +3,7 @@ const programData = {
     name: "Let's Talk About Business",
     alias: "LTAB",
     sponsor: "Luso-American Development foundation",
-    year: "2018",
+    year: "2019",
     coordinator: "Carmen Monereo",
     coordinator_LinkedIn:
       "https://www.linkedin.com/in/carmen-zita-monereo-72285710b/"
