@@ -90,7 +90,7 @@ function Footer(props) {
               align="center"
               className={classes.textColor}
             >
-              Social{" "}
+              Contact us{" "}
             </Typography>
             <div className={classes.linksSection}>
               <Typography
@@ -98,20 +98,6 @@ function Footer(props) {
                 align="center"
                 className={classes.linksText}
               >
-                <a
-                  className={classes.links}
-                  href={contact.facebook}
-                  target="blank"
-                >
-                  Facebook
-                </a>
-                <a
-                  className={classes.links}
-                  href={contact.sponsor_page}
-                  target="blank"
-                >
-                  Sponsor: Flad Mentorship
-                </a>
                 <a className={classes.links} href={"mailto:" + contact.email}>
                   e-mail: {contact.email}
                 </a>
@@ -246,6 +232,15 @@ function Footer(props) {
                 target="_blank"
               >
                 iorad
+              </a>
+              Photos by Amy Hirschi and You X Ventures on{" "}
+              <a
+                href="https://unsplash.com/"
+                title="Unsplash"
+                className={classes.links}
+                target="_blank"
+              >
+                Unspash
               </a>
             </Typography>
           </Grid>
