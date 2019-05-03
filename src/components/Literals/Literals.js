@@ -12,7 +12,7 @@ const programData = {
   contact: {
     facebook: "https://www.facebook.com/TalkBusinessFlad/",
     sponsor_page: "https://www.flad.pt/en/lets-talk-about-business/",
-    email: "talkbusiness@flad.pt"
+    email: "talkbusiness2019@gmail.com"
   }
 };
 
