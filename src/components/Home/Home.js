@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import backgroundImg from "../../images/letstalk_logo_3.jpg";
+import collage from "../../images/collage.png";
 import logo from "../../images/logo.png";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
@@ -18,6 +19,7 @@ import img2 from "../../images/brooke-cagle-609874-unsplash.jpg";
 import programData from "../Literals/Literals";
 
 const { contact } = programData;
+const { program } = programData;
 const { email } = contact;
 
 const SPACE = " ";
@@ -41,7 +43,7 @@ const toTitleCase = compose(
 
 const styles = theme => ({
   wrapper: {
-    padding: "6em 0",
+    padding: "5em 0",
     backgroundColor: "#fff"
   },
   mainSection: {
@@ -66,7 +68,7 @@ const styles = theme => ({
     margin: "0 auto",
     alignSelf: "center",
     [theme.breakpoints.up("md")]: {
-      flexShrink: 2,
+      flexShrink: 1.5,
       paddingTop: "2.1rem"
     }
   },
@@ -81,6 +83,12 @@ const styles = theme => ({
     [theme.breakpoints.up("sm")]: {
       width: "90%"
     }
+  },
+  collageImg: {
+    background: "url(" + collage + ")",
+    backgroundRepeat: "no-repeat",
+    padding: "12% 0 3rem 0",
+    backgroundSize: "contain"
   },
   sectionMentor: {
     padding: theme.sectionPadding.padding,
@@ -266,9 +274,14 @@ class Home extends Component {
 
     return (
       <main className={classes.wrapper}>
+        <div className={classes.collageImg} />
         <div className={classes.mainSection}>
           <div className={classes.backImg} />
           <div className={classes.pageTitle}>
+            <Typography variant="subtitle1" gutterBottom>
+              {program.name} helps to link people to participate in the
+              profesional community as a mentor or a mentee.
+            </Typography>
             <Typography variant="subtitle1" gutterBottom>
               Mentorship is incredibly important because it provides
               participating mentees with valuable insight to assist and guide

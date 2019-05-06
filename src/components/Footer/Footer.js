@@ -77,7 +77,8 @@ function Footer(props) {
                 <a
                   className={classes.links}
                   href={program.coordinator_LinkedIn}
-                  target="blank"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Founder of mentorship program: {program.coordinator}
                 </a>
@@ -90,7 +91,7 @@ function Footer(props) {
               align="center"
               className={classes.textColor}
             >
-              Social{" "}
+              Contact us{" "}
             </Typography>
             <div className={classes.linksSection}>
               <Typography
@@ -98,20 +99,6 @@ function Footer(props) {
                 align="center"
                 className={classes.linksText}
               >
-                <a
-                  className={classes.links}
-                  href={contact.facebook}
-                  target="blank"
-                >
-                  Facebook
-                </a>
-                <a
-                  className={classes.links}
-                  href={contact.sponsor_page}
-                  target="blank"
-                >
-                  Sponsor: Flad Mentorship
-                </a>
                 <a className={classes.links} href={"mailto:" + contact.email}>
                   e-mail: {contact.email}
                 </a>
@@ -158,7 +145,8 @@ function Footer(props) {
               <a
                 className={classes.links}
                 href="https://www.linkedin.com/in/perla-jarillo-98290436/"
-                target="blank"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Perla Jarillo
               </a>
@@ -167,6 +155,7 @@ function Footer(props) {
                 href="https://www.fabiolavieyra.com/"
                 className={classes.links}
                 target="blank"
+                rel="noopener noreferrer"
               >
                 Fabiola Vieyra
               </a>
@@ -183,6 +172,8 @@ function Footer(props) {
               <a
                 href="http://www.freepik.com/"
                 title="Freepik"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={classes.links}
               >
                 Freepik
@@ -191,6 +182,8 @@ function Footer(props) {
               <a
                 href="https://www.flaticon.com/"
                 title="Flaticon"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={classes.links}
               >
                 www.flaticon.com
@@ -200,6 +193,7 @@ function Footer(props) {
                 href="http://creativecommons.org/licenses/by/3.0/"
                 title="Creative Commons BY 3.0"
                 target="_blank"
+                rel="noopener noreferrer"
                 className={classes.links}
               >
                 CC 3.0 BY{", "}
@@ -208,6 +202,8 @@ function Footer(props) {
               <a
                 href="https://www.flaticon.com/authors/vectors-market"
                 title="Vectors Market"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={classes.links}
               >
                 Vectors Market
@@ -217,6 +213,8 @@ function Footer(props) {
                 href="https://www.flaticon.com/"
                 title="Flaticon"
                 className={classes.links}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 www.flaticon.com
               </a>{" "}
@@ -226,6 +224,7 @@ function Footer(props) {
                 title="Creative Commons BY 3.0"
                 className={classes.links}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 CC 3.0 BY{" "}
               </a>
@@ -235,6 +234,7 @@ function Footer(props) {
                 title="Industry codes"
                 className={classes.links}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 reference table.
               </a>{" "}
@@ -244,8 +244,19 @@ function Footer(props) {
                 title="Iorad"
                 className={classes.links}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 iorad
+              </a>
+              Photos by Amy Hirschi and You X Ventures on{" "}
+              <a
+                href="https://unsplash.com/"
+                title="Unsplash"
+                className={classes.links}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Unspash
               </a>
             </Typography>
           </Grid>

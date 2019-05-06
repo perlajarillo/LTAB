@@ -38,8 +38,8 @@ const styles = theme => ({
     }
   },
   logos: {
-    width: 500,
-    height: 120,
+    width: 400,
+    height: 200,
     orientation: "center",
     marginBottom: 10
   },
