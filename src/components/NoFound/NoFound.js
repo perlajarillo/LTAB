@@ -48,7 +48,11 @@ function NoFound(props) {
         <div className={classes.card}>
           <Grid container spacing={24}>
             <Grid item xs={12} sm={6} md={6} lg={6}>
-              <img src={dog} className={classes.picture} />
+              <img
+                src={dog}
+                className={classes.picture}
+                alt="Author: Charles 🇵🇭 on Unsplash"
+              />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6}>
               <Typography variant="h4" color="textSecondary" gutterBottom>
