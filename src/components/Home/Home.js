@@ -280,7 +280,7 @@ class Home extends Component {
           <div className={classes.pageTitle}>
             <Typography variant="subtitle1" gutterBottom>
               {program.name} helps to link people to participate in the
-              profesional community as a mentor or a mentee.
+              professional community as a mentor or a mentee.
             </Typography>
             <Typography variant="subtitle1" gutterBottom>
               Mentorship is incredibly important because it provides
