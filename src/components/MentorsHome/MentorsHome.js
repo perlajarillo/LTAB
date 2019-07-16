@@ -82,7 +82,7 @@ class MentorsHome extends Component {
               {" "}
               Read this{" "}
               <a
-                href="http://ior.ad/FDW"
+                href="http://ior.ad/6DWH"
                 className={classes.tutorialLink}
                 target="blank"
               >
