@@ -231,7 +231,7 @@ class Faq extends Component {
                 mentoring".
               </Typography>
               <Typography variant="body2" gutterBottom className={classes.a}>
-                See this <a href="http://ior.ad/FDW">tutorial</a> to find more
+                See this <a href="http://ior.ad/6DWH">tutorial</a> to find more
                 information about how to use this site.
               </Typography>
               <Divider />
