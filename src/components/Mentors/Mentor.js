@@ -536,7 +536,7 @@ class NewMentor extends Component {
                     </FormHelperText>
                   </div>
                   <div>
-                    <FormHelperText>State * </FormHelperText>
+                    <FormHelperText>Country * </FormHelperText>
 
                     <FormControl required className={classes.formControl}>
                       <Select
@@ -551,7 +551,7 @@ class NewMentor extends Component {
                         className={classes.textField}
                       >
                         <MenuItem value="" disabled>
-                          Select the state
+                          Select the Country
                         </MenuItem>
                         {states.map(state => (
                           <MenuItem key={state.code} value={state.code}>
